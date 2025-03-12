@@ -1,0 +1,25 @@
+.header {
+    display: flex;
+    align-items: center;
+    background: #3A2F2A;
+    color: white;
+    padding: 8px 15px; /* ลด Padding */
+    height: 50px; /* ลดความสูง Header */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.logo {
+    height: 35px; /* ลดขนาดโลโก้ */
+    margin-right: 10px;
+}
+
+.header h1 {
+    font-size: 18px; /* ลดขนาดตัวอักษร */
+    margin: 0;
+    font-weight: bold;
+}

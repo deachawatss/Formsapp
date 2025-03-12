@@ -1,0 +1,142 @@
+/* ตัวอย่าง CSS สำหรับหน้า Home */
+
+.home-container {
+    padding: 10px;
+  }
+  
+  /* =========== Dashboard Section =========== */
+  .dashboard-section {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .dashboard-title {
+    margin-top: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #3A2F2A;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .dashboard-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 10px;
+  }
+  
+  .dashboard-card {
+    flex: 1;
+    min-width: 300px; /* ป้องกันการบีบเกินไป */
+    background-color: #F8F8F8;
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  .dashboard-card h2 {
+    margin-top: 0;
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #2e5ba6;
+  }
+  
+  .dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 5px;
+  }
+  
+  .dashboard-table th {
+    background-color: #2e5ba6;
+    color: #fff;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .dashboard-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+  }
+  
+
+  /* Home.css */
+.chart-wrapper {
+    width: 100%;
+    height: 450px; /* ตั้งความสูงตามต้องการ */
+  }
+  
+  
+  /* =========== Select Form Section =========== */
+  .select-form-section {
+    background: #fff;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .btn-select-form {
+    background-color: #2e5ba6;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .btn-select-form:hover {
+    background-color: #24497b;
+  }
+  
+  /* =========== All Forms Table =========== */
+  .all-forms-title {
+    font-size: 20px;
+    margin-bottom: 8px;
+    color: #3A2F2A;
+  }
+  
+  .forms-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .forms-table th {
+    background-color: #2e5ba6;
+    color: #fff;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .forms-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .action-link {
+    text-decoration: none;
+    color: #2e5ba6;
+    margin-right: 5px;
+  }
+  
+  .delete-btn {
+    background-color: #cc2a2a;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 4px 8px;
+    cursor: pointer;
+  }
+  
+  .delete-btn:hover {
+    background-color: #a11f1f;
+  }
+  

@@ -1,0 +1,173 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.app-container {
+  display: flex;
+  margin-top: 50px;
+}
+
+.sidebar {
+  width: 180px;
+}
+
+.content-container {
+  flex: 1;
+  padding: 20px;
+  background: #F0F0F0;
+  min-height: 100vh;
+  color: #3A2F2A;
+}
+
+/* กำหนดให้ input, select, textarea ทั้งหมดมีมุมมนเหมือนกัน */
+input,
+select,
+textarea {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+  font-size: 14px;
+  box-sizing: border-box; /* แนะนำให้ใส่เพื่อให้ padding ทำงานคาดเดาได้ */
+}
+
+
+
+@media print {
+  /* ตั้งค่าหน้ากระดาษเป็น A4 แนวตั้ง ไร้ margin */
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  /* รีเซ็ต margin/padding พื้นฐานของ html/body */
+  html, body {
+    margin: 10 !important;
+    padding: 10 !important;
+    background: #fff !important;
+  }
+
+  /* ซ่อนส่วนที่ไม่ต้องการพิมพ์ เช่น header/sidebar/ปุ่มต่างๆ */
+  .header, .sidebar, .delete-btn, .btn-row {
+    display: none !important;
+  }
+
+  /* ------ ตรงนี้สำคัญ ------ */
+  /* ลบ background สีเทา/ฟ้า ของ container ต่างๆ เวลาพิมพ์ */
+  .app-container,
+  .content-container{
+    background: #fff !important;
+  }
+
+  /* เอา min-height ออก ไม่ให้ดันความสูง */
+  .content-container {
+    min-height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* บล็อค .print-page ถ้าไม่อยาก fix width/height ก็ไม่ต้องกำหนด */
+  .print-page {
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* ฟอร์มหลักให้ยืดเต็มพื้นที่ก่อนที่จะไปถึงตารางเซ็น */
+  .form-container {
+    flex: 1 !important;
+    box-shadow: none !important;
+    margin: 10px !important;
+    padding: 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* บังคับตารางเซ็นชื่อให้ "ชิดล่าง" เสมอ */
+  .sign-table {
+    margin-top: auto !important;
+    width: 100% !important;
+  }
+
+  /* ลดขนาด font หรือ padding ลงถ้าต้องการให้ยัดเนื้อหาลงในหน้าเดียว */
+  body, input, select, textarea, label, p, h3 {
+    font-size: 11px !important;
+    line-height: 1.2 !important;
+  }
+  table.pr-table th, .pr-table td {
+    font-size: 10px !important;
+    padding: 2px !important;
+  }
+  textarea {
+    resize: none !important;
+    height: 40px !important;
+  }
+  input[type="text"],
+  input[type="number"],
+  input[type="date"],
+  select {
+    padding: 2px !important;
+  }
+
+  .pr-table td input {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .print-page {
+    /* ตั้งความกว้างเท่าหน้ากระดาษ A4 (210mm) */
+    width: 210mm; 
+    margin: 0 auto; 
+    /* ปรับ scale ตามต้องการ เช่น 1.02 = ขยาย 105% */
+    transform: scale(1);
+    transform-origin: top left;
+  }
+
+  .sign-table {
+    margin-top: 20px !important; /* ตัวอย่าง ให้มีระยะเล็กน้อยแทนที่จะชิดล่างสุด */
+  }
+}
+
+
+
+
+

@@ -1,0 +1,44 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './Sidebar.css'; // ใช้สำหรับสไตล์
+
+const Sidebar = () => {
+  return (
+    <div className="sidebar">
+      {/* ปุ่ม Home วางบนสุด */}
+      <ul>
+        <li>
+          <Link to="/">🏠 Home</Link>
+        </li>
+      </ul>
+
+      <h2>📂 Document Forms</h2>
+      <ul>
+        <li>
+          <Link to="/form/capex-request">💰 CAPEX Request</Link>
+          <ul className="submenu">
+            <li>
+              <Link to="/form/capex-request/major">
+                &nbsp;&nbsp;🔷 Major Capital Request
+              </Link>
+            </li>
+            <li>
+              <Link to="/form/capex-request/minor">
+                &nbsp;&nbsp;🔶 Minor Capital Request
+              </Link>
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <Link to="/form/purchase-request">📄 Purchase Request</Link>
+        </li>
+        <li>
+          <Link to="/form/travel-request">✈️ Travel Request</Link>
+        </li>
+      </ul>
+    </div>
+  );
+};
+
+export default Sidebar;
