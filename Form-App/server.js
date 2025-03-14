@@ -1,4 +1,6 @@
-﻿require('dotenv').config();
+﻿// Load environment variables from .env file
+require('dotenv').config();
+
 const puppeteer = require('puppeteer');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -8,6 +10,9 @@ const path = require('path');
 const nodemailer = require('nodemailer');
 const fs = require('fs');
 const PdfPrinter = require('pdfmake');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const ActiveDirectory = require('activedirectory2');
 // const { default: PurchaseRequestForm } = require('../form-frontend/src/pages/PurchaseRequestForm');
 
 const app = express();
@@ -61,7 +66,7 @@ const fonts = {
     }
 };
 
-async function generatePDFwithPuppeteer(formId) {
+async function generatePDFwithPuppeteer(formId, token) {
   const url = `http://192.168.17.15:5000/view/${formId}`;
   
   // เปิดเบราว์เซอร์แบบ headless
@@ -69,7 +74,12 @@ async function generatePDFwithPuppeteer(formId) {
   try {
     const page = await browser.newPage();
     
-    // ตั้งค่า viewport ให้ชัดเจน (ตัวอย่าง 1280x800)
+    // Set localStorage before navigating
+    await page.evaluateOnNewDocument((token) => {
+      localStorage.setItem('token', token);
+    }, token);
+    
+    // ตั้งค่า viewport ให้ชัดเจน
     await page.setViewport({ width: 1280, height: 800 });
     
     // ไปที่หน้าเว็บและรอจนโหลดเสร็จ
@@ -77,23 +87,12 @@ async function generatePDFwithPuppeteer(formId) {
     // รอเพิ่มเติม 2 วินาทีเพื่อให้หน้า render ครบถ้วน
     await new Promise(resolve => setTimeout(resolve, 2000));
     
-    // Debug: ถ่าย screenshot เพื่อตรวจสอบว่า page render ถูกต้องหรือไม่
-    await page.screenshot({ path: `debug_${formId}.png`, fullPage: true });
-    console.log(`[DEBUG] Screenshot saved: debug_${formId}.png`);
-    
-    // Debug: ดู snippet ของ HTML ที่ Puppeteer ได้
-    const content = await page.content();
-    console.log("[DEBUG] Puppeteer HTML snippet:", content.slice(0, 300));
-    
-    // สั่งสร้าง PDF (กำหนดให้มี background ด้วย)
+    // สั่งสร้าง PDF
     const pdfBuffer = await page.pdf({
       format: 'A4',
       printBackground: true,
       margin: { top: '20px', right: '20px', bottom: '20px', left: '20px' }
     });
-    
-    console.log("[DEBUG] Generated PDF Buffer length:", pdfBuffer.length);
-    console.log("[DEBUG] Generated PDF Buffer snippet (first 50 bytes):", pdfBuffer.slice(0, 50).toString());
     
     return pdfBuffer;
   } finally {
@@ -170,6 +169,24 @@ async function generatePDF(form) {
     });
 }
 
+// เพิ่ม middleware สำหรับตรวจสอบ token
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบ' });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).json({ error: 'Token ไม่ถูกต้องหรือหมดอายุ' });
+    }
+    req.user = user;
+    next();
+  });
+};
+
 // API ส่งอีเมลธรรมดา (optional) ---------------------------------------
 app.post('/api/send-email', async (req, res) => {
     const { to, subject, message } = req.body;
@@ -191,42 +208,43 @@ app.post('/api/send-email', async (req, res) => {
 });
 
 // บันทึกฟอร์ม และ return ID -------------------------------------------
-app.post('/api/forms', async (req, res) => {
-    try {
-        const { form_name, user_name, department, details, supervisorEmail } = req.body;
-        if (!form_name || !user_name) {
-            return res.status(400).json({ error: "form_name และ user_name จำเป็นต้องมีข้อมูล" });
-        }
-        const pool = await sql.connect(dbConfig);
-        // ใช้ OUTPUT Inserted.id เพื่อ return ID ที่เพิ่ง Insert
-        const result = await pool.request()
-        .input('form_name', sql.NVarChar(255), form_name)
-        .input('user_name', sql.NVarChar(255), user_name)
-        .input('department', sql.NVarChar(255), department)
-        .input('details', sql.NVarChar(sql.MAX), details)
-            .query(`
-                INSERT INTO Forms (form_name, user_name, department, details)
-                OUTPUT Inserted.id
-                VALUES (@form_name, @user_name, @department, @details);
-            `);
+app.post('/api/forms', authenticateToken, async (req, res) => {
+  try {
+    const { form_name, user_name, department, details, status } = req.body;
+    const pool = await sql.connect(dbConfig);
+    const request = new sql.Request();
+    
+    request
+      .input('form_name', sql.NVarChar, form_name)
+      .input('user_name', sql.NVarChar, user_name)
+      .input('department', sql.NVarChar, department)
+      .input('details', sql.NVarChar, JSON.stringify(details))
+      .input('status', sql.NVarChar, status || 'Draft')
+      .input('request_date', sql.DateTime, new Date());
 
-        const insertedId = result.recordset[0].id; // ดึง ID ที่เพิ่งแทรก
-        res.status(201).json({
-            success: true,
-            message: "✅ บันทึกฟอร์มสำเร็จ",
-            insertedId
-        });
-    } catch (error) {
-        console.error("❌ Error inserting form:", error);
-        res.status(500).json({ error: "เกิดข้อผิดพลาดในการบันทึกข้อมูล" });
-    }
+    const result = await request.query(`
+      INSERT INTO FormsSystem.Forms 
+      (form_name, user_name, department, details, status, request_date)
+      VALUES 
+      (@form_name, @user_name, @department, @details, @status, @request_date);
+      SELECT SCOPE_IDENTITY() as insertedId;
+    `);
+
+    res.json({ 
+      message: 'Form submitted successfully', 
+      insertedId: result.recordset[0].insertedId 
+    });
+  } catch (error) {
+    console.error('Error submitting form:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 // ดึงข้อมูลฟอร์มทั้งหมด ----------------------------------------------
-app.get('/api/forms', async (req, res) => {
+app.get('/api/forms', authenticateToken, async (req, res) => {
     try {
         const pool = await sql.connect(dbConfig);
-        const result = await pool.request().query("SELECT * FROM Forms ORDER BY request_date DESC");
+        const result = await pool.request().query("SELECT * FROM FormsSystem.Forms ORDER BY request_date DESC");
         res.status(200).json(result.recordset);
     } catch (error) {
         console.error("❌ Error fetching forms:", error);
@@ -234,52 +252,105 @@ app.get('/api/forms', async (req, res) => {
     }
 });
 
-// ลบฟอร์ม -------------------------------------------------------------
-app.delete('/api/forms/:id', async (req, res) => {
+// ดึงข้อมูลฟอร์มของผู้ใช้ที่ล็อกอินเท่านั้น ----------------------------------------------
+app.get('/api/forms/my-forms', authenticateToken, async (req, res) => {
     try {
-        const { id } = req.params;
         const pool = await sql.connect(dbConfig);
         const result = await pool.request()
-            .input('id', sql.Int, id)
-            .query("DELETE FROM Forms WHERE id = @id");
-        if (result.rowsAffected[0] === 0) {
-            return res.status(404).json({ error: "ไม่พบฟอร์มที่ต้องการลบ" });
-        }
-        res.status(200).json({ message: "✅ ลบฟอร์มสำเร็จ" });
+            .input('user_name', sql.NVarChar, req.user.name)
+            .query(`
+                SELECT id, form_name, user_name, department, status, request_date, details
+                FROM FormsSystem.Forms 
+                WHERE user_name = @user_name 
+                ORDER BY request_date DESC
+            `);
+
+        // แปลง details เป็น JSON object ถ้าเป็น string
+        const forms = result.recordset.map(form => {
+            if (typeof form.details === 'string') {
+                try {
+                    form.details = JSON.parse(form.details);
+                } catch (err) {
+                    console.error("Error parsing details:", err);
+                }
+            }
+            return form;
+        });
+
+        res.status(200).json(forms);
     } catch (error) {
-        console.error("❌ Error deleting form:", error);
-        res.status(500).json({ error: "เกิดข้อผิดพลาดในการลบข้อมูล" });
+        console.error("❌ Error fetching user forms:", error);
+        res.status(500).json({ error: "เกิดข้อผิดพลาดในการดึงข้อมูล" });
     }
 });
 
-// API สร้าง PDF (ดาวน์โหลด) -------------------------------------------
-app.get('/api/forms/:id/pdf', async (req, res) => {
+// ดึงข้อมูลฟอร์มตาม ID ----------------------------------------------
+app.get('/api/forms/:id', authenticateToken, async (req, res) => {
   try {
-    const { id } = req.params;
-    console.log(`[DEBUG] Generating PDF for form ID: ${id}`);
-    const pdfBuffer = await generatePDFwithPuppeteer(id);
+    const id = parseInt(req.params.id);
+    
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "รูปแบบ ID ไม่ถูกต้อง" });
+    }
 
-    console.log("[DEBUG] PDF Buffer length:", pdfBuffer.length);
-    console.log("[DEBUG] PDF Buffer snippet (first 50 bytes):", pdfBuffer.slice(0, 50).toString());
-    fs.writeFileSync(`debug_${id}.pdf`, pdfBuffer);
-    console.log(`[DEBUG] Saved debug PDF as debug_${id}.pdf`);
+    const pool = await sql.connect(dbConfig);
+    const result = await pool.request()
+      .input('id', sql.Int, id)
+      .query(`
+        SELECT id, form_name, user_name, department, details, status, request_date
+        FROM FormsSystem.Forms 
+        WHERE id = @id
+      `);
+
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ error: "ไม่พบฟอร์มที่ต้องการ" });
+    }
+
+    // แปลง details เป็น JSON object ถ้าเป็น string
+    const form = result.recordset[0];
+    if (typeof form.details === 'string') {
+      try {
+        form.details = JSON.parse(form.details);
+      } catch (err) {
+        console.error("Error parsing details:", err);
+      }
+    }
+
+    res.json(form);
+  } catch (error) {
+    console.error("❌ Error fetching form:", error);
+    res.status(500).json({ error: "เกิดข้อผิดพลาดในการดึงข้อมูล" });
+  }
+});
+
+// API สร้าง PDF (ดาวน์โหลด)
+app.get('/api/forms/:id/pdf', authenticateToken, async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "รูปแบบ ID ไม่ถูกต้อง" });
+    }
+
+    const token = req.headers.authorization.split(' ')[1];
+    const pdfBuffer = await generatePDFwithPuppeteer(id, token);
 
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `inline; filename="form_${id}.pdf"`);
-    console.log("[DEBUG] Sending PDF response...");
     res.write(pdfBuffer);
     res.end();
-    console.log("[DEBUG] PDF response sent.");
   } catch (error) {
-    console.error("❌ Error generating PDF with Puppeteer:", error);
+    console.error("❌ Error generating PDF:", error);
     res.status(500).json({ error: "เกิดข้อผิดพลาดในการสร้าง PDF" });
   }
 });
 
-// API สร้าง PDF แล้วส่งอีเมลแนบไฟล์ ----------------------------------
-app.post('/api/forms/pdf-email', async (req, res) => {
+// API สร้าง PDF แล้วส่งอีเมลแนบไฟล์
+app.post('/api/forms/pdf-email', authenticateToken, async (req, res) => {
     try {
         const { id, email } = req.body;
+        const token = req.headers.authorization.split(' ')[1];
+        
         if (!id || !email) {
             return res.status(400).json({ error: "Missing id or email" });
         }
@@ -287,7 +358,7 @@ app.post('/api/forms/pdf-email', async (req, res) => {
         const pool = await sql.connect(dbConfig);
         const result = await pool.request()
             .input('id', sql.Int, id)
-            .query("SELECT * FROM Forms WHERE id = @id");
+            .query("SELECT * FROM FormsSystem.Forms WHERE id = @id");
 
         if (result.recordset.length === 0) {
             return res.status(404).json({ error: "ไม่พบฟอร์ม" });
@@ -295,7 +366,7 @@ app.post('/api/forms/pdf-email', async (req, res) => {
 
         const form = result.recordset[0];
         const requesterName = form.user_name;
-        const pdfBuffer = await generatePDFwithPuppeteer(id);
+        const pdfBuffer = await generatePDFwithPuppeteer(id, token);
 
         await transporter.sendMail({
             from: `"NWFTH - Forms System" <${process.env.EMAIL_USER}>`,
@@ -388,6 +459,7 @@ app.post('/api/forms/pdf-email', async (req, res) => {
 // Serve static files from the build directory
 app.use(express.static(path.join(__dirname, 'build')));
 
+// ต้องย้าย route นี้ไปไว้ด้านล่างสุด หลังจาก API routes ทั้งหมด
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
@@ -399,4 +471,410 @@ app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
 // ทดสอบ
 app.get('/', (req, res) => {
     res.send('✅ Server is running...');
+});
+
+// กำหนดค่า Active Directory
+const adConfig = {
+  url: process.env.AD_URL,
+  baseDN: process.env.AD_BASE_DN,
+  username: process.env.AD_USERNAME,
+  password: process.env.AD_PASSWORD,
+  tlsOptions: {
+    rejectUnauthorized: false
+  },
+  attributes: {
+    user: [
+      'dn', 'distinguishedName',
+      'userPrincipalName', 'sAMAccountName', 'mail',
+      'displayName', 'givenName', 'sn', 'department',
+      'title', 'manager', 'memberOf'
+    ]
+  }
+};
+
+// ฟังก์ชันสำหรับตรวจสอบการเชื่อมต่อ AD
+async function testADConnection() {
+  const ad = new ActiveDirectory(adConfig);
+  
+  return new Promise((resolve, reject) => {
+    ad.authenticate(process.env.AD_USERNAME, process.env.AD_PASSWORD, (err, auth) => {
+      if (err) {
+        console.error('❌ AD Connection test failed:', err);
+        reject(err);
+        return;
+      }
+      
+      if (auth) {
+        console.log('✅ AD Connection successful');
+        resolve(true);
+      } else {
+        console.error('❌ AD Authentication failed');
+        reject(new Error('Authentication failed'));
+      }
+    });
+  });
+}
+
+// เรียกใช้ฟังก์ชันทดสอบเมื่อเริ่มต้นเซิร์ฟเวอร์
+testADConnection().catch(err => {
+  console.error('❌ Initial AD connection test failed:', err);
+});
+
+// API สำหรับ login
+app.post('/api/login', async (req, res) => {
+  try {
+    const { email, password, rememberMe, useDomain } = req.body;
+    
+    if (useDomain) {
+      // Domain Authentication
+      const ad = new ActiveDirectory(adConfig);
+      let username = email;
+
+      // รองรับทั้งรูปแบบ username และ email
+      if (email.includes('@')) {
+        if (!email.endsWith('@newlywedsfoods.co.th')) {
+          username = email.split('@')[0] + '@newlywedsfoods.co.th';
+        }
+      } else {
+        username = email + '@newlywedsfoods.co.th';
+      }
+
+      try {
+        console.log('Attempting AD authentication with username:', username);
+        const auth = await new Promise((resolve, reject) => {
+          ad.authenticate(username, password, (err, auth) => {
+            if (err) {
+              console.error('❌ AD Authentication error:', err);
+              reject(err);
+              return;
+            }
+            resolve(auth);
+          });
+        });
+
+        if (!auth) {
+          return res.status(401).json({ error: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง' });
+        }
+
+        // ค้นหาข้อมูลผู้ใช้จาก AD
+        const user = await new Promise((resolve, reject) => {
+          ad.findUser(username, (err, user) => {
+            if (err) {
+              console.error('❌ AD Find user error:', err);
+              reject(err);
+              return;
+            }
+            resolve(user);
+          });
+        });
+
+        if (!user) {
+          return res.status(404).json({ error: 'ไม่พบข้อมูลผู้ใช้ใน Domain' });
+        }
+
+        // ตรวจสอบว่ามีผู้ใช้ในฐานข้อมูลหรือไม่
+        const pool = await sql.connect(dbConfig);
+        let dbUser = await pool.request()
+          .input('email', sql.NVarChar(255), user.mail || email)
+          .query('SELECT * FROM FormsSystem.Users WHERE email = @email');
+
+        if (dbUser.recordset.length === 0) {
+          // ถ้าไม่มีให้สร้างผู้ใช้ใหม่
+          await pool.request()
+            .input('email', sql.NVarChar(255), user.mail || email)
+            .input('name', sql.NVarChar(255), user.displayName)
+            .input('department', sql.NVarChar(255), user.department || '')
+            .input('role', sql.NVarChar(50), 'user')
+            .input('password', sql.NVarChar(255), 'AD_USER')
+            .query(`
+              INSERT INTO FormsSystem.Users (email, name, department, role, is_domain_user, password)
+              VALUES (@email, @name, @department, @role, 1, @password);
+            `);
+
+          dbUser = await pool.request()
+            .input('email', sql.NVarChar(255), user.mail || email)
+            .query('SELECT * FROM FormsSystem.Users WHERE email = @email');
+        }
+
+        const userInfo = dbUser.recordset[0];
+        const tokenExpiration = rememberMe ? '7d' : '1d';
+        const token = jwt.sign(
+          {
+            id: userInfo.id,
+            email: userInfo.email,
+            name: userInfo.name,
+            role: userInfo.role,
+            isDomainUser: true
+          },
+          process.env.JWT_SECRET,
+          { expiresIn: tokenExpiration }
+        );
+
+        res.json({
+          token,
+          user: {
+            id: userInfo.id,
+            email: userInfo.email,
+            name: userInfo.name,
+            role: userInfo.role,
+            isDomainUser: true
+          }
+        });
+
+      } catch (adError) {
+        console.error('❌ AD Error:', adError);
+        return res.status(401).json({ 
+          error: 'การยืนยันตัวตนผ่าน Domain ไม่สำเร็จ',
+          details: process.env.NODE_ENV === 'development' ? adError.message : undefined
+        });
+      }
+    } else {
+      // Local Authentication (existing code)
+      const pool = await sql.connect(dbConfig);
+      const result = await pool.request()
+        .input('email', sql.NVarChar(255), email)
+        .query('SELECT * FROM FormsSystem.Users WHERE email = @email AND is_domain_user = 0');
+      
+      const user = result.recordset[0];
+      
+      if (!user) {
+        return res.status(401).json({ error: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' });
+      }
+      
+      const validPassword = await bcrypt.compare(password, user.password);
+      if (!validPassword) {
+        return res.status(401).json({ error: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' });
+      }
+      
+      const tokenExpiration = rememberMe ? '7d' : '1d';
+      const token = jwt.sign(
+        { 
+          id: user.id, 
+          email: user.email,
+          name: user.name,
+          role: user.role 
+        }, 
+        process.env.JWT_SECRET,
+        { expiresIn: tokenExpiration }
+      );
+      
+      res.json({
+        token,
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role
+        }
+      });
+    }
+  } catch (error) {
+    console.error('❌ Error during login:', error);
+    res.status(500).json({ 
+      error: 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+});
+
+// API สำหรับลงทะเบียน
+app.post('/api/register', async (req, res) => {
+  try {
+    const { email, password, name, department } = req.body;
+    
+    const pool = await sql.connect(dbConfig);
+    const checkEmail = await pool.request()
+      .input('email', sql.NVarChar(255), email)
+      .query('SELECT id FROM FormsSystem.Users WHERE email = @email');
+    
+    if (checkEmail.recordset.length > 0) {
+      return res.status(400).json({ error: 'อีเมลนี้ถูกใช้งานแล้ว' });
+    }
+    
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    await pool.request()
+      .input('email', sql.NVarChar(255), email)
+      .input('password', sql.NVarChar(255), hashedPassword)
+      .input('name', sql.NVarChar(255), name)
+      .input('department', sql.NVarChar(255), department)
+      .input('role', sql.NVarChar(50), 'user')
+      .query(`
+        INSERT INTO FormsSystem.Users (email, password, name, department, role)
+        VALUES (@email, @password, @name, @department, @role);
+      `);
+    
+    res.status(201).json({ message: 'ลงทะเบียนสำเร็จ' });
+  } catch (error) {
+    console.error('❌ Error during registration:', error);
+    res.status(500).json({ error: 'เกิดข้อผิดพลาดในการลงทะเบียน' });
+  }
+});
+
+// API สำหรับรีเซ็ตรหัสผ่าน
+app.post('/api/reset-password-request', async (req, res) => {
+  try {
+    const { email } = req.body;
+    
+    const pool = await sql.connect(dbConfig);
+    const result = await pool.request()
+      .input('email', sql.NVarChar(255), email)
+      .query('SELECT id, name FROM FormsSystem.Users WHERE email = @email');
+    
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ error: 'ไม่พบอีเมลนี้ในระบบ' });
+    }
+    
+    const user = result.recordset[0];
+    const resetToken = jwt.sign(
+      { id: user.id, email },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+    
+    await pool.request()
+      .input('userId', sql.Int, user.id)
+      .input('resetToken', sql.NVarChar(500), resetToken)
+      .input('expiry', sql.DateTime, new Date(Date.now() + 3600000))
+      .query(`
+        INSERT INTO FormsSystem.PasswordResets (user_id, reset_token, expiry)
+        VALUES (@userId, @resetToken, @expiry)
+      `);
+    
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+    await transporter.sendMail({
+      from: `"NWFTH - Forms System" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: 'รีเซ็ตรหัสผ่าน',
+      html: `
+        <h3>สวัสดีคุณ ${user.name}</h3>
+        <p>คุณได้ขอรีเซ็ตรหัสผ่านสำหรับบัญชีของคุณ</p>
+        <p>กรุณาคลิกที่ลิงก์ด้านล่างเพื่อตั้งรหัสผ่านใหม่:</p>
+        <a href="${resetLink}">รีเซ็ตรหัสผ่าน</a>
+        <p>ลิงก์นี้จะหมดอายุใน 1 ชั่วโมง</p>
+      `
+    });
+    
+    res.json({ message: 'ส่งอีเมลรีเซ็ตรหัสผ่านแล้ว กรุณาตรวจสอบอีเมลของคุณ' });
+  } catch (error) {
+    console.error('❌ Error requesting password reset:', error);
+    res.status(500).json({ error: 'เกิดข้อผิดพลาดในการขอรีเซ็ตรหัสผ่าน' });
+  }
+});
+
+// API สำหรับตั้งรหัสผ่านใหม่
+app.post('/api/reset-password', async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    const pool = await sql.connect(dbConfig);
+    
+    const resetCheck = await pool.request()
+      .input('token', sql.NVarChar(500), token)
+      .input('now', sql.DateTime, new Date())
+      .query(`
+        SELECT user_id 
+        FROM FormsSystem.PasswordResets 
+        WHERE reset_token = @token 
+        AND expiry > @now 
+        AND used = 0
+      `);
+    
+    if (resetCheck.recordset.length === 0) {
+      return res.status(400).json({ error: 'Token ไม่ถูกต้องหรือหมดอายุ' });
+    }
+    
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    
+    await pool.request()
+      .input('id', sql.Int, decoded.id)
+      .input('password', sql.NVarChar(255), hashedPassword)
+      .query('UPDATE FormsSystem.Users SET password = @password WHERE id = @id');
+    
+    await pool.request()
+      .input('token', sql.NVarChar(500), token)
+      .query('UPDATE FormsSystem.PasswordResets SET used = 1 WHERE reset_token = @token');
+    
+    res.json({ message: 'รีเซ็ตรหัสผ่านสำเร็จ' });
+  } catch (error) {
+    console.error('❌ Error resetting password:', error);
+    res.status(500).json({ error: 'เกิดข้อผิดพลาดในการรีเซ็ตรหัสผ่าน' });
+  }
+});
+
+// API สำหรับแก้ไขฟอร์ม
+app.put('/api/forms/:id', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { form_name, user_name, department, details, status } = req.body;
+    
+    const pool = await sql.connect(dbConfig);
+    const result = await pool.request()
+      .input('id', sql.Int, id)
+      .input('form_name', sql.NVarChar, form_name)
+      .input('user_name', sql.NVarChar, user_name)
+      .input('department', sql.NVarChar, department)
+      .input('details', sql.NVarChar, details)
+      .input('status', sql.NVarChar, status)
+      .query(`
+        UPDATE FormsSystem.Forms 
+        SET form_name = @form_name,
+            user_name = @user_name,
+            department = @department,
+            details = @details,
+            status = @status
+        WHERE id = @id;
+      `);
+
+    if (result.rowsAffected[0] === 0) {
+      return res.status(404).json({ error: 'ไม่พบฟอร์มที่ต้องการแก้ไข' });
+    }
+
+    res.json({ message: 'อัพเดทฟอร์มสำเร็จ' });
+  } catch (error) {
+    console.error('Error updating form:', error);
+    res.status(500).json({ error: 'เกิดข้อผิดพลาดในการอัพเดทฟอร์ม' });
+  }
+});
+
+// API สำหรับลบฟอร์ม
+app.delete('/api/forms/:id', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const pool = await sql.connect(dbConfig);
+    
+    // เช็คว่าฟอร์มมีอยู่จริงหรือไม่
+    const checkForm = await pool.request()
+      .input('id', sql.Int, id)
+      .query('SELECT status FROM FormsSystem.Forms WHERE id = @id');
+    
+    if (checkForm.recordset.length === 0) {
+      return res.status(404).json({ error: 'ไม่พบฟอร์มที่ต้องการลบ' });
+    }
+
+    // เช็คสถานะฟอร์ม
+    const formStatus = checkForm.recordset[0].status;
+    if (formStatus !== 'Draft') {
+      return res.status(400).json({ 
+        error: 'ไม่สามารถลบฟอร์มที่อยู่ในสถานะ Waiting For Approve หรือ Approved ได้' 
+      });
+    }
+
+    // ลบฟอร์ม
+    const result = await pool.request()
+      .input('id', sql.Int, id)
+      .query('DELETE FROM FormsSystem.Forms WHERE id = @id');
+
+    if (result.rowsAffected[0] === 0) {
+      return res.status(404).json({ error: 'ไม่พบฟอร์มที่ต้องการลบ' });
+    }
+
+    res.json({ message: 'ลบฟอร์มสำเร็จ' });
+  } catch (error) {
+    console.error('Error deleting form:', error);
+    res.status(500).json({ error: 'เกิดข้อผิดพลาดในการลบฟอร์ม' });
+  }
 });

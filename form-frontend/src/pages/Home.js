@@ -1,7 +1,7 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import '../components/Home.css';
+import '../styles/Home.css';
 
 // Chart.js
 import {
@@ -27,12 +27,26 @@ const Home = () => {
 
   const fetchForms = async () => {
     try {
-      // แก้ให้ชี้ไปที่ IP/PORT ของ Server ที่ถูกต้อง
-      const response = await axios.get('http://192.168.17.15:5000/api/forms');
-      setForms(response.data);
+      const token = localStorage.getItem('token');
+      console.log('Token:', token);
+      
+      const response = await axios.get('http://192.168.17.15:5000/api/forms', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      console.log('API Response:', response.data);
+      
+      // กรองเอกสารที่ไม่ใช่ Draft สำหรับตาราง
+      const nonDraftForms = response.data.filter(form => form.status !== 'Draft');
+      setForms(nonDraftForms);
 
+      // Process dashboard data - เฉพาะเอกสารที่ไม่ใช่ Draft
       const currentYear = new Date().getFullYear();
-      const purchaseRequests = response.data.filter(f => f.form_name === 'Purchase Request');
+      const purchaseRequests = response.data.filter(f => 
+        f.form_name === 'Purchase Request' && 
+        f.status !== 'Draft'
+      );
 
       const deptMap = {};
       purchaseRequests.forEach((form) => {
@@ -40,6 +54,7 @@ const Home = () => {
         try {
           details = JSON.parse(form.details);
         } catch (err) {}
+        
         const formYear = details.date ? new Date(details.date).getFullYear() : null;
         if (formYear === currentYear) {
           const dept = form.department || 'Unknown Department';
@@ -60,17 +75,28 @@ const Home = () => {
       setDashboardData(dashArray);
 
     } catch (error) {
-      console.error('❌ Error fetching forms:', error);
+      console.error('❌ Error fetching forms:', error.response?.data || error.message);
     }
   };
 
   const deleteForm = async (id) => {
     if (window.confirm("ต้องการลบฟอร์มนี้จริงหรือไม่?")) {
       try {
-        await axios.delete(`http://192.168.17.15:5000/api/forms/${id}`);
-        fetchForms();
+        const token = localStorage.getItem('token');
+        const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+        
+        const response = await axios.delete(`${baseUrl}/api/forms/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        alert(response.data.message); // แสดงข้อความเมื่อลบสำเร็จ
+        fetchForms(); // โหลดข้อมูลใหม่
       } catch (error) {
         console.error('❌ Error deleting form:', error);
+        // แสดง error message จาก server
+        alert('❌ ' + (error.response?.data?.error || 'เกิดข้อผิดพลาดในการลบฟอร์ม'));
       }
     }
   };
@@ -130,9 +156,9 @@ const Home = () => {
   return (
     <div className="home-container">
       <div className="dashboard-section">
-        <h1 className="dashboard-title">📊 Dashboard - Purchase Requests (Current Year)</h1>
+        <h1 className="dashboard-title">📊 Dashboard - Approved Purchase Requests (Current Year)</h1>
         {dashboardData.length === 0 ? (
-          <p>ยังไม่มีข้อมูล Purchase Request ของปีนี้</p>
+          <p>ยังไม่มีข้อมูล Purchase Request ที่อนุมัติของปีนี้</p>
         ) : (
           <div className="dashboard-cards">
             {/* Summary Table */}
@@ -177,17 +203,18 @@ const Home = () => {
         )}
       </div>
 
-      <h2 className="all-forms-title">📝 All Forms in system</h2>
+      <h2 className="all-forms-title">📝 All Submitted Forms</h2>
       {forms.length === 0 ? (
-        <p>🔄 ไม่มีข้อมูลฟอร์ม</p>
+        <p>🔄 ไม่มีข้อมูลฟอร์มที่ส่งแล้ว</p>
       ) : (
         <table className="forms-table">
           <thead>
             <tr>
               <th>ID</th>
-              <th>Form Name</th>
-              <th>User</th>
+              <th>Form Type</th>
+              <th>Created By</th>
               <th>Department</th>
+              <th>Created Date</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -199,8 +226,20 @@ const Home = () => {
                 <td>{form.user_name}</td>
                 <td>{form.department}</td>
                 <td>
-                  <Link to={`/view/${form.id}`} className="action-link">🔎 see</Link> | 
-                  <button className="delete-btn" onClick={() => deleteForm(form.id)}>🗑 Delete</button>
+                  {form.request_date ? 
+                    new Date(form.request_date).toLocaleString('en-US', {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: false
+                    })
+                    : '-'
+                  }
+                </td>
+                <td>
+                  <Link to={`/view/${form.id}`} className="action-link">🔎 View</Link>
                 </td>
               </tr>
             ))}

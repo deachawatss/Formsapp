@@ -1,16 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import '../components/PurchaseRequest.css';
+import '../styles/PurchaseRequest.css';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const PurchaseRequestForm = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { search } = useLocation();
+  const queryParams = new URLSearchParams(search);
+  const formId = queryParams.get('id');
+  const user = JSON.parse(localStorage.getItem('user'));
+  const formDataFromState = location.state?.formData;
+
   const [formData, setFormData] = useState({
-    name: '',
+    name: user?.name || '',
     department: '',
     date: new Date().toISOString().split('T')[0],
-    
+    status: 'Draft',
     items: [
-      { description: '', unit: '', quantity: '', cost: '', amount: '' },
-      { description: '', unit: '', quantity: '', cost: '', amount: '' },
+      { description: '', unit: '', quantity: '', cost: '', amount: '' }
     ],
     remarks: '',
     vendorName: '',
@@ -35,7 +43,6 @@ const PurchaseRequestForm = () => {
     dateGeneralManager: ''
   });
 
-  
   const [insertedId, setInsertedId] = useState(null);
   const [isSendingEmail, setIsSendingEmail] = useState(false);
 
@@ -52,6 +59,85 @@ const PurchaseRequestForm = () => {
 
   const currencies = ['AUD', 'JPY', 'EUR', 'THB', 'USD', 'PHP'];
   const termsList = ['7 Days', '15 Days', '30 Days', '45 Days', '60 Days', 'CASH', 'Bank Transfer', 'TT Advance'];
+
+  const fetchFormData = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/forms/${formId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const { details, user_name, department } = response.data;
+      let parsedDetails = {};
+      
+      if (typeof details === 'string') {
+        parsedDetails = JSON.parse(details);
+      } else {
+        parsedDetails = details;
+      }
+
+      const newFormData = {
+        name: parsedDetails.name || user_name || user?.name || '',
+        department: parsedDetails.department || department || '',
+        date: new Date().toISOString().split('T')[0],
+        status: 'Draft',
+        items: parsedDetails.items || [{ description: '', unit: '', quantity: '', cost: '', amount: '' }],
+        remarks: parsedDetails.remarks || '',
+        vendorName: parsedDetails.vendorName || '',
+        vendorAddress1: parsedDetails.vendorAddress1 || '',
+        vendorAddress2: parsedDetails.vendorAddress2 || '',
+        vendorZip: parsedDetails.vendorZip || '',
+        CountryZip: parsedDetails.CountryZip || '',
+        currency: parsedDetails.currency || 'THB',
+        terms: parsedDetails.terms || '7 Days',
+        attn: parsedDetails.attn || '',
+        supervisorEmail: parsedDetails.supervisorEmail || '',
+        deliveryDate: parsedDetails.deliveryDate || '',
+        reasonType: parsedDetails.reasonType || '',
+        reasonComments: parsedDetails.reasonComments || '',
+        depManagerComment: parsedDetails.depManagerComment || '',
+        gmComment: parsedDetails.gmComment || '',
+        signRequester: parsedDetails.signRequester || '',
+        dateRequester: parsedDetails.dateRequester || '',
+        signDepartmentManager: parsedDetails.signDepartmentManager || '',
+        dateDepartmentManager: parsedDetails.dateDepartmentManager || '',
+        signGeneralManager: parsedDetails.signGeneralManager || '',
+        dateGeneralManager: parsedDetails.dateGeneralManager || ''
+      };
+
+      setFormData(newFormData);
+      
+    } catch (error) {
+      console.error('Error fetching form:', error);
+      alert('เกิดข้อผิดพลาดในการดึงข้อมูลฟอร์ม');
+    }
+  }, [formId, user?.name]);
+
+  useEffect(() => {
+    if (formId) {
+      if (formDataFromState) {
+        try {
+          const details = typeof formDataFromState.details === 'string' 
+            ? JSON.parse(formDataFromState.details)
+            : formDataFromState.details;
+          
+          setFormData(prev => ({
+            ...prev,
+            ...details,
+            name: formDataFromState.user_name || user?.name || '',
+            department: details.department || formDataFromState.department || ''
+          }));
+        } catch (error) {
+          console.error('Error parsing form data:', error);
+          fetchFormData();
+        }
+      } else {
+        fetchFormData();
+      }
+    }
+  }, [formId, formDataFromState, fetchFormData, user?.name]);
 
   // handleCellChange => ดัก onChange จาก <input> ในตาราง
   const handleCellChange = (e, rowIndex, field) => {
@@ -108,30 +194,98 @@ const PurchaseRequestForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Submit เฉพาะบันทึกฟอร์ม
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // แยกฟังก์ชันสำหรับ save draft
+  const handleSaveDraft = async () => {
     try {
-      const response = await axios.post('http://192.168.17.15:5000/api/forms', {
+      const token = localStorage.getItem('token');
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      
+      // แก้ไขการสร้าง URL
+      const url = formId 
+        ? `${baseUrl}/api/forms/${formId}`
+        : `${baseUrl}/api/forms`;
+      
+      const method = formId ? 'put' : 'post';
+      
+      console.log('Sending request to:', url);
+      console.log('Method:', method);
+      console.log('Form ID:', formId);
+      
+      const response = await axios[method](url, {
         form_name: "Purchase Request",
         user_name: formData.name,
         department: formData.department,
+        status: 'Draft',
         details: JSON.stringify({
           ...formData,
           subTotal: subTotalNum,
           vat: vatNum,
           grandTotal: grandTotalNum
-        }),
-        supervisorEmail: formData.supervisorEmail
+        })
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
-      alert('✅ Form submitted successfully!');
 
-      // เก็บ insertedId ที่ได้จากการสร้างฟอร์มใหม่
-      const { insertedId } = response.data;
-      setInsertedId(insertedId);
+      alert('✅ Draft saved successfully!');
+      
+      const newFormId = response.data.insertedId || formId;
+      setInsertedId(newFormId);
+      
+      navigate('/my-forms');
     } catch (error) {
       console.error('❌ Error:', error);
-      alert('❌ Error submitting form');
+      console.error('Error response:', error.response);
+      alert('❌ Error saving draft: ' + (error.response?.data?.error || error.message));
+    }
+  };
+
+  // แก้ไข handleSubmit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token');
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      
+      // แก้ไขการสร้าง URL เหมือนกับ handleSaveDraft
+      const url = formId 
+        ? `${baseUrl}/api/forms/${formId}`
+        : `${baseUrl}/api/forms`;
+      
+      const method = formId ? 'put' : 'post';
+      
+      console.log('Sending request to:', url);
+      console.log('Method:', method);
+      console.log('Form ID:', formId);
+      
+      const response = await axios[method](url, {
+        form_name: "Purchase Request",
+        user_name: formData.name,
+        department: formData.department,
+        status: 'Waiting For Approve',
+        details: JSON.stringify({
+          ...formData,
+          subTotal: subTotalNum,
+          vat: vatNum,
+          grandTotal: grandTotalNum
+        })
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      alert('✅ Form submitted successfully!');
+      
+      const newFormId = response.data.insertedId || formId;
+      setInsertedId(newFormId);
+      
+      navigate('/my-forms');
+    } catch (error) {
+      console.error('❌ Error:', error);
+      console.error('Error response:', error.response);
+      alert('❌ Error submitting form: ' + (error.response?.data?.error || error.message));
     }
   };
 
@@ -148,7 +302,7 @@ const PurchaseRequestForm = () => {
   
     try {
       setIsSendingEmail(true);
-      await axios.post('http://192.168.17.15:5000/api/forms/pdf-email', {
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/forms/pdf-email`, {
         id: insertedId,
         email: formData.supervisorEmail
       });
@@ -189,8 +343,8 @@ const PurchaseRequestForm = () => {
               type="text"
               name="name"
               value={formData.name}
-              onChange={handleChange}
-              required
+              readOnly
+              style={{ backgroundColor: '#f0f0f0' }}
             />
 
             <label>Department:</label>
@@ -559,6 +713,10 @@ const PurchaseRequestForm = () => {
           </table>
 
           <div className="btn-row">
+            <button type="button" className="button draft-btn" onClick={handleSaveDraft}>
+              💾 Save as Draft
+            </button>
+
             <button type="submit" className="button submit-btn">
               📩 Submit Form
             </button>

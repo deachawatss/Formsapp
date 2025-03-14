@@ -16,10 +16,130 @@
 .logo {
     height: 35px; /* ลดขนาดโลโก้ */
     margin-right: 10px;
+    flex-shrink: 0; /* ป้องกันไม่ให้ logo หด */
 }
 
 .header h1 {
     font-size: 18px; /* ลดขนาดตัวอักษร */
     margin: 0;
     font-weight: bold;
+    white-space: nowrap; /* ป้องกันข้อความขึ้นบรรทัดใหม่ */
+    margin-right: 20px; /* เพิ่มระยะห่างจากชื่อผู้ใช้ */
+}
+
+/* เพิ่มส่วน user profile */
+.header-right {
+    margin-left: auto; /* ย้ายไปอยู่ขวาสุด */
+    min-width: 200px; /* กำหนดความกว้างขั้นต่ำ */
+    padding-left: 10px; /* เพิ่มระยะห่างจากซ้าย */
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    white-space: nowrap; /* ป้องกันข้อความขึ้นบรรทัดใหม่ */
+}
+
+.user-profile:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.user-icon {
+    font-size: 1.5rem;
+    color: white;
+    margin-right: 0.5rem;
+}
+
+.user-name {
+    color: white;
+    font-size: 14px;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 280px;
+    margin-top: 0.5rem;
+    overflow: hidden;
+}
+
+.user-info {
+    padding: 1rem;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+}
+
+.large-user-icon {
+    font-size: 2.5rem;
+    color: #666;
+    margin-right: 1rem;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.full-name {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.25rem;
+}
+
+.email {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background-color: #e9ecef;
+    margin: 0;
+}
+
+.logout-button {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #dc3545;
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+.logout-button:hover {
+    background-color: #fff5f5;
+}
+
+.logout-button svg {
+    margin-right: 0.75rem;
+}
+
+.my-forms-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    margin-right: 16px;
+}
+
+.my-forms-button:hover {
+    background-color: #45a049;
 }

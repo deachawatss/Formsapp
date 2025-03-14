@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import '../components/PurchaseRequest.css';
+import '../styles/PurchaseRequest.css';
 
 const ViewForm = () => {
   const { id } = useParams();
@@ -15,34 +15,131 @@ const ViewForm = () => {
 
   const fetchForm = async () => {
     try {
-      const response = await axios.get(`http://192.168.17.15:5000/api/forms`);
-      const foundForm = response.data.find(f => f.id === parseInt(id));
-      if (foundForm) {
-        setForm(foundForm);
-      } else {
-        alert("ไม่พบข้อมูลฟอร์ม");
+      const token = localStorage.getItem('token');
+      console.log("Fetching form with ID:", id);
+      console.log("Using token:", token);
+
+      if (!token) {
+        alert("กรุณาเข้าสู่ระบบใหม่");
+        return;
       }
+
+      const response = await axios.get(`http://192.168.17.15:5000/api/forms/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json'
+        }
+      });
+
+      console.log("Raw API Response:", response.data);
+      console.log("Response details type:", typeof response.data.details);
+      
+      // แปลง details เป็น object ถ้าเป็น string
+      let parsedDetails = {};
+      if (typeof response.data.details === 'string') {
+        try {
+          parsedDetails = JSON.parse(response.data.details);
+          console.log("Successfully parsed details:", parsedDetails);
+        } catch (err) {
+          console.error("Error parsing details:", err);
+          console.log("Raw details string:", response.data.details);
+        }
+      } else {
+        parsedDetails = response.data.details || {};
+        console.log("Details already an object:", parsedDetails);
+      }
+
+      // ตรวจสอบค่าที่จำเป็น
+      const formData = {
+        ...response.data,
+        details: {
+          ...parsedDetails,
+          items: parsedDetails.items || [],
+          name: parsedDetails.name || response.data.user_name || '',
+          department: parsedDetails.department || response.data.department || '',
+          date: parsedDetails.date || new Date().toLocaleDateString(),
+          subTotal: parsedDetails.subTotal || 0,
+          vat: parsedDetails.vat || 0,
+          grandTotal: parsedDetails.grandTotal || 0
+        }
+      };
+
+      console.log("Final processed form data:", formData);
+      setForm(formData);
+
     } catch (error) {
-      console.error("❌ Error fetching form:", error);
+      console.error("Error fetching form:", error);
+      console.error("Error response:", error.response?.data);
+      alert("เกิดข้อผิดพลาดในการดึงข้อมูล: " + (error.response?.data?.error || error.message));
     }
   };
 
-  const handleDownloadPDF = () => {
-    window.open(`http://192.168.17.15:5000/api/forms/${id}/pdf`, '_blank');
+  const handleDownloadPDF = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert("กรุณาเข้าสู่ระบบใหม่");
+      return;
+    }
+
+    try {
+      // แสดง loading message
+      const loadingDiv = document.createElement('div');
+      loadingDiv.style.position = 'fixed';
+      loadingDiv.style.top = '50%';
+      loadingDiv.style.left = '50%';
+      loadingDiv.style.transform = 'translate(-50%, -50%)';
+      loadingDiv.style.padding = '20px';
+      loadingDiv.style.background = 'rgba(0,0,0,0.8)';
+      loadingDiv.style.color = 'white';
+      loadingDiv.style.borderRadius = '10px';
+      loadingDiv.style.zIndex = '9999';
+      loadingDiv.textContent = '⌛ Generating PDF...';
+      document.body.appendChild(loadingDiv);
+
+      // เรียก API เพื่อดาวน์โหลด PDF
+      const response = await fetch(`http://192.168.17.15:5000/api/forms/${id}/pdf?token=${token}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error downloading PDF');
+      }
+
+      // แปลงการตอบกลับเป็น blob
+      const blob = await response.blob();
+      
+      // สร้าง URL สำหรับ blob
+      const url = window.URL.createObjectURL(blob);
+      
+      // สร้าง link สำหรับดาวน์โหลด
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `form_${id}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      
+      // Cleanup
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      document.body.removeChild(loadingDiv);
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+      alert('เกิดข้อผิดพลาดในการดาวน์โหลด PDF: ' + error.message);
+    }
   };
 
-  if (!form) return <p>🔄 กำลังโหลดข้อมูล...</p>;
+  if (!form) return <p>🔄 loading...</p>;
 
-  let detailsObj = {};
-  try {
-    detailsObj = JSON.parse(form.details);
-  } catch (err) {
-    console.error("❌ Error parsing details JSON:", err);
-  }
+  // ดึงข้อมูลพื้นฐานจาก form
+  const { user_name, department: dept, details = {} } = form;
 
+  // ดึงข้อมูลจาก details
   const {
-    name,
-    department,
+    name = user_name,
+    department = dept,
     date,
     deliveryDate,
     items = [],
@@ -51,7 +148,7 @@ const ViewForm = () => {
     vendorAddress2,
     vendorZip,
     CountryZip,
-    currency,
+    currency = 'THB',
     terms,
     supervisorEmail,
     reasonType,
@@ -64,10 +161,12 @@ const ViewForm = () => {
     dateDepartmentManager,
     signGeneralManager,
     dateGeneralManager,
-    subTotal,
-    vat,
-    grandTotal
-  } = detailsObj;
+    subTotal = 0,
+    vat = 0,
+    grandTotal = 0
+  } = details;
+
+  console.log("Rendered with:", { name, department, date, items, details });
 
   const isTHB = currency === 'THB';
   const vatLabel = isTHB ? 'VAT (7%)' : 'VAT (0%)';
@@ -140,7 +239,7 @@ const ViewForm = () => {
             </tbody>
           </table>
 
-          {/* Remarks Section (Instructional Text) */}
+          {/* Remarks Section */}
           <div className="remarks-box">
             <h4>Remarks / หมายเหตุ : </h4>
             <span className="asset-condition">

@@ -1,0 +1,258 @@
+body, html {
+  margin: 0;
+  padding: 0;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f0f0f0;
+  padding: 20px;
+  margin: 0;
+}
+
+.login-box {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.company-logo {
+  width: 240px;
+  margin-bottom: 2rem;
+}
+
+.login-box h1 {
+  color: #1a1a1a;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #4a4a4a;
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding-left: 2rem;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.input-with-icon input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e1e1e1;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background-color: #f8f9fa;
+}
+
+.input-with-icon input::placeholder {
+  padding-left: 8px;
+}
+
+.input-with-icon input:focus {
+  border-color: #0078d4;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.15);
+  background-color: white;
+}
+
+.input-icon {
+  position: static;
+  color: #666;
+  font-size: 1.1rem;
+  margin-right: 0.5rem;
+}
+
+.windows-login-btn {
+  width: 100%;
+  padding: 0.85rem;
+  background-color: #0078d4;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.windows-login-btn:hover {
+  background-color: #006cbd;
+  transform: translateY(-1px);
+}
+
+.windows-login-btn:active {
+  transform: translateY(0);
+}
+
+.windows-login-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.windows-icon {
+  font-size: 1.25rem;
+}
+
+.error-message {
+  color: #dc3545;
+  background-color: #fdf0f0;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.error-icon {
+  color: #dc3545;
+  font-size: 1.1rem;
+}
+
+.loading-spinner {
+  animation: spin 1s linear infinite;
+  margin-right: 0.5rem;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.remember-me input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #2e5ba6;
+}
+
+.forgot-password {
+  color: #2e5ba6;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
+.login-button {
+  background: #2e5ba6;
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.login-button:hover {
+  background: #234a8c;
+}
+
+.login-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1.5rem 0;
+  color: #666;
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #ddd;
+}
+
+.login-divider span {
+  padding: 0 1rem;
+}
+
+.domain-login-button {
+  background: #4CAF50;
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.domain-login-button:hover {
+  background: #3d8b40;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #666;
+}
+
+.register-link a {
+  color: #2e5ba6;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+header {
+  display: none;
+} 
