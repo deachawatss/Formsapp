@@ -641,14 +641,14 @@ const PurchaseRequestForm = () => {
           <table className="sign-table">
             <thead>
               <tr>
-                <th>Requester</th>
+                {/*<th>Requester</th>*/}
                 <th>Department Manager</th>
                 <th>General Manager</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>
+               {/* <td>
                   <div className="sign-row">
                     <label>Sign:</label>
                     <input
@@ -656,8 +656,9 @@ const PurchaseRequestForm = () => {
                       name="signRequester"
                       value={formData.signRequester}
                       onChange={handleChange}
-                    />
-                  </div>
+                      </div>
+                    /> 
+                  
                   <div className="sign-row">
                     <label>Date:</label>
                     <input
@@ -667,7 +668,7 @@ const PurchaseRequestForm = () => {
                       onChange={handleChange}
                     />
                   </div>
-                </td>
+                </td>*/}
                 <td>
                   <div className="sign-row">
                     <label>Sign:</label>
