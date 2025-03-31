@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../styles/MinorForm.css';
 
 const MinorForm = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const user = JSON.parse(localStorage.getItem('user'));
   const [insertedId, setInsertedId] = useState(null);
   const [isSendingEmail, setIsSendingEmail] = useState(false);
@@ -151,9 +150,17 @@ const MinorForm = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/minor-capex`,
-        formData,
+        `${baseUrl}/api/forms`,
+        {
+          form_name: "Minor Capital Authorization Request",
+          user_name: formData.name,
+          department: formData.department,
+          status: 'Waiting For Approve',
+          details: formData
+        },
         {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -177,14 +184,16 @@ const MinorForm = () => {
   const handleSaveDraft = async () => {
     try {
       const token = localStorage.getItem('token');
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/minor-capex`,
+        `${baseUrl}/api/forms`,
         {
-          form_name: "Minor Capital Authorization",
+          form_name: "Minor Capital Authorization Request",
           user_name: formData.name,
           department: formData.department,
           status: 'Draft',
-          details: JSON.stringify(formData)
+          details: formData
         },
         {
           headers: {
@@ -218,7 +227,8 @@ const MinorForm = () => {
   
     try {
       setIsSendingEmail(true);
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/forms/pdf-email`, {
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      await axios.post(`${baseUrl}/api/forms/pdf-email`, {
         id: insertedId,
         email: formData.email
       });

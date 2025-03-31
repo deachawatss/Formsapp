@@ -108,53 +108,206 @@ async function generatePDF(form) {
             detailsData = JSON.parse(form.details);
         } catch (err) {}
 
-        const { name, department, date, items, subTotal, vat, grandTotal } = detailsData || {};
+        // กำหนดค่า docDefinition ตามประเภทของฟอร์ม
+        let docDefinition = {};
+        
+        switch(form.form_name) {
+            case 'Purchase Request':
+                const { name, department, date, items, subTotal, vat, grandTotal } = detailsData || {};
 
-        //ตาราง items
-        let itemsTableBody = [
-            ['Description', 'Unit', 'Quantity', 'Cost', 'Amount']
-        ];
-        if (items && Array.isArray(items)) {
-            items.forEach(item => {
-                itemsTableBody.push([
-                    item.description || '',
-                    item.unit || '',
-                    item.quantity || '',
-                    item.cost || '',
-                    item.amount || ''
-                ]);
-            });
+                //ตาราง items
+                let itemsTableBody = [
+                    ['Description', 'Unit', 'Quantity', 'Cost', 'Amount']
+                ];
+                if (items && Array.isArray(items)) {
+                    items.forEach(item => {
+                        itemsTableBody.push([
+                            item.description || '',
+                            item.unit || '',
+                            item.quantity || '',
+                            item.cost || '',
+                            item.amount || ''
+                        ]);
+                    });
+                }
+
+                docDefinition = {
+                    content: [
+                        { text: 'Newly Weds Foods (Thailand) Limited', style: 'header' },
+                        { text: 'General Purchase Requisition\n\n', style: 'subheader' },
+                        { text: 'FORM # PC-FM-013 \n\n', style: 'subheader' },
+                        { text: `Name: ${name || form.user_name}`, margin: [0, 2, 0, 2] },
+                        { text: `Department: ${department || form.department}`, margin: [0, 2, 0, 2] },
+                        { text: `Date: ${date || ''}`, margin: [0, 2, 0, 10] },
+                        { text: 'Items', style: 'subheader2' },
+                        {
+                            table: {
+                                body: itemsTableBody
+                            },
+                            margin: [0, 0, 0, 10]
+                        },
+                        {
+                            text: `Sub Total: ${subTotal || 0} 
+                            VAT (7%): ${vat || 0}
+                            Grand Total: ${grandTotal || 0}\n\n`,
+                            margin: [0, 2, 0, 10]
+                        },
+                        { text: 'End of PDF.', style: 'smallText' }
+                    ],
+                };
+                break;
+                
+            case 'Travel Request':
+                const { name: travelerName, email, location, country, currency, businessPurpose, requestDate, trips, estimatedCost } = detailsData || {};
+                
+                // สร้างตารางสำหรับทริป
+                let tripsTableBody = [
+                    ['From', 'To', 'Departure', 'Return', 'Class', 'Airline']
+                ];
+                
+                if (trips && Array.isArray(trips)) {
+                    trips.forEach(trip => {
+                        tripsTableBody.push([
+                            trip.from || '',
+                            trip.to || '',
+                            trip.departureDate || '',
+                            trip.roundTrip ? (trip.returnDate || '') : 'One Way',
+                            trip.tripClass || '',
+                            trip.airline || ''
+                        ]);
+                    });
+                }
+                
+                docDefinition = {
+                    content: [
+                        { text: 'NWFAP TRAVEL REQUEST', style: 'header' },
+                        { text: `Business Purpose: ${businessPurpose || ''}`, margin: [0, 5, 0, 5] },
+                        { text: `Request Date: ${requestDate || ''}`, margin: [0, 2, 0, 10] },
+                        { text: 'Traveler Information', style: 'subheader' },
+                        { text: `Name: ${travelerName || form.user_name}`, margin: [0, 2, 0, 2] },
+                        { text: `Email: ${email || ''}`, margin: [0, 2, 0, 2] },
+                        { text: `Location: ${location || ''}`, margin: [0, 2, 0, 2] },
+                        { text: `Country: ${country || ''}`, margin: [0, 2, 0, 2] },
+                        { text: `Currency: ${currency || ''}`, margin: [0, 2, 0, 10] },
+                        { text: 'Trip Details', style: 'subheader' },
+                        {
+                            table: {
+                                body: tripsTableBody
+                            },
+                            margin: [0, 5, 0, 10]
+                        },
+                        { text: 'Estimated Cost', style: 'subheader' },
+                        { text: `Airfare: ${estimatedCost?.airfare || 0}`, margin: [0, 2, 0, 2] },
+                        { text: `Accommodations: ${estimatedCost?.accommodations || 0}`, margin: [0, 2, 0, 2] },
+                        { text: `Meals/Entertainment: ${estimatedCost?.mealsEntertainment || 0}`, margin: [0, 2, 0, 2] },
+                        { text: `Other: ${estimatedCost?.other || 0}`, margin: [0, 2, 0, 2] },
+                        { text: `Total: ${estimatedCost?.total || 0}`, margin: [0, 2, 0, 10], style: 'bold' },
+                    ],
+                };
+                break;
+                
+            case 'Major Capital Authorization Request':
+                const { operatingCompany, department: majorDept, date: majorDate, projectTitle, 
+                    projectDescription, budgetAmount, projectItems, totalAmount 
+                } = detailsData || {};
+                
+                // สร้างตารางสำหรับ project items
+                let majorItemsTableBody = [
+                    ['Description', 'Amount']
+                ];
+                
+                if (projectItems && Array.isArray(projectItems)) {
+                    projectItems.forEach(item => {
+                        majorItemsTableBody.push([
+                            item.description || '',
+                            item.amount || ''
+                        ]);
+                    });
+                }
+                
+                docDefinition = {
+                    content: [
+                        { text: 'Major Capital Authorization Request', style: 'header' },
+                        { text: '(For Capital Projects > AUD 10,000)', style: 'subheader' },
+                        { text: `Operating Company: ${operatingCompany || ''}`, margin: [0, 5, 0, 2] },
+                        { text: `Department: ${majorDept || form.department}`, margin: [0, 2, 0, 2] },
+                        { text: `Date: ${majorDate || ''}`, margin: [0, 2, 0, 5] },
+                        { text: `Project Title: ${projectTitle || ''}`, margin: [0, 2, 0, 2] },
+                        { text: `Project Description: ${projectDescription || ''}`, margin: [0, 2, 0, 2] },
+                        { text: `Budget Amount: ${budgetAmount || 0}`, margin: [0, 2, 0, 5] },
+                        { text: 'Project Items', style: 'subheader2' },
+                        {
+                            table: {
+                                body: majorItemsTableBody
+                            },
+                            margin: [0, 5, 0, 5]
+                        },
+                        { text: `Total Amount: ${totalAmount || 0}`, margin: [0, 2, 0, 10], style: 'bold' },
+                    ],
+                };
+                break;
+                
+            case 'Minor Capital Authorization Request':
+                const { operatingCompany: minorOperComp, department: minorDept, date: minorDate, 
+                    projectDescription: minorDesc, projectItems: minorItems, totalAmount: minorTotal 
+                } = detailsData || {};
+                
+                // สร้างตารางสำหรับ project items ของ Minor
+                let minorItemsTableBody = [
+                    ['Description', 'Amount']
+                ];
+                
+                if (minorItems && Array.isArray(minorItems)) {
+                    minorItems.forEach(item => {
+                        minorItemsTableBody.push([
+                            item.description || '',
+                            item.amount || ''
+                        ]);
+                    });
+                }
+                
+                docDefinition = {
+                    content: [
+                        { text: 'Minor Capital Authorization Request', style: 'header' },
+                        { text: '(In Local Currency & for Projects less than 10,000 AUD)', style: 'subheader' },
+                        { text: `Operating Company: ${minorOperComp || ''}`, margin: [0, 5, 0, 2] },
+                        { text: `Department: ${minorDept || form.department}`, margin: [0, 2, 0, 2] },
+                        { text: `Date: ${minorDate || ''}`, margin: [0, 2, 0, 5] },
+                        { text: `Project Description: ${minorDesc || ''}`, margin: [0, 2, 0, 5] },
+                        { text: 'Project Items', style: 'subheader2' },
+                        {
+                            table: {
+                                body: minorItemsTableBody
+                            },
+                            margin: [0, 5, 0, 5]
+                        },
+                        { text: `Total Amount: ${minorTotal || 0}`, margin: [0, 2, 0, 10], style: 'bold' },
+                    ],
+                };
+                break;
+                
+            default:
+                // กรณีไม่มีรูปแบบเฉพาะ
+                docDefinition = {
+                    content: [
+                        { text: form.form_name, style: 'header' },
+                        { text: `User: ${form.user_name}`, margin: [0, 5, 0, 5] },
+                        { text: `Department: ${form.department || ''}`, margin: [0, 2, 0, 5] },
+                        { text: `Status: ${form.status}`, margin: [0, 2, 0, 5] },
+                        { text: `Date: ${form.request_date}`, margin: [0, 2, 0, 10] },
+                        { text: 'Form Details', style: 'subheader' },
+                        { text: JSON.stringify(detailsData, null, 2), margin: [0, 5, 0, 5] },
+                    ],
+                };
         }
-
-        const docDefinition = {
-            content: [
-                { text: 'Newly Weds Foods (Thailand) Limited', style: 'header' },
-                { text: 'General Purchase Requisition\n\n', style: 'subheader' },
-                { text: 'FORM # PC-FM-013 \n\n', style: 'subheader' },
-                { text: `Name: ${name || form.user_name}`, margin: [0, 2, 0, 2] },
-                { text: `Department: ${department || form.department}`, margin: [0, 2, 0, 2] },
-                { text: `Date: ${date || ''}`, margin: [0, 2, 0, 10] },
-                { text: 'Items', style: 'subheader2' },
-                {
-                    table: {
-                        body: itemsTableBody
-                    },
-                    margin: [0, 0, 0, 10]
-                },
-                {
-                    text: `Sub Total: ${subTotal || 0} 
-                    VAT (7%): ${vat || 0}
-                    Grand Total: ${grandTotal || 0}\n\n`,
-                    margin: [0, 2, 0, 10]
-                },
-                { text: 'End of PDF.', style: 'smallText' }
-            ],
-            styles: {
-                header: { fontSize: 16, bold: true },
-                subheader: { fontSize: 14, bold: true },
-                subheader2: { fontSize: 12, bold: true },
-                smallText: { fontSize: 10 }
-            }
+        
+        // รวมรูปแบบ styles สำหรับทุกฟอร์ม
+        docDefinition.styles = {
+            header: { fontSize: 16, bold: true, alignment: 'center', margin: [0, 0, 0, 10] },
+            subheader: { fontSize: 14, bold: true, margin: [0, 5, 0, 5] },
+            subheader2: { fontSize: 12, bold: true, margin: [0, 5, 0, 5] },
+            bold: { bold: true },
+            smallText: { fontSize: 10 }
         };
 
         const pdfDoc = printer.createPdfKitDocument(docDefinition);
@@ -366,12 +519,39 @@ app.post('/api/forms/pdf-email', authenticateToken, async (req, res) => {
 
         const form = result.recordset[0];
         const requesterName = form.user_name;
+        const formName = form.form_name;
         const pdfBuffer = await generatePDFwithPuppeteer(id, token);
+
+        // กำหนดหัวข้อและเนื้อหาอีเมลตามประเภทฟอร์ม
+        let emailSubject = '';
+        let emailIntro = '';
+        
+        switch(formName) {
+            case 'Purchase Request':
+                emailSubject = "Purchase Request Submission";
+                emailIntro = "has submitted a purchase request in our system.";
+                break;
+            case 'Travel Request':
+                emailSubject = "Travel Request Submission";
+                emailIntro = "has submitted a travel request in our system.";
+                break;
+            case 'Major Capital Authorization Request':
+                emailSubject = "Major Capital Authorization Request Submission";
+                emailIntro = "has submitted a major capital authorization request in our system.";
+                break;
+            case 'Minor Capital Authorization Request':
+                emailSubject = "Minor Capital Authorization Request Submission";
+                emailIntro = "has submitted a minor capital authorization request in our system.";
+                break;
+            default:
+                emailSubject = `${formName} Submission`;
+                emailIntro = `has submitted a ${formName.toLowerCase()} in our system.`;
+        }
 
         await transporter.sendMail({
             from: `"NWFTH - Forms System" <${process.env.EMAIL_USER}>`,
             to: email,
-            subject: "Purchase Request Submission",
+            subject: emailSubject,
             html: `<!DOCTYPE html>
             <html>
             <head>
@@ -415,12 +595,12 @@ app.post('/api/forms/pdf-email', authenticateToken, async (req, res) => {
                     alt="NWFTH Logo"
                     style="max-width:120px; display:block; margin-bottom:0;"
                 />
-                <h1 class="email-title">Purchase Request Submission</h1>
+                <h1 class="email-title">${emailSubject}</h1>
                 </div>
             <div class="content">
                 <p>Dear,</p>
                 <p>
-                <strong>(${requesterName})</strong> has submitted a purchase request in our system.
+                <strong>(${requesterName})</strong> ${emailIntro}
                 </p>
                 <p>
                 Please find the attached PDF for more details.
@@ -438,7 +618,7 @@ app.post('/api/forms/pdf-email', authenticateToken, async (req, res) => {
             </html>`,
             attachments: [
                 {
-                  filename: `form_${id}.pdf`,
+                  filename: `${formName.replace(/\s+/g, '_')}_${id}.pdf`,
                   content: pdfBuffer
                 },
                 {
@@ -816,7 +996,7 @@ app.put('/api/forms/:id', authenticateToken, async (req, res) => {
       .input('form_name', sql.NVarChar, form_name)
       .input('user_name', sql.NVarChar, user_name)
       .input('department', sql.NVarChar, department)
-      .input('details', sql.NVarChar, details)
+      .input('details', sql.NVarChar, JSON.stringify(details))
       .input('status', sql.NVarChar, status)
       .query(`
         UPDATE FormsSystem.Forms 

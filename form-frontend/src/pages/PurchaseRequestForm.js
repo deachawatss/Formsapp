@@ -63,7 +63,8 @@ const PurchaseRequestForm = () => {
   const fetchFormData = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/forms/${formId}`, {
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      const response = await axios.get(`${baseUrl}/api/forms/${formId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -302,7 +303,8 @@ const PurchaseRequestForm = () => {
   
     try {
       setIsSendingEmail(true);
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/forms/pdf-email`, {
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      await axios.post(`${baseUrl}/api/forms/pdf-email`, {
         id: insertedId,
         email: formData.supervisorEmail
       });

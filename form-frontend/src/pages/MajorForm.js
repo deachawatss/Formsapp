@@ -9,6 +9,11 @@ const MajorForm = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   const [insertedId, setInsertedId] = useState(null);
   const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  // ดึง ID จาก URL query parameters
+  const queryParams = new URLSearchParams(location.search);
+  const formId = queryParams.get('id');
 
   const [formData, setFormData] = useState({
     operatingCompany: '',
@@ -83,6 +88,45 @@ const MajorForm = () => {
     }
   });
 
+  // โหลดข้อมูลฟอร์มเมื่อเปิดในโหมดแก้ไข
+  useEffect(() => {
+    const loadFormData = async () => {
+      if (formId) {
+        try {
+          const token = localStorage.getItem('token');
+          const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+          const response = await axios.get(`${baseUrl}/api/forms/${formId}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+
+          if (response.data) {
+            setIsEditMode(true);
+            setInsertedId(formId);
+            
+            // แปลง details เป็น object ถ้าเป็น string
+            let details = response.data.details;
+            if (typeof details === 'string') {
+              details = JSON.parse(details);
+            }
+            
+            // อัพเดท formData ด้วยข้อมูลที่โหลดมา
+            setFormData(prevData => ({
+              ...prevData,
+              ...details
+            }));
+          }
+        } catch (error) {
+          console.error('Error loading form data:', error);
+          alert('เกิดข้อผิดพลาดในการโหลดข้อมูลฟอร์ม');
+        }
+      }
+    };
+
+    loadFormData();
+  }, [formId]);
+
   const departments = [
     'Group Management', 'Customer Service', 'Finance and Accounting',
     'Sales and Marketing', 'Information Communication and Technology', 
@@ -115,7 +159,19 @@ const MajorForm = () => {
           [key]: type === 'checkbox' ? checked : value
         }
       }));
-    } else {
+    } 
+    // สำหรับ nested fields เช่น financialImpact.includesCurrentBudget1
+    else if (name.includes('.')) {
+      const [section, key] = name.split('.');
+      setFormData(prev => ({
+        ...prev,
+        [section]: {
+          ...prev[section],
+          [key]: value
+        }
+      }));
+    } 
+    else {
       // ฟิลด์ทั่วไป
       setFormData(prev => ({
         ...prev,
@@ -248,18 +304,47 @@ const MajorForm = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/major-capex`,
-        formData,
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      
+      const formPayload = {
+        form_name: "Major Capital Authorization Request",
+        user_name: formData.name,
+        department: formData.department,
+        status: 'Waiting For Approve',
+        details: formData
+      };
+
+      let response;
+      if (isEditMode) {
+        // ถ้าเป็นการแก้ไข ใช้ PUT
+        response = await axios.put(
+          `${baseUrl}/api/forms/${formId}`,
+          formPayload,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
           }
-        }
-      );
+        );
+      } else {
+        // ถ้าเป็นการสร้างใหม่ ใช้ POST
+        response = await axios.post(
+          `${baseUrl}/api/forms`,
+          formPayload,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          }
+        );
+      }
       
       if (response.data) {
         alert('บันทึกข้อมูลสำเร็จ');
+        if (!isEditMode) {
+          const newFormId = response.data.insertedId;
+          setInsertedId(newFormId);
+        }
         navigate('/my-forms');
       }
     } catch (error) {
@@ -272,26 +357,47 @@ const MajorForm = () => {
   const handleSaveDraft = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/major-capex`,
-        {
-          form_name: "Major Capital Authorization",
-          user_name: formData.name,
-          department: formData.department,
-          status: 'Draft',
-          details: JSON.stringify(formData)
-        },
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      
+      const formPayload = {
+        form_name: "Major Capital Authorization Request",
+        user_name: formData.name,
+        department: formData.department,
+        status: 'Draft',
+        details: formData
+      };
+
+      let response;
+      if (isEditMode) {
+        // ถ้าเป็นการแก้ไข ใช้ PUT
+        response = await axios.put(
+          `${baseUrl}/api/forms/${formId}`,
+          formPayload,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
           }
-        }
-      );
+        );
+      } else {
+        // ถ้าเป็นการสร้างใหม่ ใช้ POST
+        response = await axios.post(
+          `${baseUrl}/api/forms`,
+          formPayload,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          }
+        );
+      }
       
       if (response.data) {
         alert('✅ Draft saved successfully!');
-        const newFormId = response.data.insertedId;
-        setInsertedId(newFormId);
+        if (!isEditMode) {
+          const newFormId = response.data.insertedId;
+          setInsertedId(newFormId);
+        }
         navigate('/my-forms');
       }
     } catch (error) {
@@ -313,7 +419,8 @@ const MajorForm = () => {
   
     try {
       setIsSendingEmail(true);
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/forms/pdf-email`, {
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      await axios.post(`${baseUrl}/api/forms/pdf-email`, {
         id: insertedId,
         email: formData.supervisorEmail
       });

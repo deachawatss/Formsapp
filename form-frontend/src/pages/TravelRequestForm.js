@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/TravelRequest.css';
@@ -12,8 +12,8 @@ const TravelRequestForm = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   const formDataFromState = location.state?.formData;
 
-  // สร้าง empty trip object เพื่อใช้เป็นต้นแบบเวลาเพิ่มทริปใหม่
-  const emptyTrip = {
+  // สร้าง empty trip object เพื่อใช้เป็นต้นแบบเวลาเพิ่มทริปใหม่ ใช้ useMemo เพื่อไม่ให้สร้างใหม่ทุก render
+  const emptyTrip = useMemo(() => ({
     from: '',
     to: '',
     departureDate: new Date().toISOString().split('T')[0],
@@ -23,7 +23,7 @@ const TravelRequestForm = () => {
     airline: '',
     roundTrip: false,
     returnDate: ''
-  };
+  }), []);
 
   const [formData, setFormData] = useState({
     businessPurpose: '',
@@ -55,7 +55,8 @@ const TravelRequestForm = () => {
   const fetchFormData = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/forms/${formId}`, {
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      const response = await axios.get(`${baseUrl}/api/forms/${formId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -100,7 +101,7 @@ const TravelRequestForm = () => {
       console.error('Error fetching form:', error);
       alert('เกิดข้อผิดพลาดในการดึงข้อมูลฟอร์ม');
     }
-  }, [formId, user?.name, user?.email]);
+  }, [formId, user?.name, user?.email, emptyTrip]);
 
   // โหลดข้อมูลฟอร์มเมื่อมี formId
   useEffect(() => {
@@ -145,7 +146,7 @@ const TravelRequestForm = () => {
         fetchFormData();
       }
     }
-  }, [formId, formDataFromState, fetchFormData, user?.name, user?.email]);
+  }, [formId, formDataFromState, fetchFormData, user?.name, user?.email, emptyTrip]);
 
   // จัดการการเปลี่ยนแปลงข้อมูลในฟอร์มทั่วไป
   const handleChange = (e) => {
@@ -341,7 +342,8 @@ const TravelRequestForm = () => {
   const handleSendEmail = async () => {
     try {
       setIsSendingEmail(true);
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/forms/pdf-email`, {
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      await axios.post(`${baseUrl}/api/forms/pdf-email`, {
         id: insertedId,
         email: formData.email
       });
@@ -377,6 +379,11 @@ const TravelRequestForm = () => {
     <div className="print-page">
       <div className="form-container">
         <div className="form-header">
+          <img
+            src="https://img2.pic.in.th/pic/logo14821dedd19c2ad18.png"
+            alt="Company Logo"
+            className="company-logo"
+          />
           <h1 className="travel-header">NWFAP TRAVEL REQUEST</h1>
         </div>
 
@@ -497,13 +504,13 @@ const TravelRequestForm = () => {
                   {showTripMenu && activeTrip === tripIndex && (
                     <div className="trip-menu" onClick={(e) => e.stopPropagation()}>
                       <div className="trip-menu-item" onClick={() => insertTripBefore(tripIndex)}>
-                        Insert trip before [Ctrl+Enter]
+                        Insert trip before 
                       </div>
                       <div className="trip-menu-item" onClick={() => insertTripAfter(tripIndex)}>
-                        Insert trip after [Ctrl+Enter]
+                        Insert trip after
                       </div>
                       <div className="trip-menu-item" onClick={() => removeTrip(tripIndex)}>
-                        Remove trip [Ctrl+Delete]
+                        Remove trip 
                       </div>
                     </div>
                   )}

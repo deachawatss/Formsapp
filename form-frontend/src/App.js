@@ -59,12 +59,12 @@ function App() {
                 <CapexRequestForm />
               </ProtectedRoute>
             } />
-            <Route path="/form/capex-request/minor" element={
+            <Route path="/form/minor-form" element={
               <ProtectedRoute>
                 <MinorForm />
               </ProtectedRoute>
             } />
-            <Route path="/form/capex-request/major" element={
+            <Route path="/form/major-form" element={
               <ProtectedRoute>
                 <MajorForm />
               </ProtectedRoute>

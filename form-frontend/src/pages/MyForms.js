@@ -80,13 +80,30 @@ const MyForms = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'Draft':
-        return '#FFA500';
+        return '#6c757d'; // สีเทา
       case 'Waiting For Approve':
-        return '#3498db';
-      case 'Approved':
-        return '#2ecc71';
+        return '#ffc107'; // สีเหลือง
+      case 'Approve':
+        return '#28a745'; // สีเขียว
+      case 'Reject':
+        return '#dc3545'; // สีแดง
       default:
-        return '#000000';
+        return '#6c757d';
+    }
+  };
+
+  const getEditLink = (form) => {
+    switch (form.form_name) {
+      case 'Purchase Request':
+        return `/form/purchase-request?id=${form.id}`;
+      case 'Travel Request':
+        return `/form/travel-request?id=${form.id}`;
+      case 'Major Capital Authorization Request':
+        return `/form/major-form?id=${form.id}`;
+      case 'Minor Capital Authorization Request':
+        return `/form/minor-form?id=${form.id}`;
+      default:
+        return `/form/purchase-request?id=${form.id}`;
     }
   };
 
@@ -134,19 +151,17 @@ const MyForms = () => {
                   </span>
                 </td>
                 <td className="actions-cell">
-                  <a 
-                    href={`http://192.168.17.15:5000/view/${form.id}`} 
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Link 
+                    to={`/view/${form.id}`} 
                     className="action-btn view-btn"
                     title="View Form"
                   >
                     👁 View
-                  </a>
+                  </Link>
                   {form.status === 'Draft' && (
                     <>
                       <Link
-                        to={`/form/purchase-request?id=${form.id}`}
+                        to={getEditLink(form)}
                         state={{ formData: form }}
                         className="action-btn edit-btn"
                         title="Edit Form"

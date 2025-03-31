@@ -18,12 +18,12 @@ const Sidebar = () => {
           <span>💰 CAPEX Request</span>
           <ul className="submenu">
             <li>
-              <Link to="/form/capex-request/major">
+              <Link to="/form/major-form">
                 &nbsp;&nbsp;🔷 Major Capital Request
               </Link>
             </li>
             <li>
-              <Link to="/form/capex-request/minor">
+              <Link to="/form/minor-form">
                 &nbsp;&nbsp;🔶 Minor Capital Request
               </Link>
             </li>

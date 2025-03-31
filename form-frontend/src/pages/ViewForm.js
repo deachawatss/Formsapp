@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/PurchaseRequest.css';
+import '../styles/MajorForm.css';
+import '../styles/MinorForm.css';
+import '../styles/TravelRequest.css';
+import '../styles/common.css';
 
 const ViewForm = () => {
   const { id } = useParams();
@@ -70,7 +74,7 @@ const ViewForm = () => {
     } catch (error) {
       console.error("Error fetching form:", error);
       console.error("Error response:", error.response?.data);
-      alert("เกิดข้อผิดพลาดในการดึงข้อมูล: " + (error.response?.data?.error || error.message));
+      alert("เกิดข้อผิดพลาดในการดาวน์โหลดข้อมูล: " + (error.response?.data?.error || error.message));
     }
   };
 
@@ -134,15 +138,17 @@ const ViewForm = () => {
   if (!form) return <p>🔄 loading...</p>;
 
   // ดึงข้อมูลพื้นฐานจาก form
-  const { user_name, department: dept, details = {} } = form;
+  const { user_name, department: dept, form_name, details = {} } = form;
+  console.log("Form name:", form_name); // แสดงชื่อฟอร์มเพื่อการดีบัก
 
   // ดึงข้อมูลจาก details
   const {
     name = user_name,
     department = dept,
     date,
-    deliveryDate,
     items = [],
+    // ข้อมูลสำหรับ Purchase Request Form
+    deliveryDate,
     vendorName,
     vendorAddress1,
     vendorAddress2,
@@ -163,33 +169,76 @@ const ViewForm = () => {
     dateGeneralManager,
     subTotal = 0,
     vat = 0,
-    grandTotal = 0
+    grandTotal = 0,
+    // ข้อมูลสำหรับ Travel Request Form
+    businessPurpose,
+    requestDate,
+    email,
+    location,
+    country,
+    trips = [],
+    estimatedCost = {},
+    requestedBy,
+    departmentManager,
+    // ข้อมูลสำหรับ Major Form
+    operatingCompany,
+    carNumber,
+    projectDescription,
+    additionSection = {},
+    disposalSection = {},
+    authorizationType = {},
+    carType = {},
+    localCurrency,
+    exchangeRate,
+    leasePayments = [],
+    financialImpact = {},
+    economicImpact = {},
+    // ข้อมูลสำหรับ Minor Form
+    purpose = {},
+    projectSummary,
+    totals = {}
   } = details;
 
-  console.log("Rendered with:", { name, department, date, items, details });
+  console.log("Rendered with:", { name, department, date, items, details, form_name });
 
-  const isTHB = currency === 'THB';
-  const vatLabel = isTHB ? 'VAT (7%)' : 'VAT (0%)';
-  const subTotalStr = (subTotal || 0).toLocaleString('en-US', { minimumFractionDigits: 2 });
-  const vatStr = (vat || 0).toLocaleString('en-US', { minimumFractionDigits: 2 });
-  const grandTotalStr = (grandTotal || 0).toLocaleString('en-US', { minimumFractionDigits: 2 });
+  // ฟังก์ชันสำหรับแสดงฟอร์มตามประเภท
+  const renderFormByType = () => {
+    switch (form_name) {
+      case 'Purchase Request':
+        return renderPurchaseRequestForm();
+      case 'Travel Request':
+        return renderTravelRequestForm();
+      case 'Major Capital Authorization Request':
+        return renderMajorCapitalForm();
+      case 'Minor Capital Authorization Request':
+        return renderMinorCapitalForm();
+      default:
+        return renderPurchaseRequestForm(); // ถ้าไม่พบประเภทที่ตรงกัน ให้แสดงเป็น Purchase Request Form
+    }
+  };
 
-  return (
-    <div className="print-page">
-      <div className="form-container">
-        <div className="form-header">
-          <img
-            src="https://img2.pic.in.th/pic/logo14821dedd19c2ad18.png"
-            alt="Company Logo"
-            className="company-logo"
-          />
-          <h1>Newly Weds Foods (Thailand) Limited</h1>
-          <p>General Purchase Requisition</p>
-          <p>FORM # PC-FM-013</p>
-        </div>
+  // ฟังก์ชันสำหรับแสดง Purchase Request Form
+  const renderPurchaseRequestForm = () => {
+    const isTHB = currency === 'THB';
+    const vatLabel = isTHB ? 'VAT (7%)' : 'VAT (0%)';
+    const subTotalStr = (subTotal || 0).toLocaleString('en-US', { minimumFractionDigits: 2 });
+    const vatStr = (vat || 0).toLocaleString('en-US', { minimumFractionDigits: 2 });
+    const grandTotalStr = (grandTotal || 0).toLocaleString('en-US', { minimumFractionDigits: 2 });
 
-        <div id="purchaseRequestForm">
-          {/* Row 1: Name, Dept, Date */}
+    return (
+      <div className="print-page">
+        <div className="form-container">
+          <div className="form-header">
+            <img
+              src="https://img2.pic.in.th/pic/logo14821dedd19c2ad18.png"
+              alt="Company Logo"
+              className="company-logo"
+            />
+            <h1>Newly Weds Foods (Thailand) Limited</h1>
+            <p>General Purchase Requisition</p>
+            <p>FORM # PC-FM-013</p>
+          </div>
+
           <div className="input-row">
             <label>Name:</label>
             <span>{name}</span>
@@ -198,7 +247,6 @@ const ViewForm = () => {
             <span>{department}</span>
           </div>
 
-          {/* Row 2: Email, Date */}
           <div className="input-row">
             <label>Email:</label>
             <span>{supervisorEmail}</span>
@@ -209,7 +257,6 @@ const ViewForm = () => {
             </div>
           </div>
 
-          {/* ตาราง Items */}
           <table className="pr-table">
             <thead>
               <tr>
@@ -239,7 +286,6 @@ const ViewForm = () => {
             </tbody>
           </table>
 
-          {/* Remarks Section */}
           <div className="remarks-box">
             <h4>Remarks / หมายเหตุ : </h4>
             <span className="asset-condition">
@@ -253,7 +299,6 @@ const ViewForm = () => {
             </span>
           </div>
 
-          {/* Reason Section */}
           <div className="reason-section">
             <h3>Reason of Request / เหตุผลการขอราคา - ขอสั่งซื้อ</h3>
             <div className="input-row-reason">
@@ -268,7 +313,6 @@ const ViewForm = () => {
             </div>
           </div>
 
-          {/* Vendor Info + Summary */}
           <div className="main-row">
             <div className="vendor-section">
               <h3>Vendor Info</h3>
@@ -294,8 +338,8 @@ const ViewForm = () => {
               </div>
             </div>
             
-            <div className="right-col summary-section">
-              <div className="input-row">
+            <div className="right-col">
+              <div className="input-row no-wrap">
                 <label>Currency:</label>
                 <span>{currency}</span>
 
@@ -304,20 +348,19 @@ const ViewForm = () => {
               </div>
 
               <div className="summary compact-summary">
-                <p style={{ margin: '3px 0' }}>
+                <p>
                   Sub Total: {subTotalStr} {currency}
                 </p>
-                <p style={{ margin: '3px 0' }}>
+                <p>
                   {vatLabel}: {vatStr} {currency}
                 </p>
-                <h3 style={{ margin: '5px 0' }}>
+                <h3>
                   Grand Total: {grandTotalStr} {currency}
                 </h3>
               </div>
             </div>
           </div>
 
-          {/* Comment Section */}
           <div className="comment-row">
             <div className="comment-box">
               <h3>Comment by Department Manager</h3>
@@ -329,7 +372,6 @@ const ViewForm = () => {
             </div>
           </div>
 
-          {/* Sign Table */}
           <table className="sign-table">
             <thead>
               <tr>
@@ -381,8 +423,529 @@ const ViewForm = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
+
+  // ฟังก์ชันสำหรับแสดง Travel Request Form
+  const renderTravelRequestForm = () => {
+    return (
+      <div className="print-page">
+        <div className="form-container">
+          <div className="form-header">
+            <img
+              src="https://img2.pic.in.th/pic/logo14821dedd19c2ad18.png"
+              alt="Company Logo"
+              className="company-logo"
+            />
+            <h1 className="travel-header">NWFAP TRAVEL REQUEST</h1>
+          </div>
+
+          {/* Business Purpose และ Request Date */}
+          <div className="input-row">
+            <div className="input-group">
+              <label>Business Purpose:</label>
+              <span>{businessPurpose}</span>
+            </div>
+            
+            <div className="input-group">
+              <label>Request Date:</label>
+              <span>{requestDate}</span>
+            </div>
+          </div>
+
+          {/* Traveler Information */}
+          <div className="section-header">
+            <h2>Traveler Information</h2>
+          </div>
+
+          <div className="input-row">
+            <div className="input-group">
+              <label>Name:</label>
+              <span>{name}</span>
+            </div>
+            
+            <div className="input-group">
+              <label>Email:</label>
+              <span>{email}</span>
+            </div>
+          </div>
+
+          <div className="input-row">
+            <div className="input-group">
+              <label>Location:</label>
+              <span>{location}</span>
+            </div>
+            
+            <div className="input-group">
+              <label>Country:</label>
+              <span>{country}</span>
+            </div>
+          </div>
+
+          <div className="input-row">
+            <div className="input-group">
+              <label>Currency:</label>
+              <span>{currency}</span>
+            </div>
+          </div>
+
+          {/* Trip Information */}
+          {trips.map((trip, index) => (
+            <div key={index} className="trip-container">
+              <div className="section-header trip-header">
+                <h2>TRIP #{index + 1}</h2>
+              </div>
+
+              <div className="input-row">
+                <div className="input-group">
+                  <label>From:</label>
+                  <span>{trip.from}</span>
+                </div>
+                
+                <div className="input-group">
+                  <label>To:</label>
+                  <span>{trip.to}</span>
+                </div>
+              </div>
+
+              <div className="input-row">
+                <div className="input-group">
+                  <label>Departure Date:</label>
+                  <span>{trip.departureDate}</span>
+                </div>
+                
+                <div className="input-group">
+                  <label>Trip Class:</label>
+                  <span>{trip.tripClass}</span>
+                </div>
+              </div>
+
+              <div className="input-row">
+                <div className="input-group checkbox-group">
+                  <label>Round trip:</label>
+                  <span>{trip.roundTrip ? 'Yes' : 'No'}</span>
+                </div>
+              </div>
+
+              {trip.roundTrip && (
+                <div className="input-row">
+                  <div className="input-group">
+                    <label>Return Date:</label>
+                    <span>{trip.returnDate}</span>
+                  </div>
+                </div>
+              )}
+
+              <div className="input-row">
+                <div className="input-group checkbox-group">
+                  <label>Include hotel:</label>
+                  <span>{trip.includeHotel ? 'Yes' : 'No'}</span>
+                </div>
+                
+                <div className="input-group checkbox-group">
+                  <label>Include car rental:</label>
+                  <span>{trip.includeCarRental ? 'Yes' : 'No'}</span>
+                </div>
+              </div>
+
+              <div className="input-row">
+                <div className="input-group">
+                  <label>Airline:</label>
+                  <span>{trip.airline}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* Estimated Cost */}
+          <div className="section-header">
+            <h2>Estimated Cost of Trip:</h2>
+          </div>
+
+          <div className="cost-table">
+            <div className="cost-row">
+              <label>Airfare:</label>
+              <span>{estimatedCost.airfare || 0}</span>
+            </div>
+            
+            <div className="cost-row">
+              <label>Accommodations:</label>
+              <span>{estimatedCost.accommodations || 0}</span>
+            </div>
+            
+            <div className="cost-row">
+              <label>Meals/Entertainment:</label>
+              <span>{estimatedCost.mealsEntertainment || 0}</span>
+            </div>
+            
+            <div className="cost-row">
+              <label>Other:</label>
+              <span>{estimatedCost.other || 0}</span>
+            </div>
+            
+            <div className="cost-row total-row">
+              <label>Total:</label>
+              <span>{estimatedCost.total || 0}</span>
+            </div>
+          </div>
+
+          {/* Signatures */}
+          <div className="section-header">
+            <h2>Signatures and Date:</h2>
+          </div>
+
+          <div className="signature-section">
+            <div className="signature-row">
+              <label>Requested By:</label>
+              <span>{requestedBy || name}</span>
+            </div>
+            <div className="signature-row">
+              <label>Department Manager:</label>
+              <span>{departmentManager}</span>
+            </div>
+          </div>
+
+          <div style={{ marginTop: '20px' }}>
+            <button className="download-pdf no-print" onClick={handleDownloadPDF}>
+              📥 Download PDF
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // ฟังก์ชันสำหรับแสดง Major Capital Form
+  const renderMajorCapitalForm = () => {
+    return (
+      <div className="print-page">
+        <div className="form-container">
+          <div className="form-header">
+            <img
+              src="https://img2.pic.in.th/pic/logo14821dedd19c2ad18.png"
+              alt="Company Logo"
+              className="company-logo"
+            />
+            <h1>Major Capital Authorization Request</h1>
+            <p>(For Capital Projects {'>'} AUD 10,000)</p>
+          </div>
+
+          <div className="input-row">
+            <div className="input-group">
+              <label>Operating Company:</label>
+              <span>{operatingCompany}</span>
+            </div>
+            <div className="input-group">
+              <label>Department:</label>
+              <span>{department}</span>
+            </div>
+            <div className="input-group">
+              <label>Date:</label>
+              <span>{date}</span>
+            </div>
+          </div>
+
+          <div className="input-row">
+            <div className="input-group">
+              <label>Name:</label>
+              <span>{name}</span>
+            </div>
+            <div className="input-group">
+              <label>Email:</label>
+              <span>{email}</span>
+            </div>
+            <div className="input-group">
+              <label>CAR: No. NWF:</label>
+              <span>{carNumber}</span>
+            </div>
+          </div>
+
+          <div className="section-header">
+            <h2>Project Description:</h2>
+          </div>
+          <div className="description-box">
+            <p>{projectDescription}</p>
+          </div>
+
+          <div className="section-header">
+            <h2>Project Summary</h2>
+          </div>
+          <div className="description-box">
+            <p>{projectSummary}</p>
+          </div>
+
+          <div className="section-header">
+            <h2>Authority Requested</h2>
+          </div>
+          <table className="authority-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Previously Approved</th>
+                <th>This Request</th>
+                <th>Total Request</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(additionSection).map(([key, value]) => (
+                <tr key={key}>
+                  <td>{key}</td>
+                  <td>{value.previouslyApproved || 0}</td>
+                  <td>{value.thisRequest || 0}</td>
+                  <td>{parseFloat(value.previouslyApproved || 0) + parseFloat(value.thisRequest || 0)}</td>
+                </tr>
+              ))}
+              {Object.entries(disposalSection).map(([key, value]) => (
+                <tr key={key}>
+                  <td>{key}</td>
+                  <td>{value.previouslyApproved || 0}</td>
+                  <td>{value.thisRequest || 0}</td>
+                  <td>{parseFloat(value.previouslyApproved || 0) + parseFloat(value.thisRequest || 0)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className="section-header">
+            <h2>Authorization Type</h2>
+          </div>
+          <div className="checkbox-container">
+            {Object.entries(authorizationType).map(([key, value]) => (
+              <div key={key} className="checkbox-group">
+                <label>{key}:</label>
+                <span>{value === true ? 'Yes' : value === false ? 'No' : value}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="section-header">
+            <h2>CAR Type</h2>
+          </div>
+          <div className="checkbox-container">
+            {Object.entries(carType).map(([key, value]) => (
+              <div key={key} className="checkbox-group">
+                <label>{key}:</label>
+                <span>{value ? 'Yes' : 'No'}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="section-header">
+            <h2>Currency</h2>
+          </div>
+          <div className="input-row">
+            <div className="input-group">
+              <label>Local Currency:</label>
+              <span>{localCurrency}</span>
+            </div>
+            <div className="input-group">
+              <label>Exchange Rate:</label>
+              <span>{exchangeRate}</span>
+            </div>
+          </div>
+
+          <div className="section-header">
+            <h2>Lease Payments</h2>
+          </div>
+          <table className="lease-table">
+            <thead>
+              <tr>
+                <th>Rent</th>
+                <th>For</th>
+                <th>Budgeted Amount</th>
+                <th>Change from Budget</th>
+                <th>Start Date</th>
+                <th>Operational Date</th>
+                <th>Post Review Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {leasePayments.map((payment, index) => (
+                <tr key={index}>
+                  <td>{payment.rent}</td>
+                  <td>{payment.for}</td>
+                  <td>{payment.budgetedAmount}</td>
+                  <td>{payment.changeFromBudget}</td>
+                  <td>{payment.startDate}</td>
+                  <td>{payment.operationalDate}</td>
+                  <td>{payment.postReviewDate}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className="section-header">
+            <h2>Financial Impact</h2>
+          </div>
+          <div className="input-row">
+            <div className="input-group">
+              <label>Year:</label>
+              <span>{financialImpact.year}</span>
+            </div>
+          </div>
+          <div className="input-row">
+            <div className="input-group">
+              <label>Profit & Loss Effect:</label>
+              <span>{financialImpact.profitLossEffect}</span>
+            </div>
+          </div>
+          <div className="input-row">
+            <div className="input-group">
+              <label>Cash Flow:</label>
+              <span>{financialImpact.cashFlow}</span>
+            </div>
+          </div>
+
+          <div className="section-header">
+            <h2>Economic Impact</h2>
+            <p>In AU Dollars</p>
+          </div>
+          <table className="economic-table">
+            <thead>
+              <tr>
+                <th>Internal Rate of Return (IRR) %</th>
+                <th>Net Present Value (NPV)</th>
+                <th>Discount Rate for NPV (%)</th>
+                <th>Project Life (Years)</th>
+                <th>After Tax Payback (Years)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{economicImpact.internalRate}</td>
+                <td>{economicImpact.netPresentValue}</td>
+                <td>{economicImpact.discountRate}</td>
+                <td>{economicImpact.projectLife}</td>
+                <td>{economicImpact.afterTaxPayback}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div style={{ marginTop: '20px' }}>
+            <button className="download-pdf no-print" onClick={handleDownloadPDF}>
+              📥 Download PDF
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // ฟังก์ชันสำหรับแสดง Minor Capital Form
+  const renderMinorCapitalForm = () => {
+    return (
+      <div className="minor-form-container">
+        <div className="minor-form-header-title">
+          <img 
+            src="https://img2.pic.in.th/pic/logo14821dedd19c2ad18.png"
+            alt="Company Logo" 
+            className="minor-company-logo"
+          />
+          <h1>Minor Capital Authorization Request</h1>
+          <p className="minor-subtitle">(In Local Currency &amp; for Projects less than 10,000 AUD)</p>
+        </div>
+
+        <div className="minor-form-header">
+          <div className="minor-form-group">
+            <label>Operating Company:</label>
+            <span>{operatingCompany}</span>
+          </div>
+
+          <div className="minor-form-group">
+            <label>Department:</label>
+            <span>{department}</span>
+          </div>
+
+          <div className="minor-form-group">
+            <label>Date:</label>
+            <span>{date}</span>
+          </div>
+
+          <div className="minor-form-group">
+            <label>Name:</label>
+            <span>{name}</span>
+          </div>
+
+          <div className="minor-form-group">
+            <label>Email:</label>
+            <span>{email}</span>
+          </div>
+        </div>
+
+        <div className="minor-purpose-section">
+          <h3>PURPOSE:</h3>
+          <div className="minor-checkbox-group">
+            {Object.entries(purpose).map(([key, value]) => (
+              <div key={key} className="minor-checkbox-item">
+                <label>{key}:</label>
+                <span>{value === true ? 'Yes' : value === false ? 'No' : value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="minor-project-summary">
+          <h3>Project Summary:</h3>
+          <p>{projectSummary}</p>
+        </div>
+
+        <div className="minor-items-section">
+          <table className="minor-items-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Unit Cost</th>
+                <th>Total Cost</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((item, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{item.description}</td>
+                  <td>{item.quantity}</td>
+                  <td>{item.unitCost}</td>
+                  <td>{item.totalCost}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="minor-currency-section">
+          <label>Currency:</label>
+          <span>{currency}</span>
+        </div>
+
+        <div className="minor-approval-section">
+          <table className="minor-approval-table">
+            <thead>
+              <tr>
+                <th>Requested By</th>
+                <th>Department Manager</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{name}</td>
+                <td>{departmentManager}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style={{ marginTop: '20px' }}>
+          <button className="download-pdf no-print" onClick={handleDownloadPDF}>
+            📥 Download PDF
+          </button>
+        </div>
+      </div>
+    );
+  };
+  
+  return renderFormByType();
 };
 
 export default ViewForm;
