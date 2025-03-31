@@ -6,6 +6,7 @@
     padding: 20px;
     border-radius: 8px; 
     font-family: Arial, sans-serif;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* ============ HEADER STYLES ============ */
@@ -13,22 +14,25 @@
     text-align: center;
     margin-bottom: 20px;
     margin-top: auto;
-    background: #24497b;  /* สีน้ำเงินเข้ม */
+    background: #1e3a8a;
     color: white;
-    padding: 10px;
-    border-radius: 5px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+
 .company-logo {
     width: 150px;
+    margin: 0 auto 10px auto;
     display: block;
-    margin: 0 auto 5px auto;
 }
+
 .form-header h1 {
     margin: 0;
     font-size: 20px;
     font-weight: bold;
-    margin-top: auto;
 }
+
 .form-header p {
     margin: 0;
     font-size: 14px;
@@ -44,11 +48,13 @@
     margin-bottom: 10px;
     flex-wrap: wrap; 
 }
+
 .input-row label {
     min-width: none;
     white-space: nowrap;
     font-weight: bold;
 }
+
 .input-row input,
 .input-row select,
 .input-row textarea {
@@ -64,11 +70,11 @@
     width: 250px; /* Reduce input width */
     max-width: 300px; /* Prevent it from stretching */
 }
+
 .input-row input[name="supervisorEmail"] {
     width: 250px; /* Reduce input width */
     max-width: 300px; /* Prevent it from stretching */
 }
-
 
 .short-date {
     width: 140px; 
@@ -81,14 +87,16 @@
     margin: 10px 0;
     table-layout: fixed; /* สำคัญ: เพื่อให้กำหนด width รายคอลัมน์ได้ */
 }
+
 .pr-table th,
 .pr-table td {
     border: 1px solid #ccc;
     padding: 8px;
     text-align: center;
 }
+
 .pr-table th {
-    background: #2e5ba6; /* สีฟ้า */
+    background: #1e3a8a;
     color: #fff;
     font-weight: bold;
 }
@@ -98,22 +106,27 @@
 .pr-table td:nth-child(1) {
     width: 50px;  /* ITEM (ตัวเลขลำดับ) */
 }
+
 .pr-table th:nth-child(2),
 .pr-table td:nth-child(2) {
     width: 250px; /* Description กว้างสุด */
 }
+
 .pr-table th:nth-child(3),
 .pr-table td:nth-child(3) {
     width: 70px;  /* Unit */
 }
+
 .pr-table th:nth-child(4),
 .pr-table td:nth-child(4) {
     width: 70px;  /* Quantity */
 }
+
 .pr-table th:nth-child(5),
 .pr-table td:nth-child(5) {
     width: 70px;  /* Cost */
 }
+
 .pr-table th:nth-child(6),
 .pr-table td:nth-child(6) {
     width: 100px; /* Amount */
@@ -132,62 +145,100 @@
 .amount-cell {
     position: relative; /* ครอบปุ่ม */
 }
+
 .delete-btn.outside {
     position: absolute;
     top: 50%;
-    right: -30px; /* ปรับตามต้องการ ให้ปุ่มออกมาด้านขวา */
+    right: -30px;
     transform: translateY(-50%);
-    background-color: #fff; /* สีพื้นหลังขาว */
-    border: 1px solid #ccc; 
-    color: #000; 
-    font-size: 12px;
-    padding: 3px 6px;
-    border-radius: 3px;
-    cursor: pointer;
-}
-
-/* ============ BUTTONS & HOVER ============ */
-.button {
-    background: #2e5ba6; /* ปุ่มสีน้ำเงิน */
-    color: #fff;
+    background: linear-gradient(135deg, #dc3545, #c82333);
     border: none;
-    border-radius: 5px;
-    padding: 8px 12px;
-    cursor: pointer;
-    margin-top: 5px;
-    transition: background-color 0.3s;
-}
-
-.button:disabled {
-    background-color: #fff;   /* เปลี่ยนพื้นหลังเป็นสีขาว */
-    color: #666;             /* เปลี่ยนสีตัวอักษรให้เข้ม-อ่อนตามชอบ */
-    border: 1px solid #ccc;  /* อาจใส่ border เพื่อให้เห็นขอบปุ่มชัดเจน */
-    cursor: not-allowed;     /* เปลี่ยน cursor เป็นสัญลักษณ์ห้ามคลิก */
-    pointer-events: none;    /* กันไม่ให้เกิด event ใด ๆ บนปุ่ม */
-  }
-.button:hover {
-    background: #24497b; /* Hover ให้เข้มขึ้น */
-}
-.btn-row {
+    color: #ffffff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
     display: flex;
-    gap: 10px;
-    margin-top: 15px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
 }
 
-.back-button {
-    background-color: #2e5ba6;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    font-size: 14px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-right: 15px;
+.delete-btn.outside:hover {
+    background: linear-gradient(135deg, #c82333, #dc3545);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* ============ BUTTONS ============ */
+.print-page .btn-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.print-page .btn-row .button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.print-page .btn-row .button:hover {
+  transform: translateY(-2px);
+}
+
+.print-page .btn-row .draft-btn {
+  background-color: #3498db;
+  color: white;
+}
+
+.print-page .btn-row .submit-btn {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.print-page .btn-row .print-btn {
+  background-color: #2B8A6F;
+  color: white;
+}
+
+.print-page .btn-row .button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+/* Remove old conflicting styles */
+.print-btn, .print-btn:hover {
+  background: none;
+  background-color: #2B8A6F !important;
+  color: white;
+  box-shadow: none;
+}
+
+@media print {
+  .print-btn {
+    display: none !important;
   }
-  
-  .back-button:hover {
-    background-color: #24497b;
-  }
+}
+
+/* Remove any conflicting button styles */
+.button {
+  background: none;
+  box-shadow: none;
+}
+
+.button:hover {
+  background: none;
+  box-shadow: none;
+}
 
 /* ============ REMARKS ROW ============ */
 .remarks-row textarea {
@@ -205,6 +256,7 @@
     border-radius: 5px;
     padding: 10px;
 }
+
 .comment-row {
     border: 1px solid #ccc;
     display: flex;
@@ -214,15 +266,18 @@
     border-radius: 5px;
     padding: 10px;
 }
+
 .comment-box {
     flex: 1;
 }
+
 .comment-box h3 {
     margin-top: auto;
     margin-bottom: 5px;
     font-size: 14px;
     font-weight: bold;
 }
+
 .comment-box textarea {
     width: 100%;
     min-height: 80px;
@@ -238,6 +293,7 @@
     border-radius: 5px;
     padding: 10px;
 }
+
 .sign-table th,
 .sign-table td {
     border: 1px solid #ccc;
@@ -245,18 +301,21 @@
     vertical-align: top;
     text-align: left;
 }
+
 .sign-table th {
-    background: #2e5ba6;
+    background: #1e3a8a;
     color: #fff;
     text-align: center;
     font-weight: bold;
 }
+
 .sign-row {
     display: flex;
     align-items: center;
     gap: 5px;
     margin-bottom: 5px;
 }
+
 .sign-row label {
     font-weight: bold;
     min-width: 40px;
@@ -265,16 +324,17 @@
 /* ============ SUMMARY, VENDOR, ETC ============ */
 .summary {
     margin-top: 10px;
-    
     display: flex;
     flex-direction: column;
     align-items: flex-end;
 }
+
 .summary.compact-summary p,
 .summary.compact-summary h3 {
     margin: 2px 0; 
     line-height: 1.2;
 }
+
 .vendor-section {
     flex: 1;
     margin-top: 0;
@@ -282,28 +342,32 @@
     padding: 10px;
     border-radius: 5px;
 }
+
 .vendor-section h3 {
     margin: 0 0 8px;
     font-weight: bold;
     font-size: 16px;
 }
+
 .vendor-row {
-    
     display: flex;
     align-items: center;
     gap: 10px;
     margin-bottom: 5px;
 }
+
 .vendor-row [name="ATTN"] {
     min-width: 30px;
     align-items: left;
     gap: 10px;
     margin-bottom: 5px;
 }
+
 .vendor-row label {
     min-width: 30px;
     font-weight: bold;
 }
+
 .vendor-row input {
     flex: 1;
 }
@@ -325,28 +389,28 @@
     border-radius: 5px;
     margin: 10px 0;
     font-style: italic;
-  }
-  .remarks-box h4 {
+}
+
+.remarks-box h4 {
     margin-bottom: 3px; /* Reduce space below h4 */
     margin-top: 2px;
     font-weight: bold;
     font-size: 14px;
     color: #007bff; /* Blue for consistency */
-  }
+}
   
-  .remarks-box strong {
+.remarks-box strong {
     color: #0c1014; /* Reddish text for emphasis */
-  }
+}
   
-  .asset-condition {
+.asset-condition {
     display: block;
     margin-top: 5px;
     font-size: 13px;
     color: #555;
-  }
+}
 
-
-  .reason-section {
+.reason-section {
     display: flex;
     flex-direction: column;
     padding: 0;
@@ -359,16 +423,17 @@
     box-sizing: border-box;
     margin-top: 10px;
 }
+
 .reason-section h3 {
-    background: #2e5ba6; /* Match the sign table header color */
+    background: #1e3a8a;
     color: white;
     font-weight: bold;
     text-align: center;
-    padding: 10px; /* Keep consistent padding */
+    padding: 10px;
     font-size: 15px;
     text-transform: uppercase;
     margin: 0;
-    width: 100%; /* Make sure it takes full width */
+    width: 100%;
     box-sizing: border-box;
 }
 
@@ -405,80 +470,107 @@
 
 .no-wrap {
     flex-wrap: nowrap; 
-  }
+}
 
-  .input-row.no-wrap select[name="currency"] {
-      flex: 0 0 auto !important;
-      width: 80px !important;
-      min-width: 80px !important;
-      max-width: 80px !important;
-  }
+.input-row.no-wrap select[name="currency"] {
+    flex: 0 0 auto !important;
+    width: 80px !important;
+    min-width: 80px !important;
+    max-width: 80px !important;
+}
 
+/* ============ ADD ITEM BUTTON ============ */
+.button.add-line-btn {
+  background: #1e3a8a;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
 
-  
+.button.add-line-btn:hover {
+  background: #1e3a8a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Remove old button styles */
+.save-draft-btn,
+.save-draft-btn:hover,
+.print-btn,
+.print-btn:hover {
+  background: none;
+  box-shadow: none;
+  transform: none;
+}
+
+/* ============ PRINT STYLES ============ */
 @media print {
+    /* ทำให้หน้าที่พิมพ์เหมือนกับที่แสดงบนหน้าจอ */
+    body {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+
+    /* จัดการตารางเมื่อพิมพ์ - ให้เหมือนกับที่แสดงบนหน้าจอ */
+    .pr-table th {
+        background-color: #1e3a8a !important;
+        color: white !important;
+    }
+
+    .reason-section h3,
+    .sign-table th,
+    .form-header {
+        background-color: #1e3a8a !important;
+        color: white !important;
+    }
+
+    /* คงสีพื้นหลังเดิมไว้ */
+    .main-row,
+    .comment-row,
+    .vendor-section,
+    .reason-section,
+    .sign-table,
+    .comment-box {
+        background-color: #f0f7ff !important;
+    }
+
+    /* ซ่อนปุ่มต่างๆ */
+    .print-page .btn-row,
+    .button.add-line-btn,
+    .delete-btn.outside,
+    .print-btn,
     .no-print {
         display: none !important;
     }
 
-    /* จัดการตารางเมื่อพิมพ์ */
-    .pr-table {
-        
-        border-collapse: separate !important;
-        border-spacing: 0 !important;
-        width: 100% !important;
-    }
-
-    .pr-table th,
-    .pr-table td {
-        border: 1px solid #ccc !important;
-        
-        padding: 4px !important;
-        position: relative !important;
-        background-clip: padding-box !important;
-    }
-
-    /* ปรับแต่งคอลัมน์ Amount */
-    .pr-table td:last-child {
-        border-left: 1px solid #ccc !important;
-    }
-
-    /* ปรับแต่งการแสดงผลข้อมูลในตาราง */
-    .pr-table td input {
-        border: none !important;
-        width: 100% !important;
-        padding: 2px !important;
-        font-size: 10px !important;
-    }
-
-    /* ซ่อนปุ่มลบ */
-    .delete-btn.outside {
-        display: none !important;
-    }
-
     /* ปรับขนาดและระยะห่าง */
-    .pr-table th {
-        font-size: 10px !important;
-        font-weight: bold !important;
-        background-color: #2e5ba6 !important;
-        color: white!important;
-    }
-
-    body {
-        zoom: 0.9;
-    }
-
-    /* ปรับการแสดงผลของ form container */
     .form-container {
-        margin: 0 !important;
+        margin: 0 auto !important;
         padding: 10px !important;
         box-shadow: none !important;
+        max-width: 100% !important;
     }
 
-    /* ปรับการแสดงผลของ input fields */
-    input, select, textarea {
-        border: 1px solid #ccc !important;
-        padding: 2px !important;
-        font-size: 10px !important;
+    /* ทำให้ตารางไม่ขึ้นหน้าใหม่กลางตาราง */
+    .pr-table {
+        page-break-inside: avoid !important;
+    }
+
+    /* ทำให้ส่วนลายเซ็นไม่ขึ้นหน้าใหม่กลางส่วน */
+    .sign-table {
+        page-break-inside: avoid !important;
+    }
+
+    /* ทำให้ส่วน comments ไม่ขึ้นหน้าใหม่กลางส่วน */
+    .comment-row {
+        page-break-inside: avoid !important;
     }
 }

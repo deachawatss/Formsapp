@@ -1,0 +1,380 @@
+/* TravelRequest.css */
+
+.print-page {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.form-container {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.form-header {
+  background-color: #1e3b70;
+  color: #fff;
+  padding: 15px;
+  text-align: center;
+}
+
+.travel-header {
+  margin: 0;
+  font-size: 22px;
+  text-transform: uppercase;
+  color: #f0ca3c;
+}
+
+.section-header {
+  background-color: #1e3b70;
+  color: #fff;
+  padding: 8px 15px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-header h2 {
+  margin: 0;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+form {
+  padding: 20px;
+}
+
+.input-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  gap: 20px;
+}
+
+.input-group {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.input-group input, 
+.input-group select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.required-mark {
+  color: red;
+  position: absolute;
+  top: 0;
+  right: -10px;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: auto;
+  margin-right: 5px;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.cost-table {
+  margin: 15px 0;
+  width: 100%;
+}
+
+.cost-row {
+  display: flex;
+  margin-bottom: 8px;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+.cost-row label {
+  width: 200px;
+  font-weight: bold;
+}
+
+.cost-row input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.total-row {
+  font-weight: bold;
+  border-top: 2px solid #777;
+  border-bottom: 2px solid #777;
+  padding-top: 10px;
+}
+
+.signature-section {
+  margin: 20px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.signature-row {
+  flex: 1;
+  min-width: 200px;
+}
+
+.btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 30px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+}
+
+.button i {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+.draft-btn {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.submit-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.email-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.print-btn {
+  background-color: #0e63ae;
+  color: white;
+}
+
+.button:hover {
+  opacity: 0.8;
+  transform: translateY(-2px);
+}
+
+.button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+}
+
+/* Trip Container Styles */
+.trip-container {
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+}
+
+.trip-header {
+  margin-top: 0;
+  border-radius: 0;
+}
+
+.trip-actions {
+  position: relative;
+}
+
+.trip-menu-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0 5px;
+}
+
+.trip-menu-icon {
+  display: inline-block;
+  transform: rotate(90deg);
+}
+
+.trip-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  min-width: 250px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.trip-menu-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  color: #333;
+  transition: background-color 0.2s;
+}
+
+.trip-menu-item:hover {
+  background-color: #f0f0f0;
+}
+
+.add-trip-container {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+}
+
+.add-trip-btn {
+  background-color: #2e86de;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.add-trip-btn i {
+  font-size: 14px;
+  margin-right: 5px;
+}
+
+.add-trip-btn:hover {
+  background-color: #1c6bc8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.add-trip-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Print styles */
+@media print {
+  /* ยกเลิกการซ่อนทั้งหมด และกำหนดให้แสดงสีเต็มรูปแบบ */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  
+  body {
+    background-color: white;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .print-page {
+    background-color: white;
+    width: 100%;
+    margin: 0;
+    padding: 10px;
+    box-shadow: none;
+  }
+  
+  .form-container {
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    box-shadow: none;
+  }
+  
+  .form-header {
+    background-color: #1e3b70 !important;
+    color: #fff !important;
+  }
+  
+  .travel-header {
+    color: #f0ca3c !important;
+  }
+  
+  .section-header {
+    background-color: #1e3b70 !important;
+    color: #fff !important;
+  }
+  
+  .total-row {
+    border-top: 2px solid #777 !important;
+    border-bottom: 2px solid #777 !important;
+  }
+  
+  .trip-container {
+    border: 1px solid #ddd !important;
+  }
+  
+  /* ซ่อนเฉพาะปุ่มและเมนู */
+  .btn-row, 
+  .trip-menu-btn, 
+  .add-trip-container,
+  .trip-menu {
+    display: none !important;
+  }
+  
+  /* แก้ไขการแสดงผลสำหรับชิ้นงานพิมพ์ */
+  .input-row {
+    margin-bottom: 10px;
+  }
+  
+  .cost-row {
+    padding-bottom: 5px;
+  }
+  
+  /* รองรับการพิมพ์หลายหน้า */
+  .trip-container {
+    page-break-inside: avoid;
+  }
+  
+  .cost-table {
+    page-break-inside: avoid;
+  }
+  
+  .signature-section {
+    page-break-inside: avoid;
+  }
+} 

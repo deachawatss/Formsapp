@@ -15,7 +15,7 @@ const Sidebar = () => {
       <h2>📂 Document Forms</h2>
       <ul>
         <li>
-          <Link to="/form/capex-request">💰 CAPEX Request</Link>
+          <span>💰 CAPEX Request</span>
           <ul className="submenu">
             <li>
               <Link to="/form/capex-request/major">

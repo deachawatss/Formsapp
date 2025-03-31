@@ -1,0 +1,443 @@
+/* Import common styles */
+@import './common.css';
+
+/* ============ MINOR FORM SPECIFIC STYLES ============ */
+.minor-form {
+    position: relative;
+}
+
+.minor-form .item-table {
+    margin-top: 20px;
+}
+
+.minor-form .item-row {
+    position: relative;
+}
+
+.minor-form .item-row input[type="number"] {
+    text-align: right;
+}
+
+.minor-form .total-row td {
+    font-weight: bold;
+    background-color: #f8f9fa;
+}
+
+.minor-form .signature-section {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.minor-form .signature-box {
+    text-align: center;
+    padding: 10px;
+}
+
+.minor-form .signature-line {
+    width: 80%;
+    margin: 10px auto;
+    border-bottom: 1px solid #000;
+}
+
+.minor-form .date-line {
+    width: 60%;
+    margin: 5px auto;
+    border-bottom: 1px solid #000;
+}
+
+/* Print specific styles for Minor form */
+@media print {
+    /* ทำให้หน้าที่พิมพ์เหมือนกับที่แสดงบนหน้าจอ */
+    body {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+
+    /* คงสีพื้นหลังเดิมไว้ */
+    .minor-form-header,
+    .minor-purpose-section,
+    .minor-project-summary,
+    .minor-currency-section,
+    .minor-approval-table {
+        background-color: #f0f7ff !important;
+    }
+
+    /* คงสีหัวข้อตารางไว้ */
+    .minor-items-table th,
+    .minor-approval-table th {
+        background-color: #1e3a8a !important;
+        color: white !important;
+    }
+
+    /* ซ่อนปุ่มต่างๆ */
+    .minor-button-group,
+    .minor-add-item-btn,
+    .minor-delete-btn.outside,
+    .no-print {
+        display: none !important;
+    }
+
+    /* ทำให้ตารางและส่วนต่างๆ ไม่ขึ้นหน้าใหม่กลางส่วน */
+    .minor-form .signature-section,
+    .minor-form .item-table,
+    .minor-items-table,
+    .minor-approval-table {
+        page-break-inside: avoid !important;
+    }
+
+    /* ปรับ container เพื่อให้มีขนาดที่เหมาะสม */
+    .minor-form-container {
+        margin: 0 auto !important;
+        padding: 10px !important;
+        box-shadow: none !important;
+        max-width: 100% !important;
+    }
+}
+
+/* ============ GLOBAL CONTAINER STYLES ============ */
+.minor-form-container {
+  max-width: 900px;
+  margin: 20px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.minor-form-container h1 {
+  text-align: center;
+  margin-bottom: 5px;
+  color: #1e3a8a;
+}
+
+.minor-subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+/* ============ FORM HEADER ============ */
+.minor-form-header {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  background: #f0f7ff;
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.minor-form-group {
+  flex: 1;
+}
+
+.minor-form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #1e3a8a;
+}
+
+.minor-form-group input,
+.minor-form-group select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* ============ PURPOSE SECTION ============ */
+.minor-purpose-section {
+  background: #f0f7ff;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+}
+
+.minor-purpose-section h3 {
+  margin-top: 0;
+  color: #1e3a8a;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.minor-checkbox-group {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.minor-checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.minor-checkbox-group input[type="text"] {
+  margin-left: 10px;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 150px;
+}
+
+/* ============ PROJECT SUMMARY ============ */
+.minor-project-summary {
+  background: #f0f7ff;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+}
+
+.minor-project-summary h3 {
+  color: #1e3a8a;
+  margin: 0 0 10px 0;
+  font-size: 16px;
+}
+
+.minor-project-summary textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+  font-size: 14px;
+}
+
+/* ============ ITEMS TABLE ============ */
+.minor-items-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background: #fff;
+}
+
+.minor-items-table th,
+.minor-items-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+
+.minor-items-table th {
+  background: #1e3a8a;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.minor-items-table td {
+  padding: 5px;
+}
+
+.minor-items-table input {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.minor-items-table input[type="number"] {
+  text-align: right;
+}
+
+.minor-add-item-btn {
+  background: #1e3a8a;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.minor-add-item-btn:hover {
+  background: #152c6e;
+}
+
+/* ============ FORM FOOTER ============ */
+.minor-form-footer {
+  margin-top: 20px;
+}
+
+.minor-currency-section {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  align-items: center;
+  background: #f0f7ff;
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.minor-currency-section label {
+  font-weight: bold;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.minor-currency-section select {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 150px;
+  font-size: 14px;
+}
+
+/* ============ APPROVAL TABLE ============ */
+.minor-approval-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background: #f0f7ff;
+}
+
+.minor-approval-table th,
+.minor-approval-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.minor-approval-table th {
+  background: #1e3a8a;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* ============ OPERATING COMPANY SECTION ============ */
+.minor-operating-company {
+  background: #f0f7ff;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+}
+
+.minor-operating-company h3 {
+  background: #1e3a8a;
+  color: white;
+  padding: 8px;
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  border-radius: 4px;
+}
+
+/* ============ BUTTONS ============ */
+.minor-button-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.minor-button-group .button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.minor-button-group .button:hover {
+  transform: translateY(-2px);
+}
+
+.minor-button-group .draft-btn {
+  background-color: #3498db;
+  color: white;
+}
+
+.minor-button-group .submit-btn {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.minor-button-group .print-btn {
+  background-color: #95a5a6;
+  color: white;
+}
+
+.minor-button-group .button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+/* ============ NEW STYLES ============ */
+.minor-form-header-title {
+  background: #1e3a8a;
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.minor-company-logo {
+  width: 150px;
+  margin: 0 auto 10px auto;
+  display: block;
+}
+
+.minor-form-header-title h1 {
+  color: white;
+  margin: 0;
+  font-size: 24px;
+}
+
+.minor-subtitle {
+  color: white;
+  margin: 5px 0 0;
+  font-style: italic;
+}
+
+/* ============ DELETE BUTTON ============ */
+.amount-cell {
+  position: relative;
+}
+
+.minor-delete-btn.outside {
+  position: absolute;
+  top: 50%;
+  right: -30px;
+  transform: translateY(-50%);
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  border: none;
+  color: #ffffff;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+  line-height: 1;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.minor-delete-btn.outside:hover {
+  background: linear-gradient(135deg, #c82333, #dc3545);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+} 

@@ -435,7 +435,7 @@ const PurchaseRequestForm = () => {
                       className="delete-btn outside"
                       onClick={() => handleDeleteItem(index)}
                     >
-                      ❌
+                      ✕
                     </button>
                   </td>
                 </tr>
@@ -444,7 +444,7 @@ const PurchaseRequestForm = () => {
           </table>
           <button
             type="button"
-            className="button"
+            className="button add-line-btn"
             onClick={addItem}
           >
             ➕ Add Item

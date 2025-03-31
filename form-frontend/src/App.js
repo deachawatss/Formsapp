@@ -5,6 +5,8 @@ import Sidebar from './components/Sidebar';
 import PurchaseRequestForm from './pages/PurchaseRequestForm';
 import CapexRequestForm from './pages/CapexRequestForm';
 import TravelRequestForm from './pages/TravelRequestForm';
+import MinorForm from './pages/MinorForm';
+import MajorForm from './pages/MajorForm';
 import Home from './pages/Home';  
 import ViewForm from './pages/ViewForm';
 import Login from './pages/login';
@@ -55,6 +57,16 @@ function App() {
             <Route path="/form/capex-request" element={
               <ProtectedRoute>
                 <CapexRequestForm />
+              </ProtectedRoute>
+            } />
+            <Route path="/form/capex-request/minor" element={
+              <ProtectedRoute>
+                <MinorForm />
+              </ProtectedRoute>
+            } />
+            <Route path="/form/capex-request/major" element={
+              <ProtectedRoute>
+                <MajorForm />
               </ProtectedRoute>
             } />
             <Route path="/form/travel-request" element={

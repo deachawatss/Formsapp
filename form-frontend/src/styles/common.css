@@ -1,0 +1,225 @@
+/* ============ GLOBAL FORM STYLES ============ */
+.form-container {
+    max-width: 900px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* ============ HEADER STYLES ============ */
+.form-header {
+    text-align: center;
+    margin-bottom: 20px;
+    background: #1e3a8a;
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.company-logo {
+    width: 150px;
+    margin: 0 auto 10px auto;
+    display: block;
+}
+
+.form-header h1 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.form-header p {
+    margin: 0;
+    font-size: 14px;
+    font-style: italic;
+    margin-top: 3px;
+}
+
+/* ============ TABLE STYLES ============ */
+.table-common {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    table-layout: fixed;
+}
+
+.table-common th {
+    background: #1e3a8a;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px;
+    border: 1px solid #ccc;
+}
+
+.table-common td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
+
+.table-common input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* ============ COMMON INPUT STYLES ============ */
+.input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.input-row label {
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.input-row input,
+.input-row select,
+.input-row textarea {
+    flex: 1;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 14px;
+    min-width: 150px;
+}
+
+/* ============ BUTTON STYLES ============ */
+.btn-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.btn-draft {
+    background-color: #3498db;
+}
+
+.btn-submit {
+    background-color: #2ecc71;
+}
+
+.btn-print {
+    background-color: #2B8A6F;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    position: absolute;
+    right: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.btn:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+}
+
+/* ============ SECTION STYLES ============ */
+.section-common {
+    border: 1px solid #ccc;
+    background: #f0f7ff;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.section-header {
+    background: #1e3a8a;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px 5px 0 0;
+    margin: -10px -10px 10px -10px;
+}
+
+/* ============ PRINT STYLES ============ */
+@media print {
+    /* ซ่อนปุ่มที่ไม่ต้องการให้แสดง */
+    .no-print,
+    .btn-row,
+    .btn-print, 
+    .btn-draft,
+    .btn-submit,
+    .btn-delete {
+        display: none !important;
+    }
+
+    /* ทำให้หน้าที่พิมพ์เหมือนกับที่แสดงบนหน้าจอ */
+    body {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+
+    /* คงสีพื้นหลังต่างๆ ไว้เหมือนเดิม */
+    .form-header,
+    .table-common th,
+    .section-header {
+        background-color: #1e3a8a !important;
+        color: white !important;
+    }
+
+    .section-common {
+        background-color: #f0f7ff !important;
+    }
+
+    /* ปรับขนาดและกำหนดให้องค์ประกอบจัดวางไม่ขึ้นหน้าใหม่กลางส่วน */
+    .form-container {
+        margin: 0 auto !important;
+        padding: 10px !important;
+        box-shadow: none !important;
+        max-width: 100% !important;
+    }
+
+    .table-common {
+        page-break-inside: avoid !important;
+        border-collapse: collapse !important;
+    }
+
+    .table-common th,
+    .table-common td {
+        border: 1px solid #000 !important;
+    }
+
+    /* รักษาการจัดวางของส่วนต่างๆ */
+    .section-common {
+        page-break-inside: avoid !important;
+    }
+} 
