@@ -119,7 +119,7 @@ const MajorForm = () => {
           }
         } catch (error) {
           console.error('Error loading form data:', error);
-          alert('เกิดข้อผิดพลาดในการโหลดข้อมูลฟอร์ม');
+          alert('Error loading form data');
         }
       }
     };
@@ -340,7 +340,7 @@ const MajorForm = () => {
       }
       
       if (response.data) {
-        alert('บันทึกข้อมูลสำเร็จ');
+        alert('✅ Submitted successfully');
         if (!isEditMode) {
           const newFormId = response.data.insertedId;
           setInsertedId(newFormId);
@@ -349,7 +349,7 @@ const MajorForm = () => {
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+      alert('Error submitting form');
     }
   };
 
@@ -409,11 +409,11 @@ const MajorForm = () => {
   // ปุ่ม Send Email
   const handleSendEmail = async () => {
     if (!formData.supervisorEmail) {
-      alert('กรุณากรอก Email ก่อนส่งอีเมล์');
+      alert('Please fill in the email before sending email');
       return;
     }
     if (!insertedId) {
-      alert('ยังไม่มีการบันทึกฟอร์ม จึงไม่สามารถส่งอีเมล์ได้');
+      alert('Form not saved yet, cannot send email');
       return;
     }
   

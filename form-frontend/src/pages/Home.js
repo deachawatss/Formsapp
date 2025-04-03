@@ -79,13 +79,14 @@ const Home = () => {
     }
   };
 
-  const deleteForm = async (id) => {
+  // eslint-disable-next-line no-unused-vars
+  const deleteForm = async (formId) => {
     if (window.confirm("ต้องการลบฟอร์มนี้จริงหรือไม่?")) {
       try {
         const token = localStorage.getItem('token');
         const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
         
-        const response = await axios.delete(`${baseUrl}/api/forms/${id}`, {
+        const response = await axios.delete(`${baseUrl}/api/forms/${formId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -96,7 +97,7 @@ const Home = () => {
       } catch (error) {
         console.error('❌ Error deleting form:', error);
         // แสดง error message จาก server
-        alert('❌ ' + (error.response?.data?.error || 'เกิดข้อผิดพลาดในการลบฟอร์ม'));
+        alert('❌ ' + (error.response?.data?.error || 'Error deleting form'));
       }
     }
   };

@@ -21,7 +21,7 @@ const MyForms = () => {
         return;
       }
 
-      // ใช้ URL จาก environment variable และต่อด้วย /my-forms
+      // Use URL from environment variable and append /my-forms
       const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
       const response = await axios.get(`${baseUrl}/api/forms/my-forms`, {
         headers: {
@@ -52,11 +52,11 @@ const MyForms = () => {
     try {
       const form = forms.find(f => f.id === id);
       if (form.status !== 'Draft') {
-        alert('ไม่สามารถลบฟอร์มที่อยู่ในสถานะ Waiting For Approve หรือ Approved ได้');
+        alert('Cannot delete forms with "Waiting For Approve" or "Approved" status');
         return;
       }
 
-      if (!window.confirm('คุณแน่ใจหรือไม่ที่จะลบฟอร์มนี้?')) {
+      if (!window.confirm('Are you sure you want to delete this form?')) {
         return;
       }
 
@@ -69,24 +69,24 @@ const MyForms = () => {
         }
       });
       
-      alert(response.data.message); // แสดงข้อความเมื่อลบสำเร็จ
-      fetchMyForms(); // โหลดข้อมูลใหม่
+      alert(response.data.message); // Show success message after deletion
+      fetchMyForms(); // Reload data
     } catch (error) {
       console.error('Error deleting form:', error);
-      alert('❌ ' + (error.response?.data?.error || 'เกิดข้อผิดพลาดในการลบฟอร์ม'));
+      alert('❌ ' + (error.response?.data?.error || 'Error deleting form'));
     }
   };
 
   const getStatusColor = (status) => {
     switch (status) {
       case 'Draft':
-        return '#6c757d'; // สีเทา
+        return '#6c757d'; // Gray
       case 'Waiting For Approve':
-        return '#ffc107'; // สีเหลือง
+        return '#ffc107'; // Yellow
       case 'Approve':
-        return '#28a745'; // สีเขียว
+        return '#28a745'; // Green
       case 'Reject':
-        return '#dc3545'; // สีแดง
+        return '#dc3545'; // Red
       default:
         return '#6c757d';
     }
@@ -111,7 +111,7 @@ const MyForms = () => {
     return (
       <div className="loading-container">
         <div className="loading-spinner"></div>
-        <p>กำลังโหลด...</p>
+        <p>Loading...</p>
       </div>
     );
   }

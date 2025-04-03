@@ -99,7 +99,7 @@ const TravelRequestForm = () => {
       
     } catch (error) {
       console.error('Error fetching form:', error);
-      alert('เกิดข้อผิดพลาดในการดึงข้อมูลฟอร์ม');
+      alert('Error fetching form data');
     }
   }, [formId, user?.name, user?.email, emptyTrip]);
 
@@ -244,7 +244,7 @@ const TravelRequestForm = () => {
   const removeTrip = (tripIndex) => {
     // ต้องเหลืออย่างน้อย 1 ทริป
     if (formData.trips.length <= 1) {
-      alert('ต้องมีอย่างน้อย 1 ทริป');
+      alert('At least 1 trip is required');
       return;
     }
     

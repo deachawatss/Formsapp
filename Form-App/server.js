@@ -851,7 +851,7 @@ app.post('/api/login', async (req, res) => {
   } catch (error) {
     console.error('❌ Error during login:', error);
     res.status(500).json({ 
-      error: 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ',
+      error: '❌Error during login',
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
@@ -868,7 +868,7 @@ app.post('/api/register', async (req, res) => {
       .query('SELECT id FROM FormsSystem.Users WHERE email = @email');
     
     if (checkEmail.recordset.length > 0) {
-      return res.status(400).json({ error: 'อีเมลนี้ถูกใช้งานแล้ว' });
+      return res.status(400).json({ error: 'This email is already in use' });
     }
     
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -884,10 +884,10 @@ app.post('/api/register', async (req, res) => {
         VALUES (@email, @password, @name, @department, @role);
       `);
     
-    res.status(201).json({ message: 'ลงทะเบียนสำเร็จ' });
+    res.status(201).json({ message: 'Registration successful' });
   } catch (error) {
     console.error('❌ Error during registration:', error);
-    res.status(500).json({ error: 'เกิดข้อผิดพลาดในการลงทะเบียน' });
+    res.status(500).json({ error: 'Registration error occurred' });
   }
 });
 
@@ -902,7 +902,7 @@ app.post('/api/reset-password-request', async (req, res) => {
       .query('SELECT id, name FROM FormsSystem.Users WHERE email = @email');
     
     if (result.recordset.length === 0) {
-      return res.status(404).json({ error: 'ไม่พบอีเมลนี้ในระบบ' });
+      return res.status(404).json({ error: 'Email not found in the system' });
     }
     
     const user = result.recordset[0];
@@ -925,20 +925,20 @@ app.post('/api/reset-password-request', async (req, res) => {
     await transporter.sendMail({
       from: `"NWFTH - Forms System" <${process.env.EMAIL_USER}>`,
       to: email,
-      subject: 'รีเซ็ตรหัสผ่าน',
+      subject: 'Password Reset Request',
       html: `
-        <h3>สวัสดีคุณ ${user.name}</h3>
-        <p>คุณได้ขอรีเซ็ตรหัสผ่านสำหรับบัญชีของคุณ</p>
-        <p>กรุณาคลิกที่ลิงก์ด้านล่างเพื่อตั้งรหัสผ่านใหม่:</p>
-        <a href="${resetLink}">รีเซ็ตรหัสผ่าน</a>
-        <p>ลิงก์นี้จะหมดอายุใน 1 ชั่วโมง</p>
+        <h3>Hello ${user.name}</h3>
+        <p>You have requested a password reset for your account</p>
+        <p>Please click the link below to reset your password:</p>
+        <a href="${resetLink}">Reset Password</a>
+        <p>This link will expire in 1 hour</p>
       `
     });
     
-    res.json({ message: 'ส่งอีเมลรีเซ็ตรหัสผ่านแล้ว กรุณาตรวจสอบอีเมลของคุณ' });
+    res.json({ message: 'Email sent for password reset' });
   } catch (error) {
     console.error('❌ Error requesting password reset:', error);
-    res.status(500).json({ error: 'เกิดข้อผิดพลาดในการขอรีเซ็ตรหัสผ่าน' });
+    res.status(500).json({ error: 'Error requesting password reset' });
   }
 });
 
@@ -963,7 +963,7 @@ app.post('/api/reset-password', async (req, res) => {
       `);
     
     if (resetCheck.recordset.length === 0) {
-      return res.status(400).json({ error: 'Token ไม่ถูกต้องหรือหมดอายุ' });
+      return res.status(400).json({ error: 'Invalid or expired token' });
     }
     
     const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -977,10 +977,10 @@ app.post('/api/reset-password', async (req, res) => {
       .input('token', sql.NVarChar(500), token)
       .query('UPDATE FormsSystem.PasswordResets SET used = 1 WHERE reset_token = @token');
     
-    res.json({ message: 'รีเซ็ตรหัสผ่านสำเร็จ' });
+    res.json({ message: 'Password reset successful' });
   } catch (error) {
     console.error('❌ Error resetting password:', error);
-    res.status(500).json({ error: 'เกิดข้อผิดพลาดในการรีเซ็ตรหัสผ่าน' });
+    res.status(500).json({ error: 'Error resetting password' });
   }
 });
 
@@ -1009,13 +1009,13 @@ app.put('/api/forms/:id', authenticateToken, async (req, res) => {
       `);
 
     if (result.rowsAffected[0] === 0) {
-      return res.status(404).json({ error: 'ไม่พบฟอร์มที่ต้องการแก้ไข' });
+      return res.status(404).json({ error: 'Form not found' });
     }
 
-    res.json({ message: 'อัพเดทฟอร์มสำเร็จ' });
+    res.json({ message: 'Form updated successfully' });
   } catch (error) {
     console.error('Error updating form:', error);
-    res.status(500).json({ error: 'เกิดข้อผิดพลาดในการอัพเดทฟอร์ม' });
+    res.status(500).json({ error: 'Error updating form' });
   }
 });
 
@@ -1032,14 +1032,14 @@ app.delete('/api/forms/:id', authenticateToken, async (req, res) => {
       .query('SELECT status FROM FormsSystem.Forms WHERE id = @id');
     
     if (checkForm.recordset.length === 0) {
-      return res.status(404).json({ error: 'ไม่พบฟอร์มที่ต้องการลบ' });
+      return res.status(404).json({ error: 'Form not found' });
     }
 
     // เช็คสถานะฟอร์ม
     const formStatus = checkForm.recordset[0].status;
     if (formStatus !== 'Draft') {
       return res.status(400).json({ 
-        error: 'ไม่สามารถลบฟอร์มที่อยู่ในสถานะ Waiting For Approve หรือ Approved ได้' 
+        error: 'Cannot delete form in status Waiting For Approve or Approved' 
       });
     }
 
@@ -1049,12 +1049,12 @@ app.delete('/api/forms/:id', authenticateToken, async (req, res) => {
       .query('DELETE FROM FormsSystem.Forms WHERE id = @id');
 
     if (result.rowsAffected[0] === 0) {
-      return res.status(404).json({ error: 'ไม่พบฟอร์มที่ต้องการลบ' });
+      return res.status(404).json({ error: 'Form not found' });
     }
 
-    res.json({ message: 'ลบฟอร์มสำเร็จ' });
+    res.json({ message: 'Form deleted successfully' });
   } catch (error) {
     console.error('Error deleting form:', error);
-    res.status(500).json({ error: 'เกิดข้อผิดพลาดในการลบฟอร์ม' });
+    res.status(500).json({ error: 'Error deleting form' });
   }
 });

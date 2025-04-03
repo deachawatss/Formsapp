@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/MinorForm.css';
 
 const MinorForm = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { search } = useLocation();
+  const queryParams = new URLSearchParams(search);
+  const formId = queryParams.get('id');
   const user = JSON.parse(localStorage.getItem('user'));
+  const formDataFromState = location.state?.formData;
+  
   const [insertedId, setInsertedId] = useState(null);
   const [isSendingEmail, setIsSendingEmail] = useState(false);
   
@@ -45,6 +51,98 @@ const MinorForm = () => {
     }
   });
 
+  // เพิ่มฟังก์ชันสำหรับโหลดข้อมูลฟอร์มเดิม
+  const fetchFormData = useCallback(async () => {
+    try {
+      console.log("Fetching form data for ID:", formId);
+      const token = localStorage.getItem('token');
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      const response = await axios.get(`${baseUrl}/api/forms/${formId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const { details, user_name, department } = response.data;
+      let parsedDetails = {};
+      
+      if (typeof details === 'string') {
+        parsedDetails = JSON.parse(details);
+      } else {
+        parsedDetails = details;
+      }
+      
+      console.log("Loaded form details:", parsedDetails);
+
+      // ใช้ฟอร์ม functional update เพื่อหลีกเลี่ยงการอ้างถึง formData ปัจจุบัน
+      setFormData(prevFormData => ({
+        ...prevFormData,  // เก็บค่าพื้นฐานไว้
+        ...parsedDetails, // เขียนทับด้วยข้อมูลที่โหลดมา
+        name: parsedDetails.name || user_name || user?.name || '',
+        department: parsedDetails.department || department || '',
+        items: parsedDetails.items || [{
+          carNumber: '',
+          startDate: '',
+          description: '',
+          capital: '',
+          lease: '',
+          expense: '',
+          total: ''
+        }],
+        purpose: parsedDetails.purpose || {
+          replacement: false,
+          expansion: false,
+          costReduction: false,
+          qualityImprovement: false,
+          other: false,
+          otherText: ''
+        },
+        totals: parsedDetails.totals || {
+          capital: 0,
+          lease: 0,
+          expense: 0,
+          total: 0
+        }
+      }));
+      
+    } catch (error) {
+      console.error('Error fetching form:', error);
+      alert('Error fetching form data');
+    }
+  }, [formId, user?.name]); // ลบ formData ออกจาก dependencies
+
+  // เพิ่ม useEffect เพื่อโหลดข้อมูลเมื่อมีการเปิดฟอร์มพร้อม ID
+  useEffect(() => {
+    if (formId) {
+      if (formDataFromState) {
+        try {
+          console.log("Using form data from state:", formDataFromState);
+          const details = typeof formDataFromState.details === 'string' 
+            ? JSON.parse(formDataFromState.details)
+            : formDataFromState.details;
+          
+          console.log("Parsed details from formDataFromState:", details);
+          
+          setFormData(prev => {
+            const newFormData = {
+              ...prev,
+              ...details,
+              name: formDataFromState.user_name || user?.name || '',
+              department: details.department || formDataFromState.department || ''
+            };
+            console.log("New form data set:", newFormData);
+            return newFormData;
+          });
+        } catch (error) {
+          console.error('Error parsing form data:', error);
+          fetchFormData();
+        }
+      } else {
+        fetchFormData();
+      }
+    }
+  }, [formId, formDataFromState, fetchFormData, user?.name]);
+  
   const departments = [
     'Group Management',
     'Customer Service',
@@ -75,24 +173,36 @@ const MinorForm = () => {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     
+    console.log(`Input change: ${name} = ${type === 'checkbox' ? checked : value}`);
+    
     if (name.startsWith('purpose.')) {
       const purposeKey = name.split('.')[1];
-      setFormData(prev => ({
-        ...prev,
-        purpose: {
-          ...prev.purpose,
-          [purposeKey]: type === 'checkbox' ? checked : value
-        }
-      }));
+      setFormData(prev => {
+        const newForm = {
+          ...prev,
+          purpose: {
+            ...prev.purpose,
+            [purposeKey]: type === 'checkbox' ? checked : value
+          }
+        };
+        console.log("Updated form data (purpose):", newForm);
+        return newForm;
+      });
     } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }));
+      setFormData(prev => {
+        const newForm = {
+          ...prev,
+          [name]: value
+        };
+        console.log("Updated form data:", newForm);
+        return newForm;
+      });
     }
   };
 
   const handleItemChange = (index, field, value) => {
+    console.log(`Item change: row ${index}, field ${field} = ${value}`);
+    
     const newItems = [...formData.items];
     newItems[index] = {
       ...newItems[index],
@@ -115,11 +225,15 @@ const MinorForm = () => {
       total: acc.total + (parseFloat(item.total) || 0)
     }), { capital: 0, lease: 0, expense: 0, total: 0 });
 
-    setFormData(prev => ({
-      ...prev,
-      items: newItems,
-      totals
-    }));
+    setFormData(prev => {
+      const newForm = {
+        ...prev,
+        items: newItems,
+        totals
+      };
+      console.log("Updated items and totals:", newItems, totals);
+      return newForm;
+    });
   };
 
   const addItem = () => {
@@ -149,18 +263,35 @@ const MinorForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log("Submitting form with data:", formData);
+      
       const token = localStorage.getItem('token');
       const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
       
-      const response = await axios.post(
-        `${baseUrl}/api/forms`,
-        {
-          form_name: "Minor Capital Authorization Request",
-          user_name: formData.name,
-          department: formData.department,
-          status: 'Waiting For Approve',
-          details: formData
-        },
+      // แก้ไขการสร้าง URL เหมือนกับ handleSaveDraft
+      const url = formId 
+        ? `${baseUrl}/api/forms/${formId}`
+        : `${baseUrl}/api/forms`;
+      
+      const method = formId ? 'put' : 'post';
+      
+      console.log('Sending request to:', url);
+      console.log('Method:', method);
+      console.log('Form ID:', formId);
+      
+      const requestData = {
+        form_name: "Minor Capital Authorization Request",
+        user_name: formData.name,
+        department: formData.department,
+        status: 'Waiting For Approve',
+        details: formData
+      };
+      
+      console.log("Request data:", requestData);
+      
+      const response = await axios[method](
+        url,
+        requestData,
         {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -168,48 +299,67 @@ const MinorForm = () => {
         }
       );
       
+      console.log("Submit response:", response.data);
+      
       if (response.data) {
-        alert('บันทึกข้อมูลสำเร็จ');
-        const newFormId = response.data.insertedId;
+        alert('Data saved successfully');
+        const newFormId = response.data.insertedId || formId;
         setInsertedId(newFormId);
         navigate('/my-forms');
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+      console.error('Error details:', error.response?.data);
+      alert('Error saving data');
     }
   };
 
   // แยกฟังก์ชันสำหรับ save draft
   const handleSaveDraft = async () => {
     try {
+      console.log("Saving draft with form data:", formData);
+      
       const token = localStorage.getItem('token');
       const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
       
-      const response = await axios.post(
-        `${baseUrl}/api/forms`,
-        {
-          form_name: "Minor Capital Authorization Request",
-          user_name: formData.name,
-          department: formData.department,
-          status: 'Draft',
-          details: formData
-        },
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
+      // แก้ไขการสร้าง URL
+      const url = formId 
+        ? `${baseUrl}/api/forms/${formId}`
+        : `${baseUrl}/api/forms`;
+      
+      const method = formId ? 'put' : 'post';
+      
+      console.log('Sending request to:', url);
+      console.log('Method:', method);
+      console.log('Form ID:', formId);
+      
+      const requestData = {
+        form_name: "Minor Capital Authorization Request",
+        user_name: formData.name,
+        department: formData.department,
+        status: 'Draft',
+        details: formData
+      };
+      
+      console.log("Request data:", requestData);
+      
+      const response = await axios[method](url, requestData, {
+        headers: {
+          'Authorization': `Bearer ${token}`
         }
-      );
+      });
+      
+      console.log("Save draft response:", response.data);
       
       if (response.data) {
         alert('✅ Draft saved successfully!');
-        const newFormId = response.data.insertedId;
+        const newFormId = response.data.insertedId || formId;
         setInsertedId(newFormId);
         navigate('/my-forms');
       }
     } catch (error) {
       console.error('Error saving draft:', error);
+      console.error('Error details:', error.response?.data);
       alert('❌ Error saving draft');
     }
   };
@@ -217,11 +367,11 @@ const MinorForm = () => {
   // ปุ่ม Send Email
   const handleSendEmail = async () => {
     if (!formData.email) {
-      alert('กรุณากรอก Email ก่อนส่งอีเมล์');
+      alert('Please enter Email before sending email');
       return;
     }
     if (!insertedId) {
-      alert('ยังไม่มีการบันทึกฟอร์ม จึงไม่สามารถส่งอีเมล์ได้');
+      alert('Form has not been saved yet, cannot send email');
       return;
     }
   

@@ -298,11 +298,10 @@ form {
 
 /* Print styles */
 @media print {
-  /* ยกเลิกการซ่อนทั้งหมด และกำหนดให้แสดงสีเต็มรูปแบบ */
+  /* Remove all hiding and set full colors for printing */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-    color-adjust: exact !important;
   }
   
   body {
@@ -348,7 +347,7 @@ form {
     border: 1px solid #ddd !important;
   }
   
-  /* ซ่อนเฉพาะปุ่มและเมนู */
+  /* Hide only buttons and menus */
   .btn-row, 
   .trip-menu-btn, 
   .add-trip-container,
@@ -356,7 +355,7 @@ form {
     display: none !important;
   }
   
-  /* แก้ไขการแสดงผลสำหรับชิ้นงานพิมพ์ */
+  /* Adjust display for print layout */
   .input-row {
     margin-bottom: 10px;
   }
@@ -365,7 +364,7 @@ form {
     padding-bottom: 5px;
   }
   
-  /* รองรับการพิมพ์หลายหน้า */
+  /* Support for multi-page printing */
   .trip-container {
     page-break-inside: avoid;
   }

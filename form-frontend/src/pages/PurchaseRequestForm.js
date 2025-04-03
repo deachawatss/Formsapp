@@ -112,7 +112,7 @@ const PurchaseRequestForm = () => {
       
     } catch (error) {
       console.error('Error fetching form:', error);
-      alert('เกิดข้อผิดพลาดในการดึงข้อมูลฟอร์ม');
+      alert('Error fetching form data');
     }
   }, [formId, user?.name]);
 
@@ -293,11 +293,11 @@ const PurchaseRequestForm = () => {
   // ปุ่ม Send Email (จะแยกออกจาก submit)
   const handleSendEmail = async () => {
     if (!formData.supervisorEmail) {
-      alert('กรุณากรอก Manager Email ก่อนส่งอีเมล์');
+      alert('Please enter Manager Email before sending email');
       return;
     }
     if (!insertedId) {
-      alert('ยังไม่มีการบันทึกฟอร์ม จึงไม่สามารถส่งอีเมล์ได้');
+      alert('Form has not been saved yet, cannot send email');
       return;
     }
   

@@ -767,18 +767,28 @@
         display: none !important;
     }
     
-    /* ทำให้ส่วนต่างๆ ไม่ขึ้นหน้าใหม่กลางส่วน */
+    /*
+      เดิมมีการ avoid ทุกตาราง
+      แก้ให้บางตารางตัดข้ามหน้าได้ (auto)
+      ส่วนไหนอยากบังคับให้อยู่หน้าเดียวกันให้คง avoid
+    */
+    
+    /* ยังบังคับไม่ตัดตรง signature และ approval table (ถ้าอยาก) */
     .major-form .signature-section,
     .major-form .item-table,
-    .major-approval-table,
+    .major-approval-table {
+        page-break-inside: avoid !important;
+    }
+
+    /* ส่วนตารางใหญ่ๆ ที่อาจยาว ให้ตัดข้ามหน้าได้ */
     .major-authority-table,
     .major-lease-payment-table,
     .major-economic-table,
     .major-financial-table,
     .major-budget-table {
-        page-break-inside: avoid !important;
+        page-break-inside: auto !important;
     }
-    
+
     /* ปรับ container เพื่อให้มีขนาดที่เหมาะสม */
     .major-form-container {
         margin: 0 auto !important;
