@@ -254,7 +254,7 @@ const MajorForm = () => {
     if (!obj) return '0.00';
     const prev = parseFloat(obj.previouslyApproved) || 0;
     const curr = parseFloat(obj.thisRequest) || 0;
-    return (prev + curr).toFixed(2);
+    return (prev + curr).toLocaleString('en-US', { minimumFractionDigits: 2 });
   };
 
   // รวมเฉพาะส่วน Addition
@@ -269,9 +269,9 @@ const MajorForm = () => {
                   + (parseFloat(pvLeasePayment.thisRequest) || 0);
 
     return {
-      prev: sumPrev.toFixed(2),
-      thisReq: sumThis.toFixed(2),
-      total: (sumPrev + sumThis).toFixed(2)
+      prev: sumPrev.toLocaleString('en-US', { minimumFractionDigits: 2 }),
+      thisReq: sumThis.toLocaleString('en-US', { minimumFractionDigits: 2 }),
+      total: (sumPrev + sumThis).toLocaleString('en-US', { minimumFractionDigits: 2 })
     };
   };
 
@@ -287,9 +287,9 @@ const MajorForm = () => {
                   + (parseFloat(expense.thisRequest) || 0);
 
     return {
-      prev: sumPrev.toFixed(2),
-      thisReq: sumThis.toFixed(2),
-      total: (sumPrev + sumThis).toFixed(2)
+      prev: sumPrev.toLocaleString('en-US', { minimumFractionDigits: 2 }),
+      thisReq: sumThis.toLocaleString('en-US', { minimumFractionDigits: 2 }),
+      total: (sumPrev + sumThis).toLocaleString('en-US', { minimumFractionDigits: 2 })
     };
   };
 

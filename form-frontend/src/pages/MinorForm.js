@@ -630,7 +630,7 @@ const MinorForm = () => {
                   />
                 </td>
                 <td className="amount-cell">
-                  {item.total}
+                  {parseFloat(item.total || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   <button
                     type="button"
                     className="minor-delete-btn outside"
@@ -647,16 +647,16 @@ const MinorForm = () => {
             <tr>
               <td colSpan="3" style={{ textAlign: 'right', fontWeight: 'bold' }}>TOTAL:</td>
               <td style={{ fontWeight: 'bold' }}>
-                {parseFloat(formData.totals.capital).toFixed(2)}
+                {parseFloat(formData.totals.capital).toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </td>
               <td style={{ fontWeight: 'bold' }}>
-                {parseFloat(formData.totals.lease).toFixed(2)}
+                {parseFloat(formData.totals.lease).toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </td>
               <td style={{ fontWeight: 'bold' }}>
-                {parseFloat(formData.totals.expense).toFixed(2)}
+                {parseFloat(formData.totals.expense).toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </td>
               <td style={{ fontWeight: 'bold' }}>
-                {parseFloat(formData.totals.total).toFixed(2)}
+                {parseFloat(formData.totals.total).toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </td>
             </tr>
           </tfoot>
@@ -694,7 +694,8 @@ const MinorForm = () => {
                   <td>Department Manager</td>
                   <td></td>
                   <td></td>
-                  <td>RGM</td>
+                  <td>MD, SE Asia<p>
+                  Anthony C.</p></td>
                   <td></td>
                   <td></td>
                 </tr>
@@ -702,7 +703,8 @@ const MinorForm = () => {
                   <td>Financial Controller</td>
                   <td></td>
                   <td></td>
-                  <td>RGVP</td>
+                  <td>For GWF<p>
+                  Paul F.</p></td>
                   <td></td>
                   <td></td>
                 </tr>
@@ -710,7 +712,8 @@ const MinorForm = () => {
                   <td>General Manager</td>
                   <td></td>
                   <td></td>
-                  <td></td>
+                  <td>For NWF<p>
+                  T.Whelan</p></td>
                   <td></td>
                   <td></td>
                 </tr>

@@ -296,9 +296,188 @@ form {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* ---------   กำจัดเส้นเกินใน TRIP   --------- */
+.trip-container {                       /* (ของเดิม) */
+  border: none;
+  background: #fff;
+  border-radius: 6px;
+  padding: 15px 18px;
+  box-shadow: 0 0 0 1px #ccc inset;
+}
+
+.trip-container .input-row {
+  border: none;
+  padding-bottom: 10px;
+}
+
+.trip-container .input-row + .input-row {
+  margin-top: 10px;
+}
+
+.trip-container .input-row:nth-of-type(3),
+.trip-container .input-row:nth-of-type(4) {
+  border: none !important;
+  box-shadow: none !important;
+  padding-top: 8px;
+}
+
+.trip-container .checkbox-group {
+  border: none !important;
+}
+
+/* ---------  Card Outline สำหรับทุก block  --------- */
+.section-card,
+.cost-table,
+.signature-section {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 15px 18px;
+  background: #fff;
+  margin-bottom: 20px;
+}
+
+/* (ซ้ำได้ ไม่เป็นไร) */
+.section-card {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  padding: 15px 18px;
+  margin-bottom: 20px;
+}
+
+/* ★ EDIT – ทำให้ header สีน้ำเงินชิดขอบการ์ด */
+.section-card > .section-header {
+  margin: -15px -18px 15px -18px;   /* ดึงเข้ามาเต็ม */
+  border-radius: 6px 6px 0 0;
+}
+
+/* ★ EDIT – ใช้การ์ดกับ cost-table / signatures */
+.section-card.cost-table { padding-top: 0; margin: 20px 0; }
+.section-card.cost-table .cost-row,
+.section-card .signature-section   { padding-left: 0; padding-right: 0; margin: 0; }
+
+
+/* ★★★ FIX #1 — header ของ TRIP ต้องเต็มการ์ด ★★★ */
+.trip-container > .section-header{
+  margin:-15px -18px 15px -18px;      /* ดึงชิดซ้าย‑ขวาเท่าการ์ด */
+  border-radius:6px 6px 0 0;
+}
+
+/* ★★★ FIX #2 — กรอบซ้อนใน Estimated‑Cost / Signatures ★★★
+   เมื่อสอง block นี้อยู่ภายใต้ .section-card ให้ตัด border ชั้นในออก */
+.section-card .cost-table,
+.section-card .signature-section{
+  border:none;            /* ลบกรอบซ้อน */
+  padding-left:0;
+  padding-right:0;
+  margin:0;
+}
+
+/* ★★★ FIX #3 — ลบกรอบซ้อนใน Traveler Information ★★★
+   input‑row ภายในการ์ดไม่ต้องมีเส้นล่าง */
+.section-card .input-row{
+  border:none;
+}
+
+/* ─────────  FIX 1 : margin‑ขวาของ Estimated Cost ───────── */
+.section-card.cost-table{
+  /* คืน padding ซ้าย‑ขวาให้เท่ากับการ์ดอื่น ๆ */
+  padding: 0 18px 15px 18px;   /* top 0 – เหลือจาก header */
+}
+
+/* ยกเลิก override เก่าที่ตัด padding ออก */
+.section-card.cost-table .cost-row{
+  padding-left: 0;          /* label ชิดซ้ายตามเดิม */
+  padding-right: 0;         /* ← อยากชิดขวา 18px ใช้ flex-end แทน input ครอบ */
+}
+
+/* ─────────  FIX 2 : ลบเส้นใต้ Other และ Total ───────── */
+.section-card.cost-table .cost-row:nth-last-of-type(2){   /* แถว Other */
+  border-bottom: none;      /* ตัดเส้นบาง */
+}
+
+.section-card.cost-table .cost-row.total-row{
+  border-bottom: none;      /* ตัดเส้นล่างของ Total */
+  /* ยังคงเส้นหนาด้านบนไว้เพื่อแยกยอดรวม */
+}
+
+/* ─────────  FIX 3 : header TRIP เต็มการ์ด (กรณี padding ถูกดึง) ───────── */
+.trip-container>.section-header{
+  margin:-15px -18px 15px -18px;   /* ชิดซ้าย‑ขวาเท่าการ์ด */
+  border-radius:6px 6px 0 0;
+}
+
+/* ★★ PATCH 10‑Apr — Estimated‑Cost spacing & extra line ★★ */
+
+/* 1) ให้ cost‑row มี padding‑ขวา 18 px เท่าการ์ด (ไม่ชิดขอบ) */
+.section-card.cost-table .cost-row{
+  padding-right:18px;          /* ซ้ายยัง 0 เพื่อให้ label ชิดขอบ */
+}
+
+/* 2) ลบเส้นบางใต้ “Other” (คือ cost‑row สุดท้ายก่อน total‑row) */
+.section-card.cost-table .cost-row:not(.total-row):last-of-type{
+  border-bottom:none;
+}
+
+/* █████  PATCH 2 – แก้ช่อง Estimated‑Cost ชิดขอบขวา + ลบเส้นบน TOTAL  █████ */
+
+/* 1) เพิ่ม padding ขวา‑ซ้าย 18 px เท่าการ์ดอื่น ๆ */
+.section-card.cost-table{
+  padding: 0 18px 18px 18px;   /* top 0 เพราะ header กินที่อยู่แล้ว */
+}
+
+/* 2) ภายใน cost-row ไม่ต้อง padding‑ขวาซ้ำ */
+.section-card.cost-table .cost-row{
+  padding-right: 0;
+}
+
+/* 3) ลบเส้นบางใต้ “Other” (cost-row สุดท้ายก่อน total) */
+.section-card.cost-table .cost-row:not(.total-row):last-of-type{
+  border-bottom: none;
+}
+
+/* 4) ลบเส้นเทา **เหนือ** แถว Total */
+.section-card.cost-table .total-row{
+  border-top: none;
+}
+
+/* ███  PATCH – ให้บล็อก Estimated‑Cost กว้างเท่าการ์ดอื่น ███ */
+
+/* 1) ตัดเส้นข้างของ cost‑row ที่ดันให้กว้างเกิน */
+.section-card.cost-table .cost-row{
+  border-left: none;
+  border-right:none;
+}
+
+/* 2) ให้ input ภายใน cost‑row กินพื้นที่ตามการ์ด (ไม่เกินขอบ) */
+.section-card.cost-table .cost-row input{
+  width:100%;
+  box-sizing:border-box;   /* รวม border เข้า width */
+}
+
+/* 3) ยืนยันว่าการ์ดมี box‑sizing ถูกต้อง */
+.section-card.cost-table{ box-sizing:border-box; }
+
+/* ░░ cost‑value ในโหมด View ให้จัดเหมือน input ░░ */
+.cost-row{
+  display:flex;
+  align-items:center;
+}
+
+.cost-row label{               /* label กว้างเท่าฟอร์มกรอก */
+  width:200px;
+  font-weight:bold;
+}
+
+.cost-value{                   /* ช่องตัวเลข */
+  flex:1;
+  padding:8px;
+  box-sizing:border-box;
+}
+
+
 /* Print styles */
 @media print {
-  /* Remove all hiding and set full colors for printing */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
@@ -347,7 +526,6 @@ form {
     border: 1px solid #ddd !important;
   }
   
-  /* Hide only buttons and menus */
   .btn-row, 
   .trip-menu-btn, 
   .add-trip-container,
@@ -355,25 +533,10 @@ form {
     display: none !important;
   }
   
-  /* Adjust display for print layout */
-  .input-row {
-    margin-bottom: 10px;
-  }
-  
-  .cost-row {
-    padding-bottom: 5px;
-  }
-  
-  /* Support for multi-page printing */
-  .trip-container {
-    page-break-inside: avoid;
-  }
-  
-  .cost-table {
-    page-break-inside: avoid;
-  }
-  
-  .signature-section {
-    page-break-inside: avoid;
-  }
-} 
+  .input-row { margin-bottom: 10px; }
+  .cost-row  { padding-bottom: 5px; }
+
+  .trip-container,
+  .cost-table,
+  .signature-section { page-break-inside: avoid; }
+}

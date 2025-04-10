@@ -63,17 +63,55 @@ const MyForms = () => {
       const token = localStorage.getItem('token');
       const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
       
-      const response = await axios.delete(`${baseUrl}/api/forms/${id}`, {
+      await axios.delete(`${baseUrl}/api/forms/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
       
-      alert(response.data.message); // Show success message after deletion
+      alert('Form deleted successfully'); // แสดงข้อความแจ้งเตือนโดยตรง
       fetchMyForms(); // Reload data
     } catch (error) {
       console.error('Error deleting form:', error);
       alert('❌ ' + (error.response?.data?.error || 'Error deleting form'));
+    }
+  };
+
+  const handleApprove = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      
+      await axios.put(`${baseUrl}/api/forms/${id}/approve`, {}, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      alert('Form approved successfully');
+      fetchMyForms();
+    } catch (error) {
+      console.error('Error approving form:', error);
+      alert('❌ ' + (error.response?.data?.error || 'Error approving form'));
+    }
+  };
+
+  const handleReject = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      
+      await axios.put(`${baseUrl}/api/forms/${id}/reject`, {}, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      alert('Form rejected successfully');
+      fetchMyForms();
+    } catch (error) {
+      console.error('Error rejecting form:', error);
+      alert('❌ ' + (error.response?.data?.error || 'Error rejecting form'));
     }
   };
 
@@ -158,6 +196,26 @@ const MyForms = () => {
                   >
                     👁 View
                   </Link>
+
+                  {form.status === 'Waiting For Approve' && (
+                    <>
+                      <button
+                        onClick={() => handleApprove(form.id)}
+                        className="action-btn approve-btn"
+                        title="Approve Form"
+                      >
+                        ✓ Approved
+                      </button>
+                      <button
+                        onClick={() => handleReject(form.id)}
+                        className="action-btn reject-btn"
+                        title="Reject Form"
+                      >
+                        ✗ Rejected
+                      </button>
+                    </>
+                  )}
+
                   {form.status === 'Draft' && (
                     <>
                       <Link

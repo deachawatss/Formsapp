@@ -142,51 +142,51 @@ const ViewMajorForm = ({ form }) => {
               <tbody>
                 <tr>
                   <td>Capital Addition</td>
-                  <td>{details.additionSection?.capitalAddition?.previouslyApproved || '0.00'}</td>
-                  <td>{details.additionSection?.capitalAddition?.thisRequest || '0.00'}</td>
-                  <td>{(Number(details.additionSection?.capitalAddition?.previouslyApproved || 0) + Number(details.additionSection?.capitalAddition?.thisRequest || 0)).toFixed(2)}</td>
+                  <td>{Number(details.additionSection?.capitalAddition?.previouslyApproved || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td>{Number(details.additionSection?.capitalAddition?.thisRequest || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td>{(Number(details.additionSection?.capitalAddition?.previouslyApproved || 0) + Number(details.additionSection?.capitalAddition?.thisRequest || 0)).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
                 </tr>
                 <tr>
                   <td>Capital-Related Expense</td>
-                  <td>{details.additionSection?.capitalRelatedExpense?.previouslyApproved || '0.00'}</td>
-                  <td>{details.additionSection?.capitalRelatedExpense?.thisRequest || '0.00'}</td>
-                  <td>{(Number(details.additionSection?.capitalRelatedExpense?.previouslyApproved || 0) + Number(details.additionSection?.capitalRelatedExpense?.thisRequest || 0)).toFixed(2)}</td>
+                  <td>{Number(details.additionSection?.capitalRelatedExpense?.previouslyApproved || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td>{Number(details.additionSection?.capitalRelatedExpense?.thisRequest || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td>{(Number(details.additionSection?.capitalRelatedExpense?.previouslyApproved || 0) + Number(details.additionSection?.capitalRelatedExpense?.thisRequest || 0)).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
                 </tr>
                 <tr>
                   <td>PV of Lease Payment</td>
-                  <td>{details.additionSection?.pvLeasePayment?.previouslyApproved || '0.00'}</td>
-                  <td>{details.additionSection?.pvLeasePayment?.thisRequest || '0.00'}</td>
-                  <td>{(Number(details.additionSection?.pvLeasePayment?.previouslyApproved || 0) + Number(details.additionSection?.pvLeasePayment?.thisRequest || 0)).toFixed(2)}</td>
+                  <td>{Number(details.additionSection?.pvLeasePayment?.previouslyApproved || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td>{Number(details.additionSection?.pvLeasePayment?.thisRequest || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td>{(Number(details.additionSection?.pvLeasePayment?.previouslyApproved || 0) + Number(details.additionSection?.pvLeasePayment?.thisRequest || 0)).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
                 </tr>
                 <tr className="total-row">
                   <td>Total Addition Request</td>
-                  <td>{additionTotal.previouslyApproved.toFixed(2)}</td>
-                  <td>{additionTotal.thisRequest.toFixed(2)}</td>
-                  <td>{additionTotal.total.toFixed(2)}</td>
+                  <td>{additionTotal.previouslyApproved.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td>{additionTotal.thisRequest.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td>{additionTotal.total.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
                 </tr>
                 <tr>
                   <td>Capital Disposal</td>
-                  <td>{details.disposalSection?.capitalDisposal?.previouslyApproved || '0.00'}</td>
-                  <td>{details.disposalSection?.capitalDisposal?.thisRequest || '0.00'}</td>
-                  <td>{(Number(details.disposalSection?.capitalDisposal?.previouslyApproved || 0) + Number(details.disposalSection?.capitalDisposal?.thisRequest || 0)).toFixed(2)}</td>
+                  <td>{Number(details.disposalSection?.capitalDisposal?.previouslyApproved || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td>{Number(details.disposalSection?.capitalDisposal?.thisRequest || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td>{(Number(details.disposalSection?.capitalDisposal?.previouslyApproved || 0) + Number(details.disposalSection?.capitalDisposal?.thisRequest || 0)).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
                 </tr>
                 <tr>
                   <td>Capital-Related Expense</td>
-                  <td>{details.disposalSection?.capitalRelatedExpense2?.previouslyApproved || '0.00'}</td>
-                  <td>{details.disposalSection?.capitalRelatedExpense2?.thisRequest || '0.00'}</td>
-                  <td>{(Number(details.disposalSection?.capitalRelatedExpense2?.previouslyApproved || 0) + Number(details.disposalSection?.capitalRelatedExpense2?.thisRequest || 0)).toFixed(2)}</td>
+                  <td>{Number(details.disposalSection?.capitalRelatedExpense2?.previouslyApproved || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td>{Number(details.disposalSection?.capitalRelatedExpense2?.thisRequest || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td>{(Number(details.disposalSection?.capitalRelatedExpense2?.previouslyApproved || 0) + Number(details.disposalSection?.capitalRelatedExpense2?.thisRequest || 0)).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
                 </tr>
                 <tr>
                   <td>Other Initial Cost</td>
-                  <td>{details.disposalSection?.otherInitialCost?.previouslyApproved || '0.00'}</td>
-                  <td>{details.disposalSection?.otherInitialCost?.thisRequest || '0.00'}</td>
-                  <td>{(Number(details.disposalSection?.otherInitialCost?.previouslyApproved || 0) + Number(details.disposalSection?.otherInitialCost?.thisRequest || 0)).toFixed(2)}</td>
+                  <td>{Number(details.disposalSection?.otherInitialCost?.previouslyApproved || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td>{Number(details.disposalSection?.otherInitialCost?.thisRequest || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td>{(Number(details.disposalSection?.otherInitialCost?.previouslyApproved || 0) + Number(details.disposalSection?.otherInitialCost?.thisRequest || 0)).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
                 </tr>
                 <tr className="total-row">
                   <td>Total Disposal Request</td>
-                  <td>{disposalTotal.previouslyApproved.toFixed(2)}</td>
-                  <td>{disposalTotal.thisRequest.toFixed(2)}</td>
-                  <td>{disposalTotal.total.toFixed(2)}</td>
+                  <td>{disposalTotal.previouslyApproved.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td>{disposalTotal.thisRequest.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td>{disposalTotal.total.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
                 </tr>
               </tbody>
             </table>

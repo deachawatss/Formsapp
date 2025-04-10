@@ -5,10 +5,13 @@ import './Sidebar.css'; // ใช้สำหรับสไตล์
 const Sidebar = () => {
   return (
     <div className="sidebar">
-      {/* ปุ่ม Home วางบนสุด */}
+      {/* ปุ่ม Home และ Dashboard */}
       <ul>
         <li>
           <Link to="/">🏠 Home</Link>
+        </li>
+        <li>
+          <Link to="/dashboard">📊 Dashboard</Link>
         </li>
       </ul>
 

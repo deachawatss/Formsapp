@@ -8,6 +8,7 @@ import TravelRequestForm from './pages/TravelRequestForm';
 import MinorForm from './pages/MinorForm';
 import MajorForm from './pages/MajorForm';
 import Home from './pages/Home';  
+import Dashboard from './pages/Dashboard';
 import ViewForm from './pages/ViewForm';
 import Login from './pages/login';
 import MyForms from './pages/MyForms';
@@ -42,6 +43,11 @@ function App() {
             <Route path="/" element={
               <ProtectedRoute>
                 <Home/>
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
               </ProtectedRoute>
             } />
             <Route path="/view/:id" element={

@@ -414,77 +414,79 @@ const TravelRequestForm = () => {
           </div>
 
           {/* Traveler Information */}
-          <div className="section-header">
-            <h2>Traveler Information</h2>
+          <div className="section-card">
+            <div className="section-header">
+              <h2>Traveler Information</h2>
+            </div>
+
+            <div className="input-row">
+              <div className="input-group">
+                <label>Name:</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  readOnly
+                  style={{ backgroundColor: '#f0f0f0' }}
+                />
+                <span className="required-mark">*</span>
+              </div>
+              
+              <div className="input-group">
+                <label>Email:</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+                <span className="required-mark">*</span>
+              </div>
+            </div>
+
+            <div className="input-row">
+              <div className="input-group">
+                <label>Location:</label>
+                <input
+                  type="text"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  required
+                />
+                <span className="required-mark">*</span>
+              </div>
+              
+              <div className="input-group">
+                <label>Country:</label>
+                <input
+                  type="text"
+                  name="country"
+                  value={formData.country}
+                  onChange={handleChange}
+                  required
+                />
+                <span className="required-mark">*</span>
+              </div>
+            </div>
+
+            <div className="input-row">
+              <div className="input-group">
+                <label>Currency:</label>
+                <input
+                  type="text"
+                  name="currency"
+                  value={formData.currency}
+                  onChange={handleChange}
+                  required
+                />
+                <span className="required-mark">*</span>
+              </div>
+            </div>
           </div>
 
-          <div className="input-row">
-            <div className="input-group">
-              <label>Name:</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                readOnly
-                style={{ backgroundColor: '#f0f0f0' }}
-              />
-              <span className="required-mark">*</span>
-            </div>
-            
-            <div className="input-group">
-              <label>Email:</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-              <span className="required-mark">*</span>
-            </div>
-          </div>
-
-          <div className="input-row">
-            <div className="input-group">
-              <label>Location:</label>
-              <input
-                type="text"
-                name="location"
-                value={formData.location}
-                onChange={handleChange}
-                required
-              />
-              <span className="required-mark">*</span>
-            </div>
-            
-            <div className="input-group">
-              <label>Country:</label>
-              <input
-                type="text"
-                name="country"
-                value={formData.country}
-                onChange={handleChange}
-                required
-              />
-              <span className="required-mark">*</span>
-            </div>
-          </div>
-
-          <div className="input-row">
-            <div className="input-group">
-              <label>Currency:</label>
-              <input
-                type="text"
-                name="currency"
-                value={formData.currency}
-                onChange={handleChange}
-                required
-              />
-              <span className="required-mark">*</span>
-            </div>
-          </div>
-
-          {/* Trip Information - แสดงทริปทุกอันในวนลูป */}
+          {/* Trip Information */}
           {formData.trips.map((trip, tripIndex) => (
             <div key={tripIndex} className="trip-container">
               <div className="section-header trip-header">
@@ -645,7 +647,7 @@ const TravelRequestForm = () => {
             </div>
           ))}
 
-          {/* Add Trip Button - แบบที่เห็นในรูปตัวอย่าง */}
+          {/* Add Trip Button */}
           <div className="add-trip-container">
             <button type="button" className="add-trip-btn" onClick={addTrip}>
               ➕ Add Trip
@@ -653,11 +655,11 @@ const TravelRequestForm = () => {
           </div>
 
           {/* Estimated Cost */}
-          <div className="section-header">
-            <h2>Estimated Cost of Trip:</h2>
-          </div>
+          <div className="section-card cost-table">  {/* ★ EDIT – wrap ด้วยการ์ด */}
+            <div className="section-header">
+              <h2>Estimated Cost of Trip:</h2>
+            </div>
 
-          <div className="cost-table">
             <div className="cost-row">
               <label>Airfare:</label>
               <input
@@ -708,7 +710,7 @@ const TravelRequestForm = () => {
               <label>Total:</label>
               <input
                 type="text"
-                value={formData.estimatedCost.total}
+                value={parseFloat(formData.estimatedCost.total || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                 readOnly
                 style={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}
               />
@@ -716,23 +718,25 @@ const TravelRequestForm = () => {
           </div>
 
           {/* Signatures */}
-          <div className="section-header">
-            <h2>Signatures and Date:</h2>
-          </div>
+          <div className="section-card">  {/* ★ EDIT – ห่อด้วยการ์ด */}
+            <div className="section-header">
+              <h2>Signatures and Date:</h2>
+            </div>
 
-          <div className="signature-section">
-            <div className="signature-row">
-              <label>Department Manager:</label>
-              <input
-                type="text"
-                name="departmentManager"
-                value={formData.departmentManager}
-                onChange={handleChange}
-              />
+            <div className="signature-section">
+              <div className="signature-row">
+                <label>Department Manager:</label>
+                <input
+                  type="text"
+                  name="departmentManager"
+                  value={formData.departmentManager}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
           </div>
 
-          {/* Buttons - ปรับแบบปุ่มให้เหมือนในภาพตัวอย่าง */}
+          {/* Buttons */}
           <div className="btn-row">
             <button type="button" className="button draft-btn" onClick={handleSaveDraft}>
               💾 Save as Draft

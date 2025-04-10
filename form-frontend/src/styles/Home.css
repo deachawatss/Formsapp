@@ -70,14 +70,6 @@ body {
   text-align: center;
 }
 
-
-/* Home.css */
-.chart-wrapper {
-  width: 100%;
-  height: 450px; /* ตั้งความสูงตามต้องการ */
-}
-
-
 /* =========== Select Form Section =========== */
 .select-form-section {
   background: #fff;
@@ -171,7 +163,7 @@ body {
 }
 
 /* =========== Action Buttons =========== */
-.action-link, .delete-btn, .action-btn, .view-btn, .edit-btn {
+.action-link, .delete-btn, .action-btn, .view-btn, .edit-btn, .approve-btn, .reject-btn {
   display: inline-flex;
   align-items: center;
   padding: 8px 16px;
@@ -198,12 +190,12 @@ body {
 }
 
 .edit-btn {
-  background-color: #f6ad55;
+  background-color: #ed8936;
   color: white;
 }
 
 .edit-btn:hover {
-  background-color: #ed8936;
+  background-color: #dd6b20;
   transform: translateY(-1px);
   box-shadow: 0 2px 4px rgba(0,0,0,0.15);
 }
@@ -215,6 +207,29 @@ body {
 
 .delete-btn:hover {
   background-color: #c53030;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+/* เพิ่มสไตล์ใหม่สำหรับปุ่ม approve และ reject */
+.approve-btn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.approve-btn:hover {
+  background-color: #45a049;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.reject-btn {
+  background-color: #e53e3e;
+  color: white;
+}
+
+.reject-btn:hover {
+  background-color: #d32f2f;
   transform: translateY(-1px);
   box-shadow: 0 2px 4px rgba(0,0,0,0.15);
 }
@@ -238,12 +253,14 @@ body {
   font-style: italic;
 }
 
-.loading-container {
+.loading-container, .error-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 200px;
+  min-height: 400px;
+  text-align: center;
+  padding: 40px;
 }
 
 .loading-spinner {
@@ -253,12 +270,39 @@ body {
   width: 40px;
   height: 40px;
   animation: spin 1s linear infinite;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.error-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+  color: #e74c3c;
+}
+
+.retry-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.retry-button:hover {
+  background-color: #2980b9;
+}
+
+.status-unknown {
+  background-color: #e0e0e0;
+  color: #666;
 }
 
 .status-badge {
@@ -279,4 +323,28 @@ body {
   gap: 8px;
   align-items: center;
   justify-content: flex-start;
+}
+
+/* สถานะฟอร์ม */
+.status-approved {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.status-waiting-for-approve {
+  background-color: #ffc107;
+  color: white;
+}
+
+.status-rejected {
+  background-color: #e53e3e;
+  color: white;
+}
+
+/* ตั้งค่าการตอบสนองสำหรับอุปกรณ์มือถือ */
+@media screen and (max-width: 768px) {
+  .forms-table {
+    display: block;
+    overflow-x: auto;
+  }
 }

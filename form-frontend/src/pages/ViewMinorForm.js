@@ -121,10 +121,10 @@ const ViewMinorForm = ({ form }) => {
               <td>{item.carNumber || ''}</td>
               <td>{item.startDate || ''}</td>
               <td>{item.description || ''}</td>
-              <td>{item.capital || ''}</td>
-              <td>{item.lease || ''}</td>
-              <td>{item.expense || ''}</td>
-              <td>{item.total || ''}</td>
+              <td>{item.capital ? parseFloat(item.capital).toLocaleString('en-US', { minimumFractionDigits: 2 }) : ''}</td>
+              <td>{item.lease ? parseFloat(item.lease).toLocaleString('en-US', { minimumFractionDigits: 2 }) : ''}</td>
+              <td>{item.expense ? parseFloat(item.expense).toLocaleString('en-US', { minimumFractionDigits: 2 }) : ''}</td>
+              <td>{item.total ? parseFloat(item.total).toLocaleString('en-US', { minimumFractionDigits: 2 }) : ''}</td>
             </tr>
           ))}
         </tbody>
@@ -132,16 +132,16 @@ const ViewMinorForm = ({ form }) => {
           <tr>
             <td colSpan="3" style={{ textAlign: 'right', fontWeight: 'bold' }}>TOTAL:</td>
             <td style={{ fontWeight: 'bold' }}>
-              {parseFloat(details.totals?.capital || 0).toFixed(2)}
+              {parseFloat(details.totals?.capital || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
             </td>
             <td style={{ fontWeight: 'bold' }}>
-              {parseFloat(details.totals?.lease || 0).toFixed(2)}
+              {parseFloat(details.totals?.lease || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
             </td>
             <td style={{ fontWeight: 'bold' }}>
-              {parseFloat(details.totals?.expense || 0).toFixed(2)}
+              {parseFloat(details.totals?.expense || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
             </td>
             <td style={{ fontWeight: 'bold' }}>
-              {parseFloat(details.totals?.total || 0).toFixed(2)}
+              {parseFloat(details.totals?.total || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
             </td>
           </tr>
         </tfoot>
@@ -165,11 +165,12 @@ const ViewMinorForm = ({ form }) => {
               </tr>
             </thead>
             <tbody>
-              <tr>
+            <tr>
                 <td>Department Manager</td>
                 <td></td>
                 <td></td>
-                <td>RGM</td>
+                <td>MD, SE Asia<p>
+                Anthony C.</p></td>
                 <td></td>
                 <td></td>
               </tr>
@@ -177,7 +178,8 @@ const ViewMinorForm = ({ form }) => {
                 <td>Financial Controller</td>
                 <td></td>
                 <td></td>
-                <td>RGVP</td>
+                <td>For GWF<p>
+                Paul F.</p></td>
                 <td></td>
                 <td></td>
               </tr>
@@ -185,9 +187,11 @@ const ViewMinorForm = ({ form }) => {
                 <td>General Manager</td>
                 <td></td>
                 <td></td>
+                <td>For NWF<p>
+                T.Whelan</p></td>
                 <td></td>
                 <td></td>
-                <td></td>
+              
               </tr>
             </tbody>
           </table>
