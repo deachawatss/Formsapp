@@ -538,5 +538,8 @@ form {
 
   .trip-container,
   .cost-table,
-  .signature-section { page-break-inside: avoid; }
+  .signature-section {
+    page-break-inside: avoid;
+    margin: 0 !important; /* ลดระยะห่างเวลาพิมพ์ */
+  }
 }
