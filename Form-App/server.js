@@ -636,12 +636,18 @@ app.post('/api/forms/pdf-email', authenticateToken, async (req, res) => {
     }
 });
 
-// Serve static files from the build directory
-app.use(express.static(path.join(__dirname, 'build')));
+// Serve static files from the build directory. If the build folder is not
+// located next to server.js, fall back to the frontend's build output.
+const defaultBuildPath = path.join(__dirname, 'build');
+const frontendBuildPath = fs.existsSync(defaultBuildPath)
+  ? defaultBuildPath
+  : path.join(__dirname, '..', 'form-frontend', 'build');
+
+app.use(express.static(frontendBuildPath));
 
 // ต้องย้าย route นี้ไปไว้ด้านล่างสุด หลังจาก API routes ทั้งหมด
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  res.sendFile(path.join(frontendBuildPath, 'index.html'));
 });
 
 // รันเซิร์ฟ
