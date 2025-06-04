@@ -779,6 +779,9 @@
     .major-approval-table {
         page-break-inside: avoid !important;
     }
+    .major-form .signature-section {
+        margin: 0 !important; /* ลดระยะห่างเวลาพิมพ์ */
+    }
 
     /* ส่วนตารางใหญ่ๆ ที่อาจยาว ให้ตัดข้ามหน้าได้ */
     .major-authority-table,

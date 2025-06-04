@@ -567,6 +567,7 @@
     /* ทำให้ส่วนลายเซ็นไม่ขึ้นหน้าใหม่กลางส่วน */
     .sign-table {
         page-break-inside: avoid !important;
+        margin: 0 !important; /* ลดระยะห่างเวลาพิมพ์ */
     }
 
     /* ทำให้ส่วน comments ไม่ขึ้นหน้าใหม่กลางส่วน */
