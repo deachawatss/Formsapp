@@ -87,6 +87,9 @@
     .minor-approval-table {
         page-break-inside: avoid !important;
     }
+    .minor-form .signature-section {
+        margin: 0 !important; /* ลดระยะห่างเวลาพิมพ์ */
+    }
 
     /* ปรับ container เพื่อให้มีขนาดที่เหมาะสม */
     .minor-form-container {
