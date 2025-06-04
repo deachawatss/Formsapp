@@ -22,7 +22,7 @@ const MyForms = () => {
       }
 
       // Use URL from environment variable and append /my-forms
-      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
       const response = await axios.get(`${baseUrl}/api/forms/my-forms`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -61,7 +61,7 @@ const MyForms = () => {
       }
 
       const token = localStorage.getItem('token');
-      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
       
       await axios.delete(`${baseUrl}/api/forms/${id}`, {
         headers: {
@@ -80,7 +80,7 @@ const MyForms = () => {
   const handleApprove = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
       
       await axios.put(`${baseUrl}/api/forms/${id}/approve`, {}, {
         headers: {
@@ -99,7 +99,7 @@ const MyForms = () => {
   const handleReject = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
       
       await axios.put(`${baseUrl}/api/forms/${id}/reject`, {}, {
         headers: {

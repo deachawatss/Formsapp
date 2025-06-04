@@ -67,7 +67,7 @@ const fonts = {
 };
 
 async function generatePDFwithPuppeteer(formId, token) {
-  const url = `http://192.168.17.15:5000/view/${formId}`;
+  const url = `http://localhost:5000/view/${formId}`;
   
   // เปิดเบราว์เซอร์แบบ headless
   const browser = await puppeteer.launch();

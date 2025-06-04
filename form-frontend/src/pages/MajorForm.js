@@ -94,7 +94,7 @@ const MajorForm = () => {
       if (formId) {
         try {
           const token = localStorage.getItem('token');
-          const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+          const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
           const response = await axios.get(`${baseUrl}/api/forms/${formId}`, {
             headers: {
               'Authorization': `Bearer ${token}`
@@ -304,7 +304,7 @@ const MajorForm = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
       
       const formPayload = {
         form_name: "Major Capital Authorization Request",
@@ -357,7 +357,7 @@ const MajorForm = () => {
   const handleSaveDraft = async () => {
     try {
       const token = localStorage.getItem('token');
-      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
       
       const formPayload = {
         form_name: "Major Capital Authorization Request",
@@ -419,7 +419,7 @@ const MajorForm = () => {
   
     try {
       setIsSendingEmail(true);
-      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
       await axios.post(`${baseUrl}/api/forms/pdf-email`, {
         id: insertedId,
         email: formData.supervisorEmail
@@ -1193,8 +1193,7 @@ const MajorForm = () => {
                 <td>Department Manager</td>
                 <td></td>
                 <td></td>
-                <td>MD, SE Asia<p>
-                Anthony C.</p></td>
+                <td>MD, SE Asia<p>Anthony C.</p></td>
                 <td></td>
                 <td></td>
               </tr>
@@ -1202,8 +1201,7 @@ const MajorForm = () => {
                 <td>Financial Controller</td>
                 <td></td>
                 <td></td>
-                <td>For GWF<p>
-                Paul F.</p></td>
+                <td>For GWF<p>Paul F.</p></td>
                 <td></td>
                 <td></td>
               </tr>
@@ -1211,11 +1209,9 @@ const MajorForm = () => {
                 <td>General Manager</td>
                 <td></td>
                 <td></td>
-                <td>For NWF<p>
-                T.Whelan</p></td>
+                <td>For NWF<p>T.Whelan</p></td>
                 <td></td>
                 <td></td>
-              
               </tr>
             </tbody>
           </table>

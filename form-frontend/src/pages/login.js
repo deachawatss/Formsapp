@@ -28,7 +28,8 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://192.168.17.15:5000/api/login', credentials);
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const response = await axios.post(`${baseUrl}/api/login`, credentials);
 
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);

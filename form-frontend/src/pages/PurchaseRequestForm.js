@@ -63,7 +63,7 @@ const PurchaseRequestForm = () => {
   const fetchFormData = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
-      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
       const response = await axios.get(`${baseUrl}/api/forms/${formId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -199,7 +199,7 @@ const PurchaseRequestForm = () => {
   const handleSaveDraft = async () => {
     try {
       const token = localStorage.getItem('token');
-      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
       
       // แก้ไขการสร้าง URL
       const url = formId 
@@ -247,7 +247,7 @@ const PurchaseRequestForm = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
       
       // แก้ไขการสร้าง URL เหมือนกับ handleSaveDraft
       const url = formId 
@@ -303,7 +303,7 @@ const PurchaseRequestForm = () => {
   
     try {
       setIsSendingEmail(true);
-      const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
       await axios.post(`${baseUrl}/api/forms/pdf-email`, {
         id: insertedId,
         email: formData.supervisorEmail

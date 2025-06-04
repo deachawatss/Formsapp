@@ -601,25 +601,57 @@
 
 /* ============ APPROVAL SECTION ============ */
 .major-approval-section {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .major-approval-table {
   width: 100%;
   border-collapse: collapse;
   background: #fff;
+  font-size: 11px;
+  margin-bottom: 0;
+  border: 1.5px solid #444;
 }
 
 .major-approval-table th,
 .major-approval-table td {
-  border: 1px solid #ccc;
-  padding: 8px;
+  border: 0.5px solid #ccc;
+  padding: 2px 3px;
   text-align: left;
+  height: 14px;
+  line-height: 1.1;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.major-approval-table tr {
+  height: 14px;
 }
 
 .major-approval-table th {
   background: #1e3a8a;
   color: white;
+  font-size: 10px;
+  font-weight: normal;
+  height: 14px;
+  padding: 2px 4px;
+}
+
+.major-approval-table td p {
+  margin: 0;
+  padding: 0;
+  font-size: 11px;
+  line-height: 1.1;
+  display: inline;
+  color: inherit;
+}
+
+.major-approval-table td p:before {
+  content: " - ";
+  display: inline;
 }
 
 /* ============ BUTTONS ============ */
@@ -687,11 +719,11 @@
 
 /* วางปุ่มลบใน cell เดียวกับ Post Review Date */
 .lease-delete-cell {
-  position: relative; /* เพื่อให้ปุ่มลอยทับใน cell ได้ */
+  position: relative;
 }
 
 .lease-delete-wrapper {
-  position: relative; /* ครอบ input และปุ่มลบ */
+  position: relative;
 }
 
 /* ปุ่มลบแบบวงกลมสีแดง Absolute ด้านขวา */

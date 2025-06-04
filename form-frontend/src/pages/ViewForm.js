@@ -18,7 +18,7 @@ const ViewForm = () => {
   const fetchForm = async () => {
     try {
       const token = localStorage.getItem('token');
-        const baseUrl = process.env.REACT_APP_API_URL || 'http://192.168.17.15:5000';
+        const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
         
       const response = await axios.get(`${baseUrl}/api/forms/${id}`, {
         headers: {
