@@ -31,15 +31,19 @@ const ViewPRForm = ({ form }) => {
   return (
     <div className="print-page">
       <div className="form-container">
-        <div className="form-header">
+        <div className="minor-form-header-title">
           <img
             src="https://img2.pic.in.th/pic/logo14821dedd19c2ad18.png"
             alt="Company Logo"
-            className="company-logo"
+            className="minor-company-logo"
           />
-          <h1>Newly Weds Foods (Thailand) Limited</h1>
-          <p>General Purchase Requisition</p>
-          <p>FORM # PC-FM-013</p>
+          <div className="minor-title-text">
+            <h1>
+              Newly Weds Foods (Thailand) Limited
+              <span>General Purchase Requisition</span>
+              <span>FORM # PC-FM-013</span>
+            </h1>
+          </div>
         </div>
 
 
@@ -183,23 +187,12 @@ const ViewPRForm = ({ form }) => {
         <table className="sign-table">
           <thead>
             <tr>
-              <th>Requester</th>
               <th>Department Manager</th>
               <th>General Manager</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>
-                <div className="sign-row">
-                  <label>Sign:</label>
-                  <span>{details.signRequester || ''}</span>
-                </div>
-                <div className="sign-row">
-                  <label>Date:</label>
-                  <span>{details.dateRequester || ''}</span>
-                </div>
-              </td>
               <td>
                 <div className="sign-row">
                   <label>Sign:</label>

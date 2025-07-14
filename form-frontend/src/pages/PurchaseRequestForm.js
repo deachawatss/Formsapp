@@ -325,16 +325,19 @@ const PurchaseRequestForm = () => {
   return (
     <div className="print-page">
       <div className="form-container">
-        <div className="form-header">
-          <img
-            src="https://img2.pic.in.th/pic/logo14821dedd19c2ad18.png"
-            alt="Company Logo"
-            className="company-logo"
-          />
-          <h1>Newly Weds Foods (Thailand) Limited</h1>
-          <p>General Purchase Requisition</p>
-          
-          <p>FORM # PC-FM-013</p>
+        <div className="minor-form-header-title">
+          <img 
+          src="https://img2.pic.in.th/pic/logo14821dedd19c2ad18.png"
+          alt="Company Logo" 
+          className="minor-company-logo"
+        />
+        <div className="minor-title-text">
+          <h1>
+            Newly Weds Foods (Thailand) Limited
+            <span>General Purchase Requisition</span>
+            <span>FORM # PC-FM-013</span>
+          </h1>
+        </div>
         </div>
 
         <form onSubmit={handleSubmit} id="purchaseRequestForm">
@@ -720,7 +723,7 @@ const PurchaseRequestForm = () => {
               💾 Save as Draft
             </button>
 
-            <button type="submit" className="button submit-btn">
+            {/* <button type="submit" className="button submit-btn">
               📩 Submit Form
             </button>
 
@@ -731,7 +734,7 @@ const PurchaseRequestForm = () => {
               disabled={!formData.supervisorEmail || !insertedId || isSendingEmail}
             >
               ✉️ {isSendingEmail ? 'Sending...' : 'Send Email'}
-            </button>
+            </button> */}
 
             <button
               type="button"

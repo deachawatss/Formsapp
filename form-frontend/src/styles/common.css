@@ -171,7 +171,22 @@
 
 /* ============ PRINT STYLES ============ */
 @media print {
-    /* ซ่อนปุ่มที่ไม่ต้องการให้แสดง */
+    /* Page setup */
+    @page {
+        size: A4 portrait;
+        margin: 15mm 10mm 15mm 10mm;
+    }
+
+    /* Reset html/body margins and ensure clean layout */
+    html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff !important;
+    }
+
+    /* Hide navigation and buttons */
+    .header, 
+    .sidebar, 
     .no-print,
     .btn-row,
     .btn-print, 
@@ -181,10 +196,28 @@
         display: none !important;
     }
 
-    /* ทำให้หน้าที่พิมพ์เหมือนกับที่แสดงบนหน้าจอ */
+    /* Fix app container spacing - remove header margin */
+    .app-container {
+        background: #fff !important;
+        margin: 0 !important;
+        margin-top: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+    }
+
+    .content-container {
+        background: #fff !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        min-height: auto !important;
+    }
+
+    /* Enhanced cross-browser print support */
     body {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+        font-size: 12px !important;
+        line-height: 1.4 !important;
     }
 
     /* คงสีพื้นหลังต่างๆ ไว้เหมือนเดิม */
@@ -217,8 +250,66 @@
         border: 1px solid #000 !important;
     }
 
-    /* รักษาการจัดวางของส่วนต่างๆ */
+    /* Enhanced section page break controls */
     .section-common {
         page-break-inside: avoid !important;
+        break-inside: avoid !important; /* Modern CSS property */
+    }
+
+    /* ============ ENHANCED CROSS-BROWSER COMPATIBILITY ============ */
+    /* Modern CSS page break properties alongside legacy ones */
+    .form-container,
+    .form-header,
+    .section-common {
+        break-inside: avoid !important;
+        break-before: auto !important;
+        break-after: auto !important;
+    }
+    
+    /* Input and form element print optimization */
+    input, textarea, select {
+        font-size: 11px !important;
+        padding: 2px 4px !important;
+        border: 1px solid #333 !important;
+        background: white !important;
+        color: black !important;
+    }
+    
+    /* Table optimization for all forms */
+    .table-common th {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+        font-size: 11px !important;
+        font-weight: bold !important;
+    }
+    
+    .table-common td {
+        font-size: 10px !important;
+        padding: 3px !important;
+    }
+    
+    /* Prevent orphaned table rows */
+    .table-common tr {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+    
+    /* Button and interactive element hiding */
+    button, .btn, [role="button"], .no-print {
+        display: none !important;
+    }
+    
+    /* Optimize spacing for print */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+        margin-top: 8px !important;
+        margin-bottom: 4px !important;
+    }
+    
+    /* Long content handling */
+    p, div {
+        orphans: 3 !important;
+        widows: 3 !important;
     }
 } 

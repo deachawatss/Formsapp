@@ -1,6 +1,54 @@
 /* Import common styles */
 @import './common.css';
 
+/* ============ FONT SIZE STANDARDIZATION ============ */
+/* Level 1: Form titles and main headers */
+.minor-level1-text {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+/* Level 2: Section headers */
+.minor-level2-text {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+/* Level 3: Content text and labels */
+.minor-level3-text {
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 1.2;
+}
+
+/* Level 4: Small text and details */
+.minor-level4-text {
+    font-size: 11px;
+    font-weight: normal;
+    line-height: 1.2;
+}
+
+/* Print sizes - smaller for A4 optimization */
+@media print {
+    .minor-level1-text {
+        font-size: 12px !important;
+    }
+    
+    .minor-level2-text {
+        font-size: 11px !important;
+    }
+    
+    .minor-level3-text {
+        font-size: 10px !important;
+    }
+    
+    .minor-level4-text {
+        font-size: 9px !important;
+    }
+}
+
 /* ============ MINOR FORM SPECIFIC STYLES ============ */
 .minor-form {
     position: relative;
@@ -66,10 +114,15 @@
     }
 
     /* คงสีหัวข้อตารางไว้ */
-    .minor-items-table th,
-    .minor-approval-table th {
+    .minor-items-table th {
         background-color: #1e3a8a !important;
         color: white !important;
+    }
+    
+    /* Approval table headers - keep light background */
+    .minor-approval-table th {
+        background-color: #f8f9fa !important;
+        color: #333 !important;
     }
 
     /* ซ่อนปุ่มต่างๆ */
@@ -80,23 +133,135 @@
         display: none !important;
     }
 
-    /* ทำให้ตารางและส่วนต่างๆ ไม่ขึ้นหน้าใหม่กลางส่วน */
-    .minor-form .signature-section,
-    .minor-form .item-table,
-    .minor-items-table,
+    /* ============ COMPREHENSIVE PAGE BREAK CONTROLS ============ */
+    /* Main section containers - prevent inappropriate splitting */
+    .minor-form-header-title,
+    .minor-form-header,
+    .minor-purpose-section,
+    .minor-project-summary,
+    .minor-currency-section,
+    .minor-approval-section,
+    .minor-operating-company,
+    .minor-form-footer {
+        page-break-inside: avoid !important;
+        page-break-before: auto !important;
+        break-inside: avoid !important; /* Modern CSS property */
+        break-before: auto !important;
+    }
+    
+    /* Allow strategic breaks for long content sections */
+    .minor-project-summary {
+        page-break-before: auto !important;
+        page-break-after: auto !important;
+        break-before: auto !important;
+        break-after: auto !important;
+    }
+    
+    /* Table controls - allow breaking for large tables but keep headers */
+    .minor-items-table {
+        page-break-inside: auto !important;
+        page-break-before: auto !important;
+        break-inside: auto !important;
+        break-before: auto !important;
+    }
+    
+    /* Keep approval table together */
     .minor-approval-table {
         page-break-inside: avoid !important;
+        break-inside: avoid !important;
     }
+    
+    /* Table headers stay with content */
+    .minor-items-table th,
+    .minor-approval-table th {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+    }
+    
+    /* Signature section controls */
     .minor-form .signature-section {
-        margin: 0 !important; /* ลดระยะห่างเวลาพิมพ์ */
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        margin: 0 !important;
+    }
+    
+    /* Individual form sections spacing for better page breaks */
+    .minor-purpose-section,
+    .minor-project-summary,
+    .minor-currency-section {
+        margin-bottom: 15px !important;
+    }
+    
+    /* Approval section header styling */
+    .minor-approval-section h3 {
+        background-color: #1e3a8a !important;
+        color: white !important;
+        padding: 8px !important;
+        margin: 0 0 10px 0 !important;
+        font-size: 14px !important;
+        font-weight: bold !important;
     }
 
-    /* ปรับ container เพื่อให้มีขนาดที่เหมาะสม */
-    .minor-form-container {
-        margin: 0 auto !important;
+    /* Minor Form specific print optimizations */
+    
+    /* Compact header for print */
+    .minor-form-header-title {
+        padding: 5px 10px !important;
+        margin-bottom: 8px !important;
+    }
+    
+    .minor-company-logo {
+        width: 80px !important;
+        margin-right: 10px !important;
+    }
+    
+    .minor-form-header-title h1 {
+        font-size: 12px !important;
+        line-height: 1.1 !important;
+    }
+    
+    .minor-subtitle {
+        font-size: 9px !important;
+    }
+    
+    /* Compact input sections */
+    .minor-form-header {
+        gap: 8px !important;
+        margin-bottom: 8px !important;
+        background-color: #f0f7ff !important;
         padding: 10px !important;
-        box-shadow: none !important;
-        max-width: 100% !important;
+    }
+    
+    .minor-form-group {
+        gap: 2px !important;
+    }
+    
+    .minor-form-group label {
+        font-size: 10px !important;
+    }
+    
+    .minor-form-group input,
+    .minor-form-group select,
+    .minor-form-group textarea {
+        font-size: 9px !important;
+        padding: 2px 4px !important;
+    }
+    
+    /* Compact purpose section */
+    .minor-purpose-section {
+        margin-bottom: 8px !important;
+        padding: 8px !important;
+    }
+    
+    /* Compact currency section */  
+    .minor-currency-section {
+        margin-bottom: 8px !important;
+        padding: 8px !important;
+    }
+    
+    /* Compact approval section */
+    .minor-approval-section {
+        margin-bottom: 6px !important;
     }
 }
 
@@ -145,6 +310,7 @@
   margin-bottom: 5px;
   font-weight: bold;
   color: #1e3a8a;
+  font-size: 12px;
 }
 
 .minor-form-group input,
@@ -153,6 +319,7 @@
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  font-size: 12px;
 }
 
 /* ============ PURPOSE SECTION ============ */
@@ -167,7 +334,7 @@
 .minor-purpose-section h3 {
   margin-top: 0;
   color: #1e3a8a;
-  font-size: 16px;
+  font-size: 14px;
   margin-bottom: 10px;
 }
 
@@ -181,7 +348,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .minor-checkbox-group input[type="text"] {
@@ -204,7 +371,7 @@
 .minor-project-summary h3 {
   color: #1e3a8a;
   margin: 0 0 10px 0;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .minor-project-summary textarea {
@@ -213,7 +380,7 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   resize: vertical;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 /* ============ ITEMS TABLE ============ */
@@ -229,6 +396,7 @@
   border: 1px solid #ccc;
   padding: 8px;
   text-align: center;
+  font-size: 12px;
 }
 
 .minor-items-table th {
@@ -237,6 +405,7 @@
   padding: 10px;
   text-align: center;
   font-weight: bold;
+  font-size: 12px;
 }
 
 .minor-items-table td {
@@ -262,7 +431,7 @@
   border-radius: 4px;
   cursor: pointer;
   margin-bottom: 20px;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .minor-add-item-btn:hover {
@@ -287,7 +456,7 @@
 
 .minor-currency-section label {
   font-weight: bold;
-  font-size: 14px;
+  font-size: 12px;
   white-space: nowrap;
 }
 
@@ -296,30 +465,70 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 150px;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 /* ============ APPROVAL TABLE ============ */
+.minor-approval-section {
+  margin-bottom: 15px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.minor-approval-section h3 {
+  background-color: #1e3a8a;
+  color: white;
+  padding: 8px;
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  font-weight: bold;
+}
+
 .minor-approval-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 20px;
-  background: #f0f7ff;
+  background: #fff;
+  font-size: 12px;
+  margin-bottom: 10px;
+  border: 1.5px solid #444;
 }
 
 .minor-approval-table th,
 .minor-approval-table td {
-  border: 1px solid #ccc;
-  padding: 8px;
+  border: 0.5px solid #ccc;
+  padding: 5px 8px;
   text-align: left;
-  font-size: 14px;
+  height: 20px;
+  line-height: 1.2;
+  vertical-align: middle;
+}
+
+.minor-approval-table tr {
+  height: 20px;
 }
 
 .minor-approval-table th {
-  background: #1e3a8a;
-  color: white;
-  text-align: center;
+  background: #f8f9fa;
+  color: #333;
+  font-size: 12px;
   font-weight: bold;
+  height: 20px;
+  padding: 4px 8px;
+}
+
+.minor-approval-table td p {
+  margin: 0;
+  padding: 0;
+  font-size: 11px;
+  line-height: 1.2;
+  display: inline;
+  color: inherit;
+}
+
+.minor-approval-table td p:before {
+  content: " - ";
+  display: inline;
 }
 
 /* ============ OPERATING COMPANY SECTION ============ */
@@ -336,7 +545,7 @@
   color: white;
   padding: 8px;
   margin: 0 0 10px 0;
-  font-size: 16px;
+  font-size: 14px;
   border-radius: 4px;
 }
 
@@ -346,7 +555,7 @@
   gap: 10px;
   justify-content: center;
   margin-top: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .minor-button-group .button {
@@ -384,31 +593,51 @@
 
 /* ============ NEW STYLES ============ */
 .minor-form-header-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
   background: #1e3a8a;
   color: white;
-  padding: 20px;
+  padding: 10px 15px;
   border-radius: 8px;
-  margin-bottom: 20px;
-  text-align: center;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: left;
 }
 
 .minor-company-logo {
-  width: 150px;
-  margin: 0 auto 10px auto;
-  display: block;
+  width: 100px;
+  height: auto;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.minor-title-text {
+  display: flex;
+  flex-direction: column;
 }
 
 .minor-form-header-title h1 {
-  color: white;
   margin: 0;
-  font-size: 24px;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1.2;
+  color: white;
+}
+
+.minor-form-header-title h1 span {
+  display: block;
+  font-size: 12px;
+  font-style: italic;
+  margin-top: 2px;
+  line-height: 1.1;
 }
 
 .minor-subtitle {
-  color: white;
-  margin: 5px 0 0;
+  margin: 2px 0 0 0;
+  font-size: 12px;
   font-style: italic;
+  line-height: 1.1;
+  color: white;
 }
 
 /* ============ DELETE BUTTON ============ */

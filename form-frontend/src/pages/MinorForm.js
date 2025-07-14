@@ -404,8 +404,10 @@ const MinorForm = () => {
           alt="Company Logo" 
           className="minor-company-logo"
         />
-        <h1>Minor Capital Authorization Request</h1>
-        <p className="minor-subtitle">(In Local Currency &amp; for Projects less than 10,000 AUD)</p>
+        <div className="minor-title-text">
+          <h1>Minor Capital Authorization Request</h1>
+          <p className="minor-subtitle">(In Local Currency &amp; for Projects less than 10,000 AUD)</p>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit}>
@@ -674,6 +676,7 @@ const MinorForm = () => {
         */}
         <div className="minor-form-footer">
           <div className="minor-approval-section">
+            <h3>Approval</h3>
             <table className="minor-approval-table">
               <thead>
                 <tr>
@@ -727,7 +730,7 @@ const MinorForm = () => {
             💾 Save as Draft
           </button>
 
-          <button type="submit" className="button submit-btn">
+          {/* <button type="submit" className="button submit-btn">
             📩 Submit Form
           </button>
 
@@ -738,7 +741,7 @@ const MinorForm = () => {
             disabled={!formData.email || !insertedId || isSendingEmail}
           >
             ✉️ {isSendingEmail ? 'Sending...' : 'Send Email'}
-          </button>
+          </button> */}
 
           <button
             type="button"

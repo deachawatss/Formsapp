@@ -1,12 +1,12 @@
 ﻿// Load environment variables from .env file
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '..', '.env') });
 
 const puppeteer = require('puppeteer');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const sql = require('mssql');
-const path = require('path');
 const nodemailer = require('nodemailer');
 const fs = require('fs');
 const PdfPrinter = require('pdfmake');
@@ -17,7 +17,16 @@ const ActiveDirectory = require('activedirectory2');
 
 const app = express();
 
-app.use(cors());
+// CORS configuration
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['http://192.168.0.21:5000', 'http://192.168.0.21'] 
+    : ['http://localhost:3000', 'http://localhost:5000'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(express.json());
 
@@ -367,8 +376,23 @@ app.post('/api/forms', authenticateToken, async (req, res) => {
     const pool = await sql.connect(dbConfig);
     const request = new sql.Request();
     
+    // Determine form type based on form_name or endpoint
+    let form_type = 'general'; // default
+    if (form_name && form_name.toLowerCase().includes('major')) {
+      form_type = 'major';
+    } else if (form_name && form_name.toLowerCase().includes('minor')) {
+      form_type = 'minor';
+    } else if (form_name && form_name.toLowerCase().includes('purchase')) {
+      form_type = 'purchase';
+    } else if (form_name && form_name.toLowerCase().includes('capex')) {
+      form_type = 'capex';
+    } else if (form_name && form_name.toLowerCase().includes('travel')) {
+      form_type = 'travel';
+    }
+
     request
       .input('form_name', sql.NVarChar, form_name)
+      .input('form_type', sql.NVarChar, form_type)
       .input('user_name', sql.NVarChar, user_name)
       .input('department', sql.NVarChar, department)
       .input('details', sql.NVarChar, JSON.stringify(details))
@@ -377,9 +401,9 @@ app.post('/api/forms', authenticateToken, async (req, res) => {
 
     const result = await request.query(`
       INSERT INTO FormsSystem.Forms 
-      (form_name, user_name, department, details, status, request_date)
+      (form_name, form_type, user_name, department, details, status, request_date)
       VALUES 
-      (@form_name, @user_name, @department, @details, @status, @request_date);
+      (@form_name, @form_type, @user_name, @department, @details, @status, @request_date);
       SELECT SCOPE_IDENTITY() as insertedId;
     `);
 
@@ -652,11 +676,21 @@ app.get('*', (req, res) => {
 
 // รันเซิร์ฟ
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+const HOST = process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost';
+
+app.listen(PORT, HOST, () => {
+  console.log(`✅ Server running on ${HOST}:${PORT}`);
+  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+});
 
 // ทดสอบ
 app.get('/', (req, res) => {
     res.send('✅ Server is running...');
+});
+
+// Health check endpoint for Docker
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'healthy', timestamp: new Date().toISOString() });
 });
 
 // กำหนดค่า Active Directory

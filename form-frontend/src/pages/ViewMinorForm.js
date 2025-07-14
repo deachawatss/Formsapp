@@ -30,8 +30,12 @@ const ViewMinorForm = ({ form }) => {
           alt="Company Logo" 
           className="minor-company-logo"
         />
-        <h1>Minor Capital Authorization Request</h1>
-        <p className="minor-subtitle">(In Local Currency &amp; for Projects less than 10,000 AUD)</p>
+        <div className="minor-title-text">
+          <h1>
+            Minor Capital Authorization Request
+            <span>(In Local Currency &amp; for Projects less than 10,000 AUD)</span>
+          </h1>
+        </div>
       </div>
 
       <div className="minor-form-header">

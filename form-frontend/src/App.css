@@ -39,7 +39,7 @@
 
 .app-container {
   display: flex;
-  margin-top: 50px;
+  margin-top: 70px;
 }
 
 .sidebar {
@@ -65,49 +65,3 @@ textarea {
   box-sizing: border-box; /* แนะนำให้ใส่เพื่อให้ padding ทำงานคาดเดาได้ */
 }
 
-@media print {
-  /* ตั้งค่าหน้ากระดาษเป็น A4 แนวตั้ง ไร้ margin */
-  @page {
-    size: A4 portrait;
-    margin: 0;
-  }
-
-  /* รีเซ็ต margin/padding พื้นฐานของ html/body */
-  html, body {
-    margin: 10px !important;
-    padding: 10px !important;
-    background: #fff !important;
-  }
-
-  /* ซ่อนส่วนที่ไม่ต้องการพิมพ์ */
-  .header, .sidebar, .btn-row {
-    display: none !important;
-  }
-
-  /* ลบ background สีเทา/ฟ้า ของ container */
-  .app-container,
-  .content-container {
-    background: #fff !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  /* ปรับความสูงของ container */
-  .content-container {
-    min-height: auto !important;
-  }
-
-  /* จัดการพื้นที่พิมพ์ */
-  .print-page {
-    width: 210mm !important;
-    margin: 0 auto !important;
-    padding: 10mm !important;
-    transform: scale(0.98);
-    transform-origin: top left;
-  }
-
-  /* ปรับขนาดตัวอักษรทั่วไป */
-  body {
-    font-size: 11px !important;
-  }
-}

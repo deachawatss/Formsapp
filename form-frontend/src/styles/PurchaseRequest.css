@@ -1,3 +1,53 @@
+@import './common.css';
+
+/* ============ FONT SIZE STANDARDIZATION ============ */
+/* Level 1: Form titles and main headers */
+.pr-level1-text {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+/* Level 2: Section headers */
+.pr-level2-text {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+/* Level 3: Content text and labels */
+.pr-level3-text {
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 1.2;
+}
+
+/* Level 4: Small text and details */
+.pr-level4-text {
+    font-size: 11px;
+    font-weight: normal;
+    line-height: 1.2;
+}
+
+/* Print sizes - smaller for A4 optimization */
+@media print {
+    .pr-level1-text {
+        font-size: 12px !important;
+    }
+    
+    .pr-level2-text {
+        font-size: 11px !important;
+    }
+    
+    .pr-level3-text {
+        font-size: 10px !important;
+    }
+    
+    .pr-level4-text {
+        font-size: 9px !important;
+    }
+}
+
 /* ============ GLOBAL CONTAINER STYLES ============ */
 .form-container {
     max-width: 900px;
@@ -10,34 +60,52 @@
 }
 
 /* ============ HEADER STYLES ============ */
-.form-header {
-    text-align: center;
-    margin-bottom: 20px;
-    margin-top: auto;
-    background: #1e3a8a;
-    color: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.minor-form-header-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  background: #1e3a8a;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: left;
 }
 
-.company-logo {
-    width: 150px;
-    margin: 0 auto 10px auto;
-    display: block;
+.minor-company-logo {
+  width: 100px;
+  height: auto;
+  margin-right: 15px;
+  flex-shrink: 0;
 }
 
-.form-header h1 {
-    margin: 0;
-    font-size: 20px;
-    font-weight: bold;
+.minor-title-text {
+  display: flex;
+  flex-direction: column;
 }
 
-.form-header p {
-    margin: 0;
-    font-size: 14px;
-    font-style: italic;
-    margin-top: 3px;
+.minor-form-header-title h1 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1.2;
+  color: white;
+}
+
+.minor-form-header-title h1 span {
+  display: block;
+  font-size: 12px;
+  font-style: italic;
+  margin-top: 2px;
+  line-height: 1.1;
+}
+
+.minor-subtitle {
+  margin: 2px 0 0 0;
+  font-size: 12px;
+  font-style: italic;
+  line-height: 1.1;
+  color: white;
 }
 
 /* ============ INPUT ROWS & FIELDS ============ */
@@ -53,6 +121,7 @@
     min-width: none;
     white-space: nowrap;
     font-weight: bold;
+    font-size: 12px;
 }
 
 .input-row input,
@@ -62,7 +131,7 @@
     border: 1px solid #ccc;
     border-radius: 5px; 
     padding: 5px;
-    font-size: 14px;
+    font-size: 12px;
     min-width: 150px;
 }
 
@@ -93,12 +162,14 @@
     border: 1px solid #ccc;
     padding: 8px;
     text-align: center;
+    font-size: 12px;
 }
 
 .pr-table th {
     background: #1e3a8a;
     color: #fff;
     font-weight: bold;
+    font-size: 12px;
 }
 
 /* กำหนดความกว้างแต่ละคอลัมน์ (ITEM / Description / Unit / Quantity / Cost / Amount) */
@@ -300,6 +371,7 @@
     padding: 8px;
     vertical-align: top;
     text-align: left;
+    font-size: 12px;
 }
 
 .sign-table th {
@@ -307,6 +379,7 @@
     color: #fff;
     text-align: center;
     font-weight: bold;
+    font-size: 12px;
 }
 
 .sign-row {
@@ -319,6 +392,7 @@
 .sign-row label {
     font-weight: bold;
     min-width: 40px;
+    font-size: 12px;
 }
 
 /* ============ SUMMARY, VENDOR, ETC ============ */
@@ -346,7 +420,7 @@
 .vendor-section h3 {
     margin: 0 0 8px;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .vendor-row {
@@ -366,6 +440,7 @@
 .vendor-row label {
     min-width: 30px;
     font-weight: bold;
+    font-size: 12px;
 }
 
 .vendor-row input {
@@ -430,7 +505,7 @@
     font-weight: bold;
     text-align: center;
     padding: 10px;
-    font-size: 15px;
+    font-size: 14px;
     text-transform: uppercase;
     margin: 0;
     width: 100%;
@@ -448,6 +523,7 @@
 .input-row-reason label {
     font-weight: bold;
     white-space: nowrap; /* Prevent text wrapping */
+    font-size: 12px;
 }
 
 .input-row-reason select {
@@ -488,7 +564,7 @@
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
@@ -512,53 +588,22 @@
 
 /* ============ PRINT STYLES ============ */
 @media print {
-    /* ทำให้หน้าที่พิมพ์เหมือนกับที่แสดงบนหน้าจอ */
-    body {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-        color-adjust: exact !important;
+    .minor-form-header-title h1 {
+        font-size: 18px !important;
     }
 
-    /* จัดการตารางเมื่อพิมพ์ - ให้เหมือนกับที่แสดงบนหน้าจอ */
-    .pr-table th {
-        background-color: #1e3a8a !important;
-        color: white !important;
+    .pr-table {
+        table-layout: auto; /* Allow table to adjust column widths */
     }
 
-    .reason-section h3,
-    .sign-table th,
-    .form-header {
-        background-color: #1e3a8a !important;
-        color: white !important;
+    .pr-table th,
+    .pr-table td {
+        font-size: 10px !important;
+        padding: 4px !important;
     }
-
-    /* คงสีพื้นหลังเดิมไว้ */
-    .main-row,
-    .comment-row,
-    .vendor-section,
-    .reason-section,
-    .sign-table,
-    .comment-box {
-        background-color: #f0f7ff !important;
-    }
-
-    /* ซ่อนปุ่มต่างๆ */
-    .print-page .btn-row,
-    .button.add-line-btn,
-    .delete-btn.outside,
-    .print-btn,
-    .no-print {
-        display: none !important;
-    }
-
-    /* ปรับขนาดและระยะห่าง */
-    .form-container {
-        margin: 0 auto !important;
-        padding: 10px !important;
-        box-shadow: none !important;
-        max-width: 100% !important;
-    }
-
+    
+    /* Purchase Request specific print styles only */
+    
     /* ทำให้ตารางไม่ขึ้นหน้าใหม่กลางตาราง */
     .pr-table {
         page-break-inside: avoid !important;
@@ -567,11 +612,17 @@
     /* ทำให้ส่วนลายเซ็นไม่ขึ้นหน้าใหม่กลางส่วน */
     .sign-table {
         page-break-inside: avoid !important;
-        margin: 0 !important; /* ลดระยะห่างเวลาพิมพ์ */
+        margin: 0 !important;
     }
 
     /* ทำให้ส่วน comments ไม่ขึ้นหน้าใหม่กลางส่วน */
     .comment-row {
         page-break-inside: avoid !important;
+    }
+
+    /* ซ่อนปุ่มเฉพาะ Purchase Request */
+    .button.add-line-btn,
+    .delete-btn.outside {
+        display: none !important;
     }
 }

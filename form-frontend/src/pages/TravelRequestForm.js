@@ -22,7 +22,8 @@ const TravelRequestForm = () => {
     includeCarRental: false,
     airline: '',
     roundTrip: false,
-    returnDate: ''
+    returnDate: '',
+    returnTripClass: ''
   }), []);
 
   const [formData, setFormData] = useState({
@@ -84,11 +85,20 @@ const TravelRequestForm = () => {
             includeCarRental: parsedDetails.includeCarRental || false,
             airline: parsedDetails.airline || '',
             roundTrip: parsedDetails.roundTrip || false,
-            returnDate: parsedDetails.returnDate || ''
+            returnDate: parsedDetails.returnDate || '',
+            returnTripClass: parsedDetails.returnTripClass || ''
           }];
         } else {
           parsedDetails.trips = [{ ...emptyTrip }];
         }
+      }
+
+      // Ensure all existing trips have returnTripClass field for backward compatibility
+      if (parsedDetails.trips) {
+        parsedDetails.trips = parsedDetails.trips.map(trip => ({
+          ...trip,
+          returnTripClass: trip.returnTripClass || ''
+        }));
       }
 
       setFormData({
@@ -125,11 +135,20 @@ const TravelRequestForm = () => {
                 includeCarRental: details.includeCarRental || false,
                 airline: details.airline || '',
                 roundTrip: details.roundTrip || false,
-                returnDate: details.returnDate || ''
+                returnDate: details.returnDate || '',
+                returnTripClass: details.returnTripClass || ''
               }];
             } else {
               details.trips = [{ ...emptyTrip }];
             }
+          }
+          
+          // Ensure all existing trips have returnTripClass field for backward compatibility
+          if (details.trips) {
+            details.trips = details.trips.map(trip => ({
+              ...trip,
+              returnTripClass: trip.returnTripClass || ''
+            }));
           }
           
           setFormData(prev => ({
@@ -376,21 +395,22 @@ const TravelRequestForm = () => {
   }, [showTripMenu]);
 
   return (
-    <div className="print-page">
-      <div className="form-container">
-        <div className="form-header">
-          <img
-            src="https://img2.pic.in.th/pic/logo14821dedd19c2ad18.png"
-            alt="Company Logo"
-            className="company-logo"
-          />
-          <h1 className="travel-header">NWFAP TRAVEL REQUEST</h1>
+    <div className="travel-form-container print-page">
+      <div className="travel-form-header">
+        <img 
+          src="https://img2.pic.in.th/pic/logo14821dedd19c2ad18.png"
+          alt="Company Logo" 
+          className="travel-company-logo"
+        />
+        <div className="travel-title-text">
+          <h1>NWFAP TRAVEL REQUEST</h1>
         </div>
+      </div>
 
-        <form onSubmit={handleSubmit} id="travelRequestForm">
-          {/* Business Purpose และ Request Date */}
-          <div className="input-row">
-            <div className="input-group">
+      <form onSubmit={handleSubmit} id="travelRequestForm">
+        <div className="travel-section">
+          <div className="form-grid">
+            <div className="form-field full-width">
               <label>Business Purpose:</label>
               <input
                 type="text"
@@ -399,10 +419,8 @@ const TravelRequestForm = () => {
                 onChange={handleChange}
                 required
               />
-              <span className="required-mark">*</span>
             </div>
-            
-            <div className="input-group">
+            <div className="form-field short-input">
               <label>Request Date:</label>
               <input
                 type="date"
@@ -412,255 +430,215 @@ const TravelRequestForm = () => {
               />
             </div>
           </div>
+        </div>
 
-          {/* Traveler Information */}
-          <div className="section-card">
-            <div className="section-header">
-              <h2>Traveler Information</h2>
+        <div className="travel-section">
+          <div className="travel-section-header">
+            <h2>Traveler Information</h2>
+          </div>
+          <div className="form-grid">
+            <div className="form-field">
+              <label>Name:</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                readOnly
+                style={{ backgroundColor: '#f0f0f0' }}
+              />
             </div>
-
-            <div className="input-row">
-              <div className="input-group">
-                <label>Name:</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  readOnly
-                  style={{ backgroundColor: '#f0f0f0' }}
-                />
-                <span className="required-mark">*</span>
-              </div>
-              
-              <div className="input-group">
-                <label>Email:</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-                <span className="required-mark">*</span>
-              </div>
+            <div className="form-field">
+              <label>Email:</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
             </div>
-
-            <div className="input-row">
-              <div className="input-group">
-                <label>Location:</label>
-                <input
-                  type="text"
-                  name="location"
-                  value={formData.location}
-                  onChange={handleChange}
-                  required
-                />
-                <span className="required-mark">*</span>
-              </div>
-              
-              <div className="input-group">
-                <label>Country:</label>
-                <input
-                  type="text"
-                  name="country"
-                  value={formData.country}
-                  onChange={handleChange}
-                  required
-                />
-                <span className="required-mark">*</span>
-              </div>
+            <div className="form-field">
+              <label>Location:</label>
+              <input
+                type="text"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                required
+              />
             </div>
-
-            <div className="input-row">
-              <div className="input-group">
-                <label>Currency:</label>
-                <input
-                  type="text"
-                  name="currency"
-                  value={formData.currency}
-                  onChange={handleChange}
-                  required
-                />
-                <span className="required-mark">*</span>
-              </div>
+            <div className="form-field">
+              <label>Country:</label>
+              <input
+                type="text"
+                name="country"
+                value={formData.country}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-field short-input">
+              <label>Currency:</label>
+              <input
+                type="text"
+                name="currency"
+                value={formData.currency}
+                onChange={handleChange}
+                required
+              />
             </div>
           </div>
+        </div>
 
-          {/* Trip Information */}
-          {formData.trips.map((trip, tripIndex) => (
-            <div key={tripIndex} className="trip-container">
-              <div className="section-header trip-header">
-                <h2>TRIP</h2>
-                <div className="trip-actions">
-                  <button 
-                    type="button" 
-                    className="trip-menu-btn"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleTripMenu(tripIndex);
-                    }}
-                  >
-                    <span className="trip-menu-icon">≡</span>
-                  </button>
-                  
-                  {showTripMenu && activeTrip === tripIndex && (
-                    <div className="trip-menu" onClick={(e) => e.stopPropagation()}>
-                      <div className="trip-menu-item" onClick={() => insertTripBefore(tripIndex)}>
-                        Insert trip before 
-                      </div>
-                      <div className="trip-menu-item" onClick={() => insertTripAfter(tripIndex)}>
-                        Insert trip after
-                      </div>
-                      <div className="trip-menu-item" onClick={() => removeTrip(tripIndex)}>
-                        Remove trip 
-                      </div>
-                    </div>
-                  )}
-                </div>
+        {formData.trips.map((trip, tripIndex) => (
+          <div key={tripIndex} className="travel-section">
+            <div className="travel-section-header">
+              <h2>TRIP {tripIndex + 1}</h2>
+            </div>
+            <div className="form-grid">
+              <div className="form-field">
+                <label>From:</label>
+                <input
+                  type="text"
+                  name="from"
+                  value={trip.from}
+                  onChange={(e) => handleTripInputChange(e, tripIndex)}
+                  required
+                />
               </div>
-
-              <div className="input-row">
-                <div className="input-group">
-                  <label>From:</label>
-                  <input
-                    type="text"
-                    name="from"
-                    value={trip.from}
-                    onChange={(e) => handleTripInputChange(e, tripIndex)}
-                    required
-                  />
-                  <span className="required-mark">*</span>
-                </div>
-                
-                <div className="input-group">
-                  <label>To:</label>
-                  <input
-                    type="text"
-                    name="to"
-                    value={trip.to}
-                    onChange={(e) => handleTripInputChange(e, tripIndex)}
-                    required
-                  />
-                  <span className="required-mark">*</span>
-                </div>
+              <div className="form-field">
+                <label>To:</label>
+                <input
+                  type="text"
+                  name="to"
+                  value={trip.to}
+                  onChange={(e) => handleTripInputChange(e, tripIndex)}
+                  required
+                />
               </div>
-
-              <div className="input-row">
-                <div className="input-group">
-                  <label>Departure Date:</label>
-                  <input
-                    type="date"
-                    name="departureDate"
-                    value={trip.departureDate}
-                    onChange={(e) => handleTripInputChange(e, tripIndex)}
-                    required
-                  />
-                  <span className="required-mark">*</span>
-                </div>
-                
-                <div className="input-group">
-                  <label>Trip Class:</label>
-                  <select
-                    name="tripClass"
-                    value={trip.tripClass}
-                    onChange={(e) => handleTripInputChange(e, tripIndex)}
-                    required
-                  >
-                    <option value="">select...</option>
-                    <option value="Economy">Economy</option>
-                    <option value="Business">Business</option>
-                    <option value="First Class">First Class</option>
-                  </select>
-                  <span className="required-mark">*</span>
-                </div>
+              <div className="form-field short-input">
+                <label>Departure Date:</label>
+                <input
+                  type="date"
+                  name="departureDate"
+                  value={trip.departureDate}
+                  onChange={(e) => handleTripInputChange(e, tripIndex)}
+                  required
+                />
               </div>
-
-              <div className="input-row">
-                <div className="input-group checkbox-group">
-                  <label>
-                    <input
-                      type="checkbox"
-                      name="roundTrip"
-                      checked={trip.roundTrip}
-                      onChange={(e) => handleTripCheckboxChange(e, tripIndex)}
-                    />
-                    Round trip
-                  </label>
-                </div>
-              </div>
-
-              {trip.roundTrip && (
-                <div className="input-row">
-                  <div className="input-group">
-                    <label>Return Date:</label>
-                    <input
-                      type="date"
-                      name="returnDate"
-                      value={trip.returnDate}
-                      onChange={(e) => handleTripInputChange(e, tripIndex)}
-                      required={trip.roundTrip}
-                    />
-                    <span className="required-mark">*</span>
-                  </div>
-                </div>
-              )}
-
-              <div className="input-row">
-                <div className="input-group checkbox-group">
-                  <label>
+              <div className="form-field">
+                 <label></label> {/* Spacer for alignment */}
+                 <div className="checkbox-group">
                     <input
                       type="checkbox"
                       name="includeHotel"
                       checked={trip.includeHotel}
                       onChange={(e) => handleTripCheckboxChange(e, tripIndex)}
                     />
-                    Include hotel
-                  </label>
-                </div>
-                
-                <div className="input-group checkbox-group">
-                  <label>
+                    <label>Include hotel</label>
+                 </div>
+              </div>
+              <div className="form-field short-input">
+                <label>Trip Class:</label>
+                <select
+                  name="tripClass"
+                  value={trip.tripClass}
+                  onChange={(e) => handleTripInputChange(e, tripIndex)}
+                  required
+                >
+                  <option value="">select...</option>
+                  <option value="Economy">Economy</option>
+                  <option value="Business">Business</option>
+                  <option value="First Class">First Class</option>
+                </select>
+              </div>
+              <div className="form-field">
+                 <label></label> {/* Spacer for alignment */}
+                 <div className="checkbox-group">
                     <input
                       type="checkbox"
                       name="includeCarRental"
                       checked={trip.includeCarRental}
                       onChange={(e) => handleTripCheckboxChange(e, tripIndex)}
                     />
-                    Include car rental
-                  </label>
-                </div>
+                    <label>Include car rental</label>
+                 </div>
               </div>
-
-              <div className="input-row">
-                <div className="input-group">
-                  <label>Airline:</label>
+              <div className="form-field">
+                 <label></label> {/* Spacer for alignment */}
+                 <div className="checkbox-group">
+                    <input
+                      type="checkbox"
+                      name="roundTrip"
+                      checked={trip.roundTrip}
+                      onChange={(e) => handleTripCheckboxChange(e, tripIndex)}
+                    />
+                    <label>Round trip</label>
+                 </div>
+              </div>
+              <div className="form-field">
+                <label>Airline:</label>
+                <input
+                  type="text"
+                  name="airline"
+                  value={trip.airline}
+                  onChange={(e) => handleTripInputChange(e, tripIndex)}
+                  required
+                />
+              </div>
+              {trip.roundTrip && (
+                <div className="form-field short-input">
+                  <label>Return Date:</label>
                   <input
-                    type="text"
-                    name="airline"
-                    value={trip.airline}
+                    type="date"
+                    name="returnDate"
+                    value={trip.returnDate}
                     onChange={(e) => handleTripInputChange(e, tripIndex)}
-                    required
+                    required={trip.roundTrip}
                   />
-                  <span className="required-mark">*</span>
                 </div>
-              </div>
+              )}
+              {trip.roundTrip && (
+                <div className="form-field">
+                  <label></label> {/* Spacer for alignment */}
+                </div>
+              )}
+              {trip.roundTrip && (
+                <div className="form-field short-input">
+                  <label>Return Trip Class:</label>
+                  <select
+                    name="returnTripClass"
+                    value={trip.returnTripClass}
+                    onChange={(e) => handleTripInputChange(e, tripIndex)}
+                    required={trip.roundTrip}
+                  >
+                    <option value="">select...</option>
+                    <option value="Economy">Economy</option>
+                    <option value="Business">Business</option>
+                    <option value="First Class">First Class</option>
+                  </select>
+                </div>
+              )}
             </div>
-          ))}
-
-          {/* Add Trip Button */}
-          <div className="add-trip-container">
-            <button type="button" className="add-trip-btn" onClick={addTrip}>
-              ➕ Add Trip
-            </button>
           </div>
+        ))}
 
-          {/* Estimated Cost */}
-          <div className="section-card cost-table">  {/* ★ EDIT – wrap ด้วยการ์ด */}
-            <div className="section-header">
+        <div className="btn-row" style={{ marginBottom: '20px' }}>
+          <button 
+            type="button" 
+            className="button" 
+            onClick={addTrip}
+            style={{ backgroundColor: '#4CAF50', color: 'white' }}
+          >
+            ➕ Add Trip
+          </button>
+        </div>
+
+        <div className="travel-section">
+            <div className="travel-section-header">
               <h2>Estimated Cost of Trip:</h2>
             </div>
-
-            <div className="cost-row">
+            <div className="cost-section">
               <label>Airfare:</label>
               <input
                 type="text"
@@ -669,10 +647,8 @@ const TravelRequestForm = () => {
                 onChange={handleCostChange}
                 required
               />
-              <span className="required-mark">*</span>
             </div>
-            
-            <div className="cost-row">
+            <div className="cost-section">
               <label>Accommodations:</label>
               <input
                 type="text"
@@ -681,10 +657,8 @@ const TravelRequestForm = () => {
                 onChange={handleCostChange}
                 required
               />
-              <span className="required-mark">*</span>
             </div>
-            
-            <div className="cost-row">
+            <div className="cost-section">
               <label>Meals/Entertainment:</label>
               <input
                 type="text"
@@ -693,10 +667,8 @@ const TravelRequestForm = () => {
                 onChange={handleCostChange}
                 required
               />
-              <span className="required-mark">*</span>
             </div>
-            
-            <div className="cost-row">
+            <div className="cost-section">
               <label>Other:</label>
               <input
                 type="text"
@@ -705,66 +677,46 @@ const TravelRequestForm = () => {
                 onChange={handleCostChange}
               />
             </div>
-            
-            <div className="cost-row total-row">
+            <div className="cost-section total">
               <label>Total:</label>
               <input
                 type="text"
                 value={parseFloat(formData.estimatedCost.total || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                 readOnly
-                style={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}
               />
             </div>
-          </div>
+        </div>
 
-          {/* Signatures */}
-          <div className="section-card">  {/* ★ EDIT – ห่อด้วยการ์ด */}
-            <div className="section-header">
+        <div className="travel-section">
+            <div className="travel-section-header">
               <h2>Signatures and Date:</h2>
             </div>
-
-            <div className="signature-section">
-              <div className="signature-row">
-                <label>Department Manager:</label>
-                <input
-                  type="text"
-                  name="departmentManager"
-                  value={formData.departmentManager}
-                  onChange={handleChange}
-                />
-              </div>
+            <div className="form-grid">
+                <div className="form-field">
+                    <label>Department Manager:</label>
+                    <input
+                      type="text"
+                      name="departmentManager"
+                      value={formData.departmentManager}
+                      onChange={handleChange}
+                    />
+                </div>
             </div>
-          </div>
+        </div>
 
-          {/* Buttons */}
-          <div className="btn-row">
-            <button type="button" className="button draft-btn" onClick={handleSaveDraft}>
-              💾 Save as Draft
-            </button>
-
-            <button type="submit" className="button submit-btn">
-              📩 Submit Form
-            </button>
-
-            <button
-              type="button"
-              className="button email-btn"
-              onClick={handleSendEmail}
-              disabled={!formData.email || !insertedId || isSendingEmail}
-            >
-              ✉️ {isSendingEmail ? 'Sending...' : 'Send Email'}
-            </button>
-
-            <button
-              type="button"
-              className="button print-btn"
-              onClick={handlePrint}
-            >
-              🖨 Print
-            </button>
-          </div>
-        </form>
-      </div>
+        <div className="btn-row">
+          <button type="button" className="button draft-btn" onClick={handleSaveDraft}>
+            💾 Save as Draft
+          </button>
+          <button
+            type="button"
+            className="button print-btn"
+            onClick={handlePrint}
+          >
+            🖨 Print
+          </button>
+        </div>
+      </form>
     </div>
   );
 };

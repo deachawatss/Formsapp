@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
@@ -14,25 +14,127 @@ import Login from './pages/login';
 import MyForms from './pages/MyForms';
 import './App.css';
 
-// ProtectedRoute component
+// ProtectedRoute component with proper token validation
 const ProtectedRoute = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
   const token = localStorage.getItem('token');
-  if (!token) {
+
+  useEffect(() => {
+    const validateToken = async () => {
+      if (!token) {
+        console.log('Token validation: No token found');
+        setIsAuthenticated(false);
+        return;
+      }
+
+      try {
+        const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+        console.log('Token validation: Using API URL:', baseUrl);
+        
+        const response = await fetch(`${baseUrl}/api/forms/my-forms`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        console.log('Token validation: Response status:', response.status);
+        
+        if (response.ok) {
+          console.log('Token validation: Success');
+          setIsAuthenticated(true);
+        } else {
+          console.log('Token validation: Failed, clearing localStorage');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.error('Token validation failed:', error);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setIsAuthenticated(false);
+      }
+    };
+
+    validateToken();
+  }, [token]);
+
+  if (isAuthenticated === null) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        fontSize: '18px' 
+      }}>
+        Loading...
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
     return <Navigate to="/login" />;
   }
+
   return children;
 };
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
   const token = localStorage.getItem('token');
   const isLoginPage = window.location.pathname === '/login';
   const isPublicRoute = ['/login'].includes(window.location.pathname);
 
+  useEffect(() => {
+    const validateToken = async () => {
+      if (!token) {
+        console.log('Token validation: No token found');
+        setIsAuthenticated(false);
+        return;
+      }
+
+      try {
+        const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+        console.log('Token validation: Using API URL:', baseUrl);
+        
+        const response = await fetch(`${baseUrl}/api/forms/my-forms`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        console.log('Token validation: Response status:', response.status);
+        
+        if (response.ok) {
+          console.log('Token validation: Success');
+          setIsAuthenticated(true);
+        } else {
+          console.log('Token validation: Failed, clearing localStorage');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.error('Token validation failed:', error);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setIsAuthenticated(false);
+      }
+    };
+
+    validateToken();
+  }, [token]);
+
   return (
     <Router>
-      {!isLoginPage && token && <Header />}
-      <div className="app-container" style={{ marginTop: token && !isPublicRoute ? '50px' : '0' }}>
-        {!isLoginPage && token && <Sidebar />}
+      {!isLoginPage && isAuthenticated && <Header />}
+      <div className="app-container" style={{ marginTop: isAuthenticated && !isPublicRoute ? '70px' : '0' }}>
+        {!isLoginPage && isAuthenticated && <Sidebar />}
         <div className="content-container">
           <Routes>
             {/* Public routes */}
@@ -85,7 +187,11 @@ function App() {
                 <Home />
               </ProtectedRoute>
             } />
-            <Route path="/my-forms" element={<MyForms />} />
+            <Route path="/my-forms" element={
+              <ProtectedRoute>
+                <MyForms />
+              </ProtectedRoute>
+            } />
           </Routes>
         </div>
       </div>

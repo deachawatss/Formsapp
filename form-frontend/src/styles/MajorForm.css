@@ -1,6 +1,54 @@
 /* Import common styles */
 @import './common.css';
 
+/* ============ FONT SIZE STANDARDIZATION ============ */
+/* Level 1: Form titles and main headers */
+.major-level1-text {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+/* Level 2: Section headers */
+.major-level2-text {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+/* Level 3: Content text and labels */
+.major-level3-text {
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 1.2;
+}
+
+/* Level 4: Small text and details */
+.major-level4-text {
+    font-size: 11px;
+    font-weight: normal;
+    line-height: 1.2;
+}
+
+/* Print sizes - smaller for A4 optimization */
+@media print {
+    .major-level1-text {
+        font-size: 12px !important;
+    }
+    
+    .major-level2-text {
+        font-size: 11px !important;
+    }
+    
+    .major-level3-text {
+        font-size: 10px !important;
+    }
+    
+    .major-level4-text {
+        font-size: 9px !important;
+    }
+}
+
 /* ============ MAJOR FORM SPECIFIC STYLES ============ */
 .major-form {
     position: relative;
@@ -50,9 +98,9 @@
 /* ============ GLOBAL CONTAINER STYLES ============ */
 .major-form-container {
   max-width: 900px; /* Changed from 210mm to match PurchaseRequest */
-  margin: 20px auto;
+  margin: 15px auto;
   background: #fff;
-  padding: 20px;
+  padding: 15px;
   border-radius: 8px;
   font-family: Arial, sans-serif;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -60,34 +108,37 @@
 
 /* ============ FORM HEADER ============ */
 .major-form-header {
-  text-align: center;
-  margin-bottom: 20px;
-  margin-top: auto;
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
   background: #1e3a8a;
   color: white;
-  padding: 15px;
+  padding: 10px 15px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: left;
 }
 
 .major-company-logo {
-  width: 150px;
-  margin: 0 auto 10px auto;
-  display: block;
+  width: 100px;
+  height: auto;
+  margin-right: 15px;
+  flex-shrink: 0;
 }
 
 .major-form-header h1 {
   margin: 0;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: bold;
-  margin-top: auto;
+  line-height: 1.2;
 }
 
 .major-form-header h1 span {
   display: block;
-  font-size: 14px;
+  font-size: 12px;
   font-style: italic;
-  margin-top: 3px;
+  margin-top: 2px;
+  line-height: 1.1;
 }
 
 .major-subtitle {
@@ -101,21 +152,30 @@
 .major-input-section {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  margin-bottom: 20px;
+  gap: 15px;
+  margin-bottom: 15px;
   align-items: start;
+  background: #f0f7ff;
+  border-radius: 5px;
+  padding: 15px;
+  border: 1px solid #ccc;
 }
 
 .major-form-group {
   display: flex;
   flex-direction: column;
   min-width: 0; /* Prevent overflow */
+  gap: 3px;
 }
 
 .major-form-group label {
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 2px;
   color: #000;
+  white-space: nowrap; /* Prevent label wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
 }
 
 .major-form-group input,
@@ -123,9 +183,11 @@
 .major-form-group textarea {
   border: 1px solid #ccc;
   border-radius: 5px;
-  padding: 5px;
-  font-size: 14px;
-  min-width: 150px;
+  padding: 4px;
+  font-size: 12px;
+  min-width: 120px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .major-car-number {
@@ -135,7 +197,7 @@
 
 /* ============ PROJECT DESCRIPTION ============ */
 .major-project-summary {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
   background: #f0f7ff;
   border-radius: 5px;
   padding: 10px;
@@ -166,6 +228,7 @@
   color: #000;
   display: block;
   margin-bottom: 5px;
+  font-size: 12px;
 }
 
 .major-project-description textarea {
@@ -180,7 +243,7 @@
   display: grid;
   grid-template-columns: 66% 34%;
   gap: 0;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
   position: relative;
   border: 1px solid #ccc;
   padding: 0;
@@ -208,7 +271,7 @@
   padding: 6px 8px;
   margin-bottom: 5px;
   font-size: 14px;
-  font-weight: normal;
+  font-weight: bold;
   border-bottom: 1px solid #ccc;
   box-sizing: border-box;
 }
@@ -225,8 +288,8 @@
   background: #1e3a8a;
   color: white;
   text-align: center;
-  font-weight: normal;
-  font-size: 14px;
+  font-weight: bold;
+  font-size: 12px;
   padding: 6px 8px;
   border: 1px solid #ccc;
 }
@@ -234,13 +297,13 @@
 .major-authority-table td {
   border: 1px solid #ccc;
   padding: 6px 8px;
-  font-size: 14px;
+  font-size: 12px;
   vertical-align: middle;
 }
 
 .major-authority-table td:first-child {
   padding-left: 8px;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .major-authority-table td:last-child {
@@ -282,7 +345,7 @@
   padding: 6px 8px;
   margin: 0;
   font-size: 14px;
-  font-weight: normal;
+  font-weight: bold;
   border-bottom: 1px solid #ccc;
 }
 
@@ -305,7 +368,7 @@
 }
 
 .major-checkbox-group label {
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.3;
 }
 
@@ -345,7 +408,7 @@
 }
 
 .major-car-type .major-checkbox-group label {
-  font-size: 12px;
+  font-size: 11px;
   white-space: nowrap;
   flex: 0 1 auto;
 }
@@ -356,7 +419,7 @@
   padding: 10px;
   margin-top: 10px;
   background: white;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .major-currency-section .major-form-group {
@@ -368,7 +431,7 @@
 }
 
 .major-currency-section label {
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .major-currency-section select,
@@ -410,18 +473,13 @@
 
 /* ============ LEASE SECTION ============ */
 .major-lease-section {
-  margin-bottom: 20px;
-}
-
-.major-lease-section h3 {
-  background-color: #1e3a8a;
-  color: white;
-  padding: 8px;
-  margin: 0 0 10px 0;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  padding: 0;
 }
 
 .major-lease-payment-table {
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
 .major-lease-payment-table table {
@@ -429,6 +487,7 @@
   border-collapse: collapse;
   margin-bottom: 10px;
   background: #fff;
+  font-size: 12px;
 }
 
 .major-lease-payment-table th {
@@ -437,11 +496,13 @@
   padding: 8px;
   text-align: center;
   border: 1px solid #ccc;
+  font-size: 12px;
 }
 
 .major-lease-payment-table td {
   padding: 8px;
   border: 1px solid #ccc;
+  font-size: 12px;
 }
 
 .lease-payment-inputs {
@@ -477,24 +538,26 @@
 
 /* ============ IMPACT SECTION ============ */
 .major-impact-section {
-  margin-bottom: 20px;
-  background: #f0f7ff;
-  border-radius: 5px;
-  padding: 10px;
+  margin-bottom: 12px;
   margin-top: 10px;
 }
 
 .major-financial-impact,
 .major-economic-impact {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+  background: #f0f7ff;
+  border-radius: 5px;
+  padding: 10px;
 }
 
 .major-financial-impact h3,
 .major-economic-impact h3 {
   background-color: #1e3a8a;
   color: white;
-  padding: 8px;
-  margin: 0 0 10px 0;
+  padding: 6px;
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .major-financial-content {
@@ -515,32 +578,54 @@
   padding-left: 20px;
 }
 
-.major-economic-header {
-  margin-bottom: 10px;
-  font-weight: bold;
-}
-
 .major-economic-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed; /* Fixed layout for consistent widths */
 }
 
 .major-economic-table th,
 .major-economic-table td {
   border: 1px solid #ccc;
-  padding: 8px;
+  padding: 5px;
   text-align: left;
+  font-size: 12px;
+}
+
+/* Optimize column widths for 6-column layout */
+.major-economic-table th:first-child,
+.major-economic-table td:first-child {
+  width: 15%; /* Currency indicator column */
+  text-align: center;
+  font-weight: bold;
+}
+
+.major-economic-table th:nth-child(2),
+.major-economic-table td:nth-child(2),
+.major-economic-table th:nth-child(3),
+.major-economic-table td:nth-child(3),
+.major-economic-table th:nth-child(4),
+.major-economic-table td:nth-child(4),
+.major-economic-table th:nth-child(5),
+.major-economic-table td:nth-child(5),
+.major-economic-table th:nth-child(6),
+.major-economic-table td:nth-child(6) {
+  width: 17%; /* Equal width for data columns */
 }
 
 .major-economic-table th {
   background: #1e3a8a;
   color: white;
+  font-size: 11px;
+  font-weight: bold;
 }
 
 .major-economic-table input {
   width: 100%;
-  padding: 5px;
+  padding: 3px;
   border: 1px solid #ccc;
+  font-size: 11px;
+  box-sizing: border-box;
 }
 
 /* ============ FINANCIAL IMPACT SECTION ============ */
@@ -548,6 +633,7 @@
   display: flex;
   gap: 0;
   margin-top: 10px;
+  width: 100%;
 }
 
 .major-financial-table {
@@ -566,6 +652,7 @@
   white-space: nowrap;
   width: 200px;
   background-color: #f5f5f5;
+  font-size: 12px;
 }
 
 .major-financial-table input {
@@ -585,12 +672,15 @@
   padding: 8px;
   text-align: center;
   border: 1px solid #ccc;
+  font-size: 12px;
+  font-weight: bold;
 }
 
 .major-budget-table td {
   padding: 8px;
   border: 1px solid #ccc;
   height: 43px;
+  font-size: 12px;
 }
 
 .major-budget-table input {
@@ -601,50 +691,59 @@
 
 /* ============ APPROVAL SECTION ============ */
 .major-approval-section {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   width: 100%;
   margin-left: auto;
   margin-right: auto;
+  margin-top: 10px;
+}
+
+.major-approval-section h3 {
+  background-color: #1e3a8a;
+  color: white;
+  padding: 8px;
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .major-approval-table {
   width: 100%;
   border-collapse: collapse;
   background: #fff;
-  font-size: 11px;
-  margin-bottom: 0;
+  font-size: 12px;
+  margin-bottom: 10px;
   border: 1.5px solid #444;
 }
 
 .major-approval-table th,
 .major-approval-table td {
   border: 0.5px solid #ccc;
-  padding: 2px 3px;
+  padding: 5px 8px;
   text-align: left;
-  height: 14px;
-  line-height: 1.1;
-  white-space: nowrap;
+  height: 20px;
+  line-height: 1.2;
   vertical-align: middle;
 }
 
 .major-approval-table tr {
-  height: 14px;
+  height: 20px;
 }
 
 .major-approval-table th {
-  background: #1e3a8a;
-  color: white;
-  font-size: 10px;
-  font-weight: normal;
-  height: 14px;
-  padding: 2px 4px;
+  background: #f8f9fa;
+  color: #333;
+  font-size: 12px;
+  font-weight: bold;
+  height: 20px;
+  padding: 4px 8px;
 }
 
 .major-approval-table td p {
   margin: 0;
   padding: 0;
   font-size: 11px;
-  line-height: 1.1;
+  line-height: 1.2;
   display: inline;
   color: inherit;
 }
@@ -660,7 +759,7 @@
   gap: 10px;
   justify-content: center;
   margin-top: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .major-button-group .button {
@@ -705,7 +804,7 @@
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
@@ -742,7 +841,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 12px;
   font-weight: bold;
   margin: 0;
   line-height: 1;
@@ -758,11 +857,63 @@
 
 /* ============ PRINT STYLES ============ */
 @media print {
+    /* Page setup for A4 */
+    @page {
+        size: A4;
+        margin: 15mm 10mm 15mm 10mm;
+    }
+    
     /* ทำให้หน้าที่พิมพ์เหมือนกับที่แสดงบนหน้าจอ */
     body {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
         color-adjust: exact !important;
+        font-size: 12px !important;
+    }
+    
+    /* Major Form specific print optimizations */
+    
+    /* Compact header for print */
+    .major-form-header {
+        padding: 5px 10px !important;
+        margin-bottom: 8px !important;
+    }
+    
+    .major-company-logo {
+        width: 80px !important;
+        margin-right: 10px !important;
+    }
+    
+    .major-form-header h1 {
+        font-size: 12px !important;
+        line-height: 1.1 !important;
+    }
+    
+    .major-form-header h1 span {
+        font-size: 9px !important;
+    }
+    
+    /* Compact input sections */
+    .major-input-section {
+        gap: 8px !important;
+        margin-bottom: 8px !important;
+        background-color: #f0f7ff !important;
+        padding: 10px !important;
+    }
+    
+    .major-form-group {
+        gap: 2px !important;
+    }
+    
+    .major-form-group label {
+        font-size: 10px !important;
+    }
+    
+    .major-form-group input,
+    .major-form-group select,
+    .major-form-group textarea {
+        font-size: 10px !important;
+        padding: 2px !important;
     }
     
     /* คงสีพื้นหลังต่างๆ ไว้เหมือนเดิม */
@@ -785,10 +936,15 @@
     .major-lease-payment-table th,
     .major-economic-table th,
     .major-budget-table th,
-    .major-approval-table th,
     .major-project-summary h3 {
         background-color: #1e3a8a !important;
         color: white !important;
+    }
+    
+    /* Approval table headers - keep light background */
+    .major-approval-table th {
+        background-color: #f8f9fa !important;
+        color: #333 !important;
     }
     
     /* ซ่อนปุ่มต่างๆ */
@@ -799,38 +955,183 @@
         display: none !important;
     }
     
-    /*
-      เดิมมีการ avoid ทุกตาราง
-      แก้ให้บางตารางตัดข้ามหน้าได้ (auto)
-      ส่วนไหนอยากบังคับให้อยู่หน้าเดียวกันให้คง avoid
-    */
+    /* ============ COMPREHENSIVE PAGE BREAK CONTROLS ============ */
+    /* Main section containers - prevent inappropriate splitting */
+    .major-form-header,
+    .major-input-section,
+    .major-project-description,
+    .major-authority-section,
+    .major-authorization-type,
+    .major-car-type,
+    .major-currency-section,
+    .major-lease-section,
+    .major-impact-section,
+    .major-approval-section {
+        page-break-inside: avoid !important;
+        page-break-before: auto !important;
+        break-inside: avoid !important; /* Modern CSS property */
+        break-before: auto !important;
+    }
     
-    /* ยังบังคับไม่ตัดตรง signature และ approval table (ถ้าอยาก) */
-    .major-form .signature-section,
-    .major-form .item-table,
+    /* Allow strategic breaks for long content sections */
+    .major-project-description {
+        page-break-before: auto !important;
+        page-break-after: auto !important;
+        break-before: auto !important;
+        break-after: auto !important;
+    }
+    
+    /* Enhanced lease section page break controls */
+    .major-lease-section {
+        page-break-inside: avoid !important;
+        page-break-before: auto !important;
+        page-break-after: auto !important;
+        break-inside: avoid !important;
+        break-before: auto !important;
+        break-after: auto !important;
+    }
+    
+    /* Lease payment table specific controls */
+    .major-lease-payment-table {
+        page-break-inside: auto !important;
+        break-inside: auto !important;
+    }
+    
+    .major-lease-payment-table table {
+        page-break-inside: auto !important;
+        break-inside: auto !important;
+    }
+    
+    .major-lease-payment-table th {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+    }
+    
+    /* Keep Financial and Economic Impact together when possible */
+    .major-financial-impact {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+    }
+    
+    /* Individual table controls */
+    .major-authority-table,
+    .major-lease-payment-table {
+        page-break-inside: auto !important;
+        page-break-before: auto !important;
+        break-inside: auto !important;
+        break-before: auto !important;
+    }
+    
+    /* Keep smaller tables together */
+    .major-economic-table,
+    .major-financial-table,
     .major-approval-table {
         page-break-inside: avoid !important;
+        break-inside: avoid !important;
     }
+    
+    /* Signature section controls */
     .major-form .signature-section {
-        margin: 0 !important; /* ลดระยะห่างเวลาพิมพ์ */
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        margin: 0 !important;
     }
-
-    /* ส่วนตารางใหญ่ๆ ที่อาจยาว ให้ตัดข้ามหน้าได้ */
+    
+    /* Table headers stay with content */
+    .major-authority-table th,
+    .major-lease-payment-table th,
+    .major-economic-table th,
+    .major-financial-table th,
+    .major-approval-table th {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+    }
+    
+    /* Font size optimization for tables */
     .major-authority-table,
     .major-lease-payment-table,
     .major-economic-table,
     .major-financial-table,
     .major-budget-table {
-        page-break-inside: auto !important;
+        font-size: 10px !important;
+    }
+    
+    /* Compact table styles for print */
+    .major-economic-table th,
+    .major-economic-table td {
+        padding: 3px !important;
+        font-size: 10px !important;
+    }
+    
+    .major-economic-table input {
+        font-size: 9px !important;
+        padding: 1px !important;
+    }
+    
+    .major-approval-table th,
+    .major-approval-table td {
+        padding: 3px 5px !important;
+        height: 16px !important;
+        font-size: 10px !important;
+    }
+    
+    .major-approval-table td p {
+        font-size: 10px !important;
+    }
+    
+    /* Compact section headers */
+    .major-financial-impact h3,
+    .major-economic-impact h3 {
+        padding: 4px !important;
+        font-size: 11px !important;
+    }
+    
+    .major-authority-table::before,
+    .major-authorization-type h3,
+    .major-car-type h3,
+    .major-lease-section h3 {
+        font-size: 11px !important;
+    }
+    
+    .major-authority-table th,
+    .major-authority-table td {
+        font-size: 10px !important;
+    }
+    
+    .major-checkbox-group label {
+        font-size: 10px !important;
+    }
+    
+    .major-car-type .major-checkbox-group label {
+        font-size: 9px !important;
+    }
+    
+    .major-currency-section,
+    .major-currency-section label {
+        font-size: 10px !important;
+    }
+    
+    .major-financial-table .label-cell,
+    .major-budget-table th,
+    .major-budget-table td {
+        font-size: 10px !important;
+    }
+    
+    .major-add-line-btn {
+        font-size: 10px !important;
+    }
+    
+    .major-delete-btn.outside {
+        font-size: 10px !important;
+    }
+    
+    /* Reduce margins for all sections */
+    .major-financial-impact,
+    .major-economic-impact,
+    .major-approval-section {
+        margin-bottom: 6px !important;
     }
 
-    /* ปรับ container เพื่อให้มีขนาดที่เหมาะสม */
-    .major-form-container {
-        margin: 0 auto !important;
-        padding: 10px !important;
-        box-shadow: none !important;
-        max-width: 100% !important;
-    }
 }
 
 /* Update operational date header to wrap */
@@ -920,7 +1221,7 @@
   padding: 15px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .authority-table {
@@ -948,7 +1249,7 @@
   padding: 15px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .checkbox-group {

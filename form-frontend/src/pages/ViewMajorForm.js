@@ -439,6 +439,7 @@ const ViewMajorForm = ({ form }) => {
 
         {/* -------------------- APPROVAL SECTION -------------------- */}
         <div className="major-approval-section">
+          <h3>Approval</h3>
           <table className="major-approval-table">
             <thead>
               <tr>

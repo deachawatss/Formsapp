@@ -1,0 +1,216 @@
+/**
+ * BandCI Design System Variables for NWFTH-Forms
+ * Professional brown-based color palette and design tokens
+ * SCOPED TO HOME PAGE ONLY
+ */
+
+.home-container {
+  /* Brown Color Scale - Primary Brand Colors */
+  --color-brown-25: #fdfcfb;
+  --color-brown-50: #faf7f5;
+  --color-brown-75: #f8f4f1;
+  --color-brown-100: #f5ede8;
+  --color-brown-200: #ead9d0;
+  --color-brown-300: #dcc0b0;
+  --color-brown-400: #c89e88;
+  --color-brown-500: #b8806a;
+  --color-brown-600: #a66b56;
+  --color-brown-700: #8d5a49;
+  --color-brown-800: #744c3f;
+  --color-brown-900: #5d4037;
+
+  /* Primary Colors - Same as brown for consistency */
+  --color-primary-25: var(--color-brown-25);
+  --color-primary-50: var(--color-brown-50);
+  --color-primary-75: var(--color-brown-75);
+  --color-primary-100: var(--color-brown-100);
+  --color-primary-200: var(--color-brown-200);
+  --color-primary-300: var(--color-brown-300);
+  --color-primary-400: var(--color-brown-400);
+  --color-primary-500: var(--color-brown-500);
+  --color-primary-600: var(--color-brown-600);
+  --color-primary-700: var(--color-brown-700);
+  --color-primary-800: var(--color-brown-800);
+  --color-primary-900: var(--color-brown-900);
+
+  /* Success Colors */
+  --color-success-50: #f0fdf4;
+  --color-success-100: #dcfce7;
+  --color-success-200: #bbf7d0;
+  --color-success-300: #86efac;
+  --color-success-400: #4ade80;
+  --color-success-500: #22c55e;
+  --color-success-600: #16a34a;
+  --color-success-700: #15803d;
+  --color-success-800: #166534;
+  --color-success-900: #14532d;
+
+  /* Warning Colors */
+  --color-warning-50: #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-200: #fde68a;
+  --color-warning-300: #fcd34d;
+  --color-warning-400: #fbbf24;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-warning-700: #b45309;
+  --color-warning-800: #92400e;
+  --color-warning-900: #78350f;
+
+  /* Danger Colors */
+  --color-danger-50: #fef2f2;
+  --color-danger-100: #fee2e2;
+  --color-danger-200: #fecaca;
+  --color-danger-300: #fca5a5;
+  --color-danger-400: #f87171;
+  --color-danger-500: #ef4444;
+  --color-danger-600: #dc2626;
+  --color-danger-700: #b91c1c;
+  --color-danger-800: #991b1b;
+  --color-danger-900: #7f1d1d;
+
+  /* Info Colors */
+  --color-info-50: #eff6ff;
+  --color-info-100: #dbeafe;
+  --color-info-200: #bfdbfe;
+  --color-info-300: #93c5fd;
+  --color-info-400: #60a5fa;
+  --color-info-500: #3b82f6;
+  --color-info-600: #2563eb;
+  --color-info-700: #1d4ed8;
+  --color-info-800: #1e40af;
+  --color-info-900: #1e3a8a;
+
+  /* Gray Colors */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  /* Semantic Colors */
+  --color-text-primary: #3e2723;
+  --color-text-secondary: #5d4037;
+  --color-text-muted: #8d5a49;
+  --color-text-disabled: #a66b56;
+
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #f5f5f5;
+  --color-background-muted: #faf7f5;
+  --color-background-elevated: #ffffff;
+
+  --color-border-primary: #ead9d0;
+  --color-border-secondary: #dcc0b0;
+  --color-border-muted: #f5ede8;
+  --color-border-focus: #8d5a49;
+
+  /* Dashboard Status Colors */
+  --color-status-clean: #dcc0b0;
+  --color-status-complete: #c89e88;
+  --color-status-working: #b8806a;
+  --color-status-highlight: #8d5a49;
+
+  /* Spacing Scale */
+  --spacing-xs: 0.25rem;   /* 4px */
+  --spacing-sm: 0.5rem;    /* 8px */
+  --spacing-md: 0.75rem;   /* 12px */
+  --spacing-lg: 1rem;      /* 16px */
+  --spacing-xl: 1.25rem;   /* 20px */
+  --spacing-2xl: 1.5rem;   /* 24px */
+  --spacing-3xl: 2rem;     /* 32px */
+  --spacing-4xl: 2.5rem;   /* 40px */
+  --spacing-5xl: 3rem;     /* 48px */
+
+  /* Typography Scale */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 1.875rem;  /* 30px */
+  --font-size-4xl: 2.25rem;   /* 36px */
+  --font-size-5xl: 3rem;      /* 48px */
+
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Line Heights */
+  --line-height-none: 1;
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+
+  /* Border Radius */
+  --border-radius-none: 0;
+  --border-radius-sm: 0.125rem;   /* 2px */
+  --border-radius-md: 0.375rem;   /* 6px */
+  --border-radius-lg: 0.5rem;     /* 8px */
+  --border-radius-xl: 0.75rem;    /* 12px */
+  --border-radius-2xl: 1rem;      /* 16px */
+  --border-radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(93, 64, 55, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(93, 64, 55, 0.1), 0 2px 4px -1px rgba(93, 64, 55, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(93, 64, 55, 0.1), 0 4px 6px -2px rgba(93, 64, 55, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(93, 64, 55, 0.1), 0 10px 10px -5px rgba(93, 64, 55, 0.04);
+
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 200ms ease-in-out;
+  --transition-slow: 300ms ease-in-out;
+}
+
+/* Dark Theme Override (optional) */
+@media (prefers-color-scheme: dark) {
+  .home-container {
+    --color-background-primary: #1a1a1a;
+    --color-background-secondary: #2a2a2a;
+    --color-background-muted: #3a3a3a;
+    --color-background-elevated: #2a2a2a;
+    
+    --color-text-primary: #f5ede8;
+    --color-text-secondary: #ead9d0;
+    --color-text-muted: #dcc0b0;
+    --color-text-disabled: #b8806a;
+    
+    --color-border-primary: #404040;
+    --color-border-secondary: #525252;
+    --color-border-muted: #2a2a2a;
+    --color-border-focus: #dcc0b0;
+    
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.15);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Utility Classes - Scoped to Home Container */
+.home-container .text-primary { color: var(--color-text-primary); }
+.home-container .text-secondary { color: var(--color-text-secondary); }
+.home-container .text-muted { color: var(--color-text-muted); }
+
+.home-container .bg-primary { background-color: var(--color-background-primary); }
+.home-container .bg-secondary { background-color: var(--color-background-secondary); }
+.home-container .bg-muted { background-color: var(--color-background-muted); }
+
+.home-container .border-primary { border-color: var(--color-border-primary); }
+.home-container .border-secondary { border-color: var(--color-border-secondary); }
+
+.home-container .shadow-card { box-shadow: var(--shadow-md); }
+.home-container .shadow-modal { box-shadow: var(--shadow-xl); }
+
+.home-container .transition-fast { transition: var(--transition-fast); }
+.home-container .transition-normal { transition: var(--transition-normal); }
+.home-container .transition-slow { transition: var(--transition-slow); }

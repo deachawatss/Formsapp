@@ -3,8 +3,8 @@
     align-items: center;
     background: #3A2F2A;
     color: white;
-    padding: 8px 15px; /* ลด Padding */
-    height: 50px; /* ลดความสูง Header */
+    padding: 10px 15px; /* เพิ่ม Padding */
+    height: 70px; /* เพิ่มความสูง Header */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     position: fixed;
     top: 0;
@@ -14,7 +14,7 @@
 }
 
 .logo {
-    height: 35px; /* ลดขนาดโลโก้ */
+    height: 50px; /* เพิ่มขนาดโลโก้ */
     margin-right: 10px;
     flex-shrink: 0; /* ป้องกันไม่ให้ logo หด */
 }
@@ -142,4 +142,24 @@
 
 .my-forms-button:hover {
     background-color: #45a049;
+}
+
+/* Print styles - hide header completely */
+@media print {
+    .header {
+        display: none !important;
+        position: static !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .header *,
+    .header-right,
+    .user-profile,
+    .dropdown-menu,
+    .my-forms-button {
+        display: none !important;
+        visibility: hidden !important;
+    }
 }

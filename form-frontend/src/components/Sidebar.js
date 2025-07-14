@@ -3,6 +3,15 @@ import { Link } from 'react-router-dom';
 import './Sidebar.css'; // ใช้สำหรับสไตล์
 
 const Sidebar = () => {
+  // Get user information from localStorage
+  const user = JSON.parse(localStorage.getItem('user')) || {};
+  
+  // Check if user is admin (hardcoded admin users)
+  const isAdmin = (userName) => {
+    const adminUsers = ['Jon', 'Phuvis', 'deachawat'];
+    return adminUsers.includes(userName);
+  };
+
   return (
     <div className="sidebar">
       {/* ปุ่ม Home และ Dashboard */}
@@ -10,9 +19,12 @@ const Sidebar = () => {
         <li>
           <Link to="/">🏠 Home</Link>
         </li>
-        <li>
-          <Link to="/dashboard">📊 Dashboard</Link>
-        </li>
+        {/* Show Dashboard only for admin users */}
+        {isAdmin(user.name) && (
+          <li>
+            <Link to="/dashboard">📊 Dashboard</Link>
+          </li>
+        )}
       </ul>
 
       <h2>📂 Document Forms</h2>

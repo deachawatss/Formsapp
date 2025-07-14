@@ -1,0 +1,31 @@
+{
+  "name": "nwfth-forms",
+  "version": "1.0.0",
+  "description": "Full-stack organizational form management system",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd Form-App && npm run dev",
+    "dev:frontend": "cd form-frontend && npm run dev",
+    "build": "cd form-frontend && npm run build",
+    "start": "cd Form-App && npm start",
+    "install:all": "npm install && cd Form-App && npm install && cd ../form-frontend && npm install",
+    "build:docker": "docker build -t nwfth-forms .",
+    "run:docker": "docker run -p 5000:5000 nwfth-forms"
+  },
+  "keywords": [
+    "forms",
+    "management",
+    "nodejs",
+    "react",
+    "express"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "lucide": "^0.525.0"
+  }
+}

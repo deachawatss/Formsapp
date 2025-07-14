@@ -872,8 +872,9 @@ const MajorForm = () => {
           </div>
         </div>
 
-        {/* -------------------- LEASE PAYMENT TABLE -------------------- */}
-        <div className="major-lease-payment-table">
+        {/* -------------------- LEASE PAYMENT SECTION -------------------- */}
+        <div className="major-lease-section">
+          <div className="major-lease-payment-table">
           <table>
             <thead>
               <tr>
@@ -959,6 +960,7 @@ const MajorForm = () => {
           <button type="button" onClick={addLeaseLine} className="major-add-line-btn">
           ➕ Add Line
           </button>
+          </div>
         </div>
 
         {/* -------------------- IMPACT SECTION -------------------- */}
@@ -1110,12 +1112,10 @@ const MajorForm = () => {
 
           <div className="major-economic-impact">
             <h3>Economic Impact</h3>
-            <div className="major-economic-header">
-              <span>In AU Dollars</span>
-            </div>
             <table className="major-economic-table">
               <thead>
                 <tr>
+                  <th></th>
                   <th>Internal Rate of Return (IRR) %</th>
                   <th>Net Present Value (NPV)</th>
                   <th>Discount Rate for NPV (%)</th>
@@ -1125,6 +1125,7 @@ const MajorForm = () => {
               </thead>
               <tbody>
                 <tr>
+                  <td>In AU Dollars</td>
                   <td>
                     <input
                       type="number"
@@ -1173,6 +1174,7 @@ const MajorForm = () => {
 
         {/* -------------------- APPROVAL SECTION -------------------- */}
         <div className="major-approval-section">
+          <h3>Approval</h3>
           <table className="major-approval-table">
             <thead>
               <tr>
@@ -1224,7 +1226,7 @@ const MajorForm = () => {
             💾 Save as Draft
           </button>
 
-          <button type="submit" className="button submit-btn">
+          {/* <button type="submit" className="button submit-btn">
             📩 Submit Form
           </button>
 
@@ -1235,7 +1237,7 @@ const MajorForm = () => {
             disabled={!formData.supervisorEmail || !insertedId || isSendingEmail}
           >
             ✉️ {isSendingEmail ? 'Sending...' : 'Send Email'}
-          </button>
+          </button> */}
 
           <button
             type="button"
