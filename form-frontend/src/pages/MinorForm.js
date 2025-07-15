@@ -168,7 +168,7 @@ const MinorForm = () => {
     'NWF Australia'
   ];
 
-  const currencies = ['THB', 'PHP', 'AUD'];
+  const currencies = ['THB', 'PHP', 'AUD', 'USD'];
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
