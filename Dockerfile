@@ -1,5 +1,5 @@
 # Multi-stage build for production deployment
-FROM node:18-alpine AS frontend-build
+FROM node:20-alpine AS frontend-build
 
 # Set working directory for frontend build
 WORKDIR /app/frontend
@@ -17,7 +17,7 @@ COPY form-frontend/ ./
 RUN npm run build:prod
 
 # Production stage
-FROM node:18-alpine AS production
+FROM node:20-alpine AS production
 
 # Install puppeteer dependencies
 RUN apk add --no-cache \
