@@ -474,18 +474,23 @@
 /* ============ LEASE SECTION ============ */
 .major-lease-section {
   margin-bottom: 12px;
+  background: #f0f7ff;
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%; /* Full width to match Financial Impact section */
+  box-sizing: border-box;
   border: 1px solid #ccc;
-  padding: 0;
 }
 
 .major-lease-payment-table {
   margin-bottom: 0;
+  width: 100%;
 }
 
 .major-lease-payment-table table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 10px;
+  margin-bottom: 0;
   background: #fff;
   font-size: 12px;
 }
@@ -804,10 +809,13 @@
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
+  margin-bottom: 0;
   font-size: 12px;
   font-weight: 500;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
+  display: block;
+  width: fit-content;
 }
 
 .major-add-line-btn:hover {
@@ -989,17 +997,24 @@
         break-inside: avoid !important;
         break-before: auto !important;
         break-after: auto !important;
+        width: 100% !important; /* Full width in print to match other sections */
+        padding: 8px !important; /* Maintain padding in print */
+        box-sizing: border-box !important;
+        background-color: #f0f7ff !important; /* Maintain background in print */
+        border: 1px solid #ccc !important; /* Maintain border in print */
     }
     
-    /* Lease payment table specific controls */
+    /* Lease payment table specific controls - keep table within section */
     .major-lease-payment-table {
-        page-break-inside: auto !important;
-        break-inside: auto !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        margin: 0 !important;
     }
     
     .major-lease-payment-table table {
-        page-break-inside: auto !important;
-        break-inside: auto !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        width: 100% !important;
     }
     
     .major-lease-payment-table th {
@@ -1014,12 +1029,19 @@
     }
     
     /* Individual table controls */
-    .major-authority-table,
-    .major-lease-payment-table {
+    .major-authority-table {
         page-break-inside: auto !important;
         page-break-before: auto !important;
         break-inside: auto !important;
         break-before: auto !important;
+    }
+    
+    /* Lease payment table should stay with its section */
+    .major-lease-payment-table {
+        page-break-inside: avoid !important;
+        page-break-before: avoid !important;
+        break-inside: avoid !important;
+        break-before: avoid !important;
     }
     
     /* Keep smaller tables together */
@@ -1054,6 +1076,32 @@
     .major-financial-table,
     .major-budget-table {
         font-size: 10px !important;
+    }
+    
+    /* Enhanced lease payment table column widths for print */
+    .major-lease-payment-table th:nth-child(1),
+    .major-lease-payment-table td:nth-child(1) {
+        width: 15% !important;
+        max-width: 15% !important;
+    }
+    
+    .major-lease-payment-table th:nth-child(2),
+    .major-lease-payment-table td:nth-child(2),
+    .major-lease-payment-table th:nth-child(3),
+    .major-lease-payment-table td:nth-child(3),
+    .major-lease-payment-table th:nth-child(4),
+    .major-lease-payment-table td:nth-child(4),
+    .major-lease-payment-table th:nth-child(5),
+    .major-lease-payment-table td:nth-child(5) {
+        width: 17% !important;
+        max-width: 17% !important;
+    }
+    
+    .major-lease-payment-table th:nth-child(6),
+    .major-lease-payment-table td:nth-child(6) {
+        width: 17% !important;
+        max-width: 17% !important;
+        min-width: 100px !important; /* Ensure enough space for full dates in print */
     }
     
     /* Compact table styles for print */
@@ -1139,6 +1187,44 @@
   white-space: normal;
   word-break: break-word;
   min-width: 80px;
+}
+
+/* Column width distribution for lease payment table */
+.major-lease-payment-table th:nth-child(1),
+.major-lease-payment-table td:nth-child(1) {
+  width: 20%;
+  max-width: 20%;
+}
+
+.major-lease-payment-table th:nth-child(2),
+.major-lease-payment-table td:nth-child(2) {
+  width: 16%;
+  max-width: 16%;
+}
+
+.major-lease-payment-table th:nth-child(3),
+.major-lease-payment-table td:nth-child(3) {
+  width: 16%;
+  max-width: 16%;
+}
+
+.major-lease-payment-table th:nth-child(4),
+.major-lease-payment-table td:nth-child(4) {
+  width: 16%;
+  max-width: 16%;
+}
+
+.major-lease-payment-table th:nth-child(5),
+.major-lease-payment-table td:nth-child(5) {
+  width: 16%;
+  max-width: 16%;
+}
+
+.major-lease-payment-table th:nth-child(6),
+.major-lease-payment-table td:nth-child(6) {
+  width: 16%;
+  max-width: 16%;
+  min-width: 100px; /* Ensure enough space for full dates */
 }
 
 /* Fix currency section alignment */

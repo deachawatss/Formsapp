@@ -160,9 +160,9 @@ const ViewMajorForm = ({ form }) => {
                 </tr>
                 <tr className="total-row">
                   <td>Total Addition Request</td>
-                  <td>{additionTotal.previouslyApproved.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                  <td>{additionTotal.thisRequest.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                  <td>{additionTotal.total.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td style={{ textAlign: 'right' }}>{additionTotal.previouslyApproved.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td style={{ textAlign: 'right' }}>{additionTotal.thisRequest.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td style={{ textAlign: 'right' }}>{additionTotal.total.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
                 </tr>
                 <tr>
                   <td>Capital Disposal</td>
@@ -184,9 +184,9 @@ const ViewMajorForm = ({ form }) => {
                 </tr>
                 <tr className="total-row">
                   <td>Total Disposal Request</td>
-                  <td>{disposalTotal.previouslyApproved.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                  <td>{disposalTotal.thisRequest.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                  <td>{disposalTotal.total.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td style={{ textAlign: 'right' }}>{disposalTotal.previouslyApproved.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td style={{ textAlign: 'right' }}>{disposalTotal.thisRequest.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td style={{ textAlign: 'right' }}>{disposalTotal.total.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
                 </tr>
               </tbody>
             </table>
@@ -303,11 +303,12 @@ const ViewMajorForm = ({ form }) => {
         </div>
 
         {/* -------------------- LEASE PAYMENT TABLE -------------------- */}
-        <div className="major-lease-payment-table">
+        <div className="major-lease-section">
+          <div className="major-lease-payment-table">
           <table>
             <thead>
               <tr>
-                <th>Lease or Continued Payment</th>
+                <th>Lease or Continued<br/>Payment</th>
                 <th>Budgeted Amount</th>
                 <th>Change From Budget</th>
                 <th>Start Date</th>
@@ -344,6 +345,7 @@ const ViewMajorForm = ({ form }) => {
               )}
             </tbody>
           </table>
+          </div>
         </div>
 
         {/* -------------------- IMPACT SECTION -------------------- */}

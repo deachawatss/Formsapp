@@ -32,7 +32,6 @@ const MajorForm = () => {
     disposalSection: {
       capitalDisposal: { previouslyApproved: '', thisRequest: '' },
       capitalRelatedExpense2: { previouslyApproved: '', thisRequest: '' },
-      expense: { previouslyApproved: '', thisRequest: '' },
       otherInitialCost: { previouslyApproved: '', thisRequest: '' }
     },
     // Authorization
@@ -277,14 +276,12 @@ const MajorForm = () => {
 
   // รวมเฉพาะส่วน Disposal
   const totalDisposalRequest = () => {
-    const { capitalDisposal, capitalRelatedExpense2, expense } = formData.disposalSection;
+    const { capitalDisposal, capitalRelatedExpense2 } = formData.disposalSection;
     const sumPrev = (parseFloat(capitalDisposal.previouslyApproved) || 0)
-                  + (parseFloat(capitalRelatedExpense2.previouslyApproved) || 0)
-                  + (parseFloat(expense.previouslyApproved) || 0);
+                  + (parseFloat(capitalRelatedExpense2.previouslyApproved) || 0);
 
     const sumThis = (parseFloat(capitalDisposal.thisRequest) || 0)
-                  + (parseFloat(capitalRelatedExpense2.thisRequest) || 0)
-                  + (parseFloat(expense.thisRequest) || 0);
+                  + (parseFloat(capitalRelatedExpense2.thisRequest) || 0);
 
     return {
       prev: sumPrev.toLocaleString('en-US', { minimumFractionDigits: 2 }),
@@ -623,9 +620,9 @@ const MajorForm = () => {
                 </tr>
                 <tr>
                   <td>Total Addition Request</td>
-                  <td>{totalAdditionRequest().prev}</td>
-                  <td>{totalAdditionRequest().thisReq}</td>
-                  <td>{totalAdditionRequest().total}</td>
+                  <td style={{ textAlign: 'right' }}>{totalAdditionRequest().prev}</td>
+                  <td style={{ textAlign: 'right' }}>{totalAdditionRequest().thisReq}</td>
+                  <td style={{ textAlign: 'right' }}>{totalAdditionRequest().total}</td>
                 </tr>
 
                 {/* ---------- DISPOSAL SECTION ---------- */}
@@ -669,9 +666,9 @@ const MajorForm = () => {
         
                 <tr>
                   <td>Total Disposal Request</td>
-                  <td>{totalDisposalRequest().prev}</td>
-                  <td>{totalDisposalRequest().thisReq}</td>
-                  <td>{totalDisposalRequest().total}</td>
+                  <td style={{ textAlign: 'right' }}>{totalDisposalRequest().prev}</td>
+                  <td style={{ textAlign: 'right' }}>{totalDisposalRequest().thisReq}</td>
+                  <td style={{ textAlign: 'right' }}>{totalDisposalRequest().total}</td>
                 </tr>
                 <tr>
                   <td>Other Initial Cost</td>
@@ -878,7 +875,7 @@ const MajorForm = () => {
           <table>
             <thead>
               <tr>
-                <th>Lease or Continued Payment</th>
+                <th>Lease or Continued<br/>Payment</th>
                 <th>Budgeted Amount</th>
                 <th>Change From Budget</th>
                 <th>Start Date</th>
