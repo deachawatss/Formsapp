@@ -323,7 +323,7 @@ const PurchaseRequestForm = () => {
   };
     
   return (
-    <div className="print-page">
+    <div className="purchase-form-container">
       <div className="form-container">
         <div className="minor-form-header-title">
           <img 
@@ -341,7 +341,7 @@ const PurchaseRequestForm = () => {
         </div>
 
         <form onSubmit={handleSubmit} id="purchaseRequestForm">
-          {/* Row 1: Name, Dept, Date */}
+          {/* Row 1: Name and Email */}
           <div className="input-row">
             <label>Name:</label>
             <input
@@ -352,22 +352,6 @@ const PurchaseRequestForm = () => {
               style={{ backgroundColor: '#f0f0f0' }}
             />
 
-            <label>Department:</label>
-            <select
-              name="department"
-              value={formData.department}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Select Department</option>
-              {departments.map(dep => (
-                <option key={dep} value={dep}>{dep}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Row 2: Manager Email, Delivery Date */}
-          <div className="input-row">
             <label>Email:</label>
             <input
               type="email"
@@ -375,6 +359,24 @@ const PurchaseRequestForm = () => {
               value={formData.supervisorEmail}
               onChange={handleChange}
             />
+          </div>
+
+          {/* Row 2: Department and Date */}
+          <div className="input-row">
+            <div className="department-field">
+              <label>Department:</label>
+              <select
+                name="department"
+                value={formData.department}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Department</option>
+                {departments.map(dep => (
+                  <option key={dep} value={dep}>{dep}</option>
+                ))}
+              </select>
+            </div>
 
             <div className="date-group">
               <label>Date:</label>
@@ -386,7 +388,6 @@ const PurchaseRequestForm = () => {
                 required
               />
             </div>
-
           </div>
 
           {/* ตาราง Items (6 คอลัมน์) */}
@@ -507,52 +508,56 @@ const PurchaseRequestForm = () => {
       onChange={handleChange}
     />
   </div>
-  {/* Zip */}
-  <div className="vendor-row">
-    <label>Zip Code:</label>
-    <input
-      type="text"
-      name="vendorZip"
-      value={formData.vendorZip}
-      onChange={handleChange}
-    />
-  </div>
-  {/* Country */}
-  <div className="vendor-row">
-    <label>Country:</label>
-    <input
-      type="text"
-      name="CountryZip"
-      value={formData.CountryZip}
-      onChange={handleChange}
-    />
+  {/* Zip and Country on same line */}
+  <div className="vendor-row multi-field">
+    <div className="field-group">
+      <label>Zip Code:</label>
+      <input
+        type="text"
+        name="vendorZip"
+        value={formData.vendorZip}
+        onChange={handleChange}
+      />
+    </div>
+    <div className="field-group">
+      <label>Country:</label>
+      <input
+        type="text"
+        name="CountryZip"
+        value={formData.CountryZip}
+        onChange={handleChange}
+      />
+    </div>
   </div>
 </div>
             
-<div className="right-col summary-section">
-  {/* Currency */}
-  <div className="input-row no-wrap">
-    <label>Currency:</label>
-    <select
-      name="currency"
-      value={formData.currency}
-      onChange={handleChange}
-    >
-      {currencies.map(curr => (
-        <option key={curr} value={curr}>{curr}</option>
-      ))}
-    </select>
-
-    <label>Terms:</label>
-    <select
-      name="terms"
-      value={formData.terms}
-      onChange={handleChange}
-    >
-      {termsList.map(term => (
-        <option key={term} value={term}>{term}</option>
-      ))}
-    </select>
+<div className="right-col summary-section right-panel">
+  {/* Currency and Terms */}
+  <div className="input-row multi-field">
+    <div className="field-group">
+      <label>Currency:</label>
+      <select
+        name="currency"
+        value={formData.currency}
+        onChange={handleChange}
+      >
+        {currencies.map(curr => (
+          <option key={curr} value={curr}>{curr}</option>
+        ))}
+      </select>
+    </div>
+    <div className="field-group">
+      <label>Terms:</label>
+      <select
+        name="terms"
+        value={formData.terms}
+        onChange={handleChange}
+      >
+        {termsList.map(term => (
+          <option key={term} value={term}>{term}</option>
+        ))}
+      </select>
+    </div>
   </div>
 
       

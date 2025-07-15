@@ -140,23 +140,28 @@ const ViewPRForm = ({ form }) => {
               <label>Address2:</label>
               <span>{details.vendorAddress2 || ''}</span>
             </div>
-            <div className="vendor-row">
-              <label>Zip Code:</label>
-              <span>{details.vendorZip || ''}</span>
-            </div>
-            <div className="vendor-row">
-              <label>Country:</label>
-              <span>{details.CountryZip || ''}</span>
+            <div className="vendor-row multi-field">
+              <div className="field-group">
+                <label>Zip Code:</label>
+                <span>{details.vendorZip || ''}</span>
+              </div>
+              <div className="field-group">
+                <label>Country:</label>
+                <span>{details.CountryZip || ''}</span>
+              </div>
             </div>
           </div>
           
-          <div className="right-col">
-            <div className="input-row no-wrap">
-              <label>Currency:</label>
-              <span>{details.currency || ''}</span>
-
-              <label>Terms:</label>
-              <span>{details.terms || ''}</span>
+          <div className="right-col summary-section right-panel">
+            <div className="input-row multi-field">
+              <div className="field-group">
+                <label>Currency:</label>
+                <span>{details.currency || ''}</span>
+              </div>
+              <div className="field-group">
+                <label>Terms:</label>
+                <span>{details.terms || ''}</span>
+              </div>
             </div>
 
             <div className="summary compact-summary">
