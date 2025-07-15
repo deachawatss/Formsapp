@@ -4,17 +4,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-NWFTH-Forms is a full-stack organizational form management system with a Node.js/Express backend and React frontend. The application handles multiple form types (Purchase, CAPEX, Travel, Minor/Major requests) with user authentication, PDF generation, and email notifications.
+NWFTH-Forms is an enterprise-grade organizational form management system with a Node.js/Express backend and React frontend. The application provides comprehensive form lifecycle management for multiple form types (Purchase, CAPEX, Travel, Minor/Major requests) with advanced features including dual authentication (Local + Active Directory), executive dashboard analytics, automated PDF generation, email notifications, and production-ready Docker deployment.
 
 ## Tech Stack
 
 - **Backend**: Node.js/Express with SQL Server integration
-- **Frontend**: React 19 with Material-UI (MUI v6)
-- **Database**: Microsoft SQL Server
-- **Authentication**: JWT + Active Directory
-- **PDF Generation**: Puppeteer (headless Chrome)
-- **Email**: Nodemailer
-- **Charts**: Chart.js
+- **Frontend**: React 18 with Material-UI (MUI v6) + React Router v7
+- **Database**: Microsoft SQL Server with FormsSystem schema
+- **Authentication**: JWT + Active Directory (dual authentication)
+- **PDF Generation**: Puppeteer (headless Chrome) with complete Roboto font family
+- **Email**: Nodemailer with HTML templates
+- **Analytics**: Chart.js with react-chartjs-2 for dashboard visualizations
+- **Deployment**: Docker with multi-stage builds and health checks
+- **Security**: bcrypt, cross-env, non-root containers
 
 ## Development Commands
 
@@ -41,27 +43,46 @@ npm run build  # Production build
 npm test       # React testing
 ```
 
-### Docker Commands
+### Docker Commands (Production Ready)
 ```bash
+# Build and run with npm scripts
 npm run build:docker  # Build Docker image
 npm run run:docker    # Run Docker container
-docker-compose up --build  # Use Docker Compose
+
+# Direct Docker commands
+docker build -t nwfth-forms .
+docker run -p 5000:5000 nwfth-forms
+
+# Docker Compose (Recommended for production)
+docker-compose up --build  # Build and start with compose
+docker-compose up -d       # Start in detached mode
+docker-compose down        # Stop and remove containers
+docker-compose logs -f     # Follow logs
+
+# Health check
+curl http://localhost:5000/health
 ```
 
 ## Project Structure
 
+### Root Level
+- `Dockerfile` - Multi-stage production build with Puppeteer dependencies
+- `docker-compose.yml` - Production orchestration with environment variables
+- `database.sql` - Complete FormsSystem schema with advanced features
+- `package.json` - Root package with Docker scripts and project coordination
+
 ### Form-App/ (Backend)
 - `server.js` - Main Express server with all routes, database connections, PDF generation, and email logic
-- `database.sql` - Complete database schema with tables for users, forms, departments, and workflows
-- `fonts/` - Roboto font family for PDF generation
-- `.env` - Database connection and email configuration
+- `fonts/` - Complete Roboto font family (Regular, Bold, Italic, etc.) for PDF generation
+- `package.json` - Backend dependencies including Puppeteer, Active Directory, and email
+- `.env` - Database, email, and Active Directory configuration
 
 ### form-frontend/ (Frontend)
 - `src/components/` - Reusable UI components (Header, Sidebar)
-- `src/pages/` - Form pages (Purchase, CAPEX, Travel, Minor, Major requests)
-- `src/styles/` - CSS stylesheets for each component
+- `src/pages/` - Form pages (Purchase, CAPEX, Travel, Minor, Major requests) + Dashboard
+- `src/styles/` - CSS stylesheets for each component including Dashboard analytics
 - `public/` - Static assets and HTML template
-- `build/` - Production build output (already built)
+- `build/` - Production build output (served by backend in Docker)
 
 ## Architecture Patterns
 
@@ -83,33 +104,78 @@ docker-compose up --build  # Use Docker Compose
 
 ### Form Types Supported
 - Purchase Request Forms
-- CAPEX Request Forms
-- Travel Request Forms
+- CAPEX Request Forms  
+- Travel Request Forms (with multi-trip support and remove trip functionality)
 - Minor Forms
 - Major Forms
 
 ### Core Functionality
-- Multi-tenant department structure
-- Role-based access control
-- Form workflow management (submit, approve, reject)
-- PDF generation from forms
-- Email notifications for form actions
-- Analytics dashboard with charts
-- User authentication with Active Directory
+- Multi-tenant department structure with budget tracking
+- Role-based access control (user, admin, manager roles)
+- Form workflow management (submit, approve, reject, draft)
+- Professional PDF generation with Puppeteer and custom fonts
+- Automated email notifications with HTML templates
+- Executive dashboard with Chart.js analytics
+- Dual authentication: Local users + Active Directory integration
+
+### Advanced Features
+- **Executive Dashboard**: Comprehensive analytics with bar charts, pie charts, and trend analysis
+- **Financial Tracking**: Real-time budget monitoring and spending analysis
+- **Active Directory Integration**: Auto-provisioning and domain user management
+- **Multi-trip Travel Forms**: Dynamic trip management with add/remove functionality
+- **PDF Email System**: Automated form delivery with professional email templates
+- **Production Deployment**: Docker containerization with health checks
+- **Audit Logging**: Complete form history and change tracking
+- **Responsive Design**: Mobile-friendly interface with Material-UI components
 
 ## Database Schema
 
-The SQL Server database includes:
-- `Users` - User accounts with department associations
-- `Departments` - Organizational departments
-- `PurchaseRequests`, `CapexRequests`, `TravelRequests`, `MinorForms`, `MajorForms` - Form-specific tables
-- Workflow and approval tracking fields in each form table
+The SQL Server database uses the **FormsSystem** schema with advanced features:
+
+### Core Tables
+- `FormsSystem.Users` - Enhanced user accounts supporting both local and Active Directory authentication
+- `FormsSystem.Departments` - Organizational departments with budget tracking
+- `FormsSystem.DepartmentBudgets` - Fiscal year budget management with spent/remaining calculations
+- `FormsSystem.Forms` - Unified forms table supporting all form types with JSON details storage
+
+### Advanced Features
+- **Audit Logging**: Automatic change tracking with triggers
+- **Budget Management**: Real-time budget calculations with computed columns
+- **Performance Optimization**: 15+ strategic indexes for query performance
+- **Data Views**: Business intelligence views for analytics and reporting
+- **Password Reset**: Secure token-based password reset system
+- **Form Workflow**: Complete status tracking (Draft, Submitted, Approved, Rejected)
+
+### Security & Performance
+- Parameterized queries preventing SQL injection
+- Optimized indexes for dashboard analytics
+- Computed columns for real-time calculations
+- Foreign key constraints ensuring data integrity
 
 ## Development Notes
 
-- The application is production-ready with existing build artifacts
-- All database schema is defined in `Form-App/database.sql`
-- Environment variables are configured in `Form-App/.env`
-- PDF generation uses Puppeteer with custom fonts in `Form-App/fonts/`
-- Frontend build output is already present in `form-frontend/build/`
-- Authentication integrates with Active Directory for user management
+### Production Readiness
+- **Docker Deployment**: Multi-stage builds with production optimizations
+- **Health Monitoring**: Built-in health check endpoints for container orchestration
+- **Security Hardening**: Non-root containers, environment variable configuration
+- **Performance**: Optimized database queries with strategic indexing
+- **Font Management**: Complete Roboto font family for consistent PDF output
+
+### Environment Configuration
+- Database schema defined in root-level `database.sql` with FormsSystem schema
+- Environment variables configured in `Form-App/.env` for all services
+- Docker environment variables in `docker-compose.yml` for production deployment
+- Frontend build artifacts integrated into Docker container for single-container deployment
+
+### Key Technical Details
+- **PDF Generation**: Puppeteer with headless Chrome for high-quality PDF output
+- **Authentication**: Dual system supporting both local users and Active Directory
+- **Analytics**: Chart.js integration with real-time data visualization
+- **Email System**: Professional HTML email templates with automated PDF attachments
+- **Database**: Advanced SQL Server features including triggers, views, and computed columns
+
+### Deployment Workflows
+- **Development**: `npm run dev` for concurrent frontend/backend development
+- **Production**: Docker Compose with health checks and environment management
+- **Testing**: Integrated testing with React Testing Library and Jest
+- **Build Process**: Automated frontend builds integrated into Docker containers

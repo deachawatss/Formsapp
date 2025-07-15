@@ -494,6 +494,16 @@ const TravelRequestForm = () => {
           <div key={tripIndex} className="travel-section">
             <div className="travel-section-header">
               <h2>TRIP {tripIndex + 1}</h2>
+              {formData.trips.length > 1 && (
+                <button
+                  type="button"
+                  className="remove-trip-btn"
+                  onClick={() => removeTrip(tripIndex)}
+                  title="Remove this trip"
+                >
+                  🗑️ Remove Trip
+                </button>
+              )}
             </div>
             <div className="form-grid">
               <div className="form-field">

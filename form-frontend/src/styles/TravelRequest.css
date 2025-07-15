@@ -51,6 +51,9 @@
     padding: 8px 15px;
     margin-bottom: 15px;
     border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .travel-section-header h2 {
@@ -58,6 +61,22 @@
     font-size: 16px;
     text-transform: uppercase;
     text-align: left;
+}
+
+.remove-trip-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: 500;
+}
+
+.remove-trip-btn:hover {
+    background-color: #c0392b;
 }
 
 /* --- New Form Layout System --- */
@@ -235,5 +254,10 @@
     .btn-row {
         page-break-inside: avoid !important;
         break-inside: avoid !important;
+    }
+    
+    /* Hide remove trip buttons when printing */
+    .remove-trip-btn {
+        display: none !important;
     }
 }
