@@ -84,7 +84,7 @@ const Dashboard = () => {
           const details = parseFormDetails(form);
           let value = 0;
 
-          if (form.form_name === 'Purchase Request') {
+          if ((form.form_type || form.form_name) === 'Purchase Request') {
             if (details.grandTotal !== undefined) {
               value = parseFloat(details.grandTotal) || 0;
             } else if (details.subTotal !== undefined && details.vat !== undefined) {
@@ -96,7 +96,7 @@ const Dashboard = () => {
                 return sum + (parseFloat(item.amount) || 0);
               }, 0);
             }
-          } else if (form.form_name === 'Major Capital Authorization Request') {
+          } else if ((form.form_type || form.form_name) === 'Major Capital Authorization Request') {
             let additionTotal = 0;
             let disposalTotal = 0;
             
@@ -289,7 +289,7 @@ const Dashboard = () => {
           if (year === selectedYear && form.form_name) {
             let value = 0;
 
-            if (form.form_name === 'Purchase Request') {
+            if ((form.form_type || form.form_name) === 'Purchase Request') {
               if (details.grandTotal !== undefined) {
                 value = parseFloat(details.grandTotal) || 0;
               } else if (details.subTotal !== undefined && details.vat !== undefined) {
@@ -301,7 +301,7 @@ const Dashboard = () => {
                   return sum + (parseFloat(item.amount) || 0);
                 }, 0);
               }
-            } else if (form.form_name === 'Major Capital Authorization Request') {
+            } else if ((form.form_type || form.form_name) === 'Major Capital Authorization Request') {
               let additionTotal = 0;
               let disposalTotal = 0;
               
@@ -881,7 +881,7 @@ const Dashboard = () => {
                   const details = parseFormDetails(form);
                   console.log(`Form ID ${form.id} - ${form.form_name}:`, details);
                   
-                  if (form.form_name === 'Purchase Request') {
+                  if ((form.form_type || form.form_name) === 'Purchase Request') {
                     console.log("Purchase Request Raw data:", details);
 
                     if (typeof details.grandTotal !== 'undefined') {
@@ -1000,7 +1000,7 @@ const Dashboard = () => {
                     }
                     
                     console.log(`${form.form_name} - total:`, details.total, 'estimatedCost:', details.estimatedCost, 'Value:', value);
-                  } else if (form.form_name === 'Major Capital Authorization Request') {
+                  } else if ((form.form_type || form.form_name) === 'Major Capital Authorization Request') {
                     console.log("Table - Major Capital Raw data:", details);
                     
                     let disposalTotal = 0;

@@ -62,17 +62,17 @@ const ViewForm = () => {
     return <div>No data found</div>;
   }
 
-  // Access only form_name which is necessary to decide which component to display
-  const { form_name } = form;
-  console.log("Form name:", form_name);
+  // Access form_type (new schema) with fallback to form_name (old schema) for compatibility
+  const form_type = form.form_type || form.form_name;
+  console.log("Form type:", form_type);
   console.log("Rendered with form data:", form);
 
   // Render appropriate view component based on form type
   const renderFormByType = () => {
     // Add log before entering switch case
-    console.log(`Rendering form type: "${form_name}" from data:`, form);
+    console.log(`Rendering form type: "${form_type}" from data:`, form);
     
-    switch (form_name) {
+    switch (form_type) {
       case 'Major Capital Authorization Request':
         return <ViewMajorForm form={form} />;
       case 'Purchase Request':
@@ -83,8 +83,9 @@ const ViewForm = () => {
       case 'Travel Request':
         return <ViewTravelRequest form={form} />;
       default:
-        console.error("❌ Form name not found:", form_name);
-        return <div>Form type not found "{form_name}"</div>;
+        console.error("❌ Form type not found:", form_type);
+        console.error("Available form data:", form);
+        return <div>Form type not found "{form_type}"</div>;
     }
   };
 

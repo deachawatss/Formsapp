@@ -6,6 +6,8 @@ import '../styles/Home.css';
 const MyForms = () => {
   const [forms, setForms] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editingFormId, setEditingFormId] = useState(null);
+  const [editingName, setEditingName] = useState('');
   const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
@@ -115,6 +117,39 @@ const MyForms = () => {
     }
   };
 
+  const handleEditCustomName = (form) => {
+    setEditingFormId(form.id);
+    setEditingName(form.custom_name || form.form_type);
+  };
+
+  const handleSaveCustomName = async (formId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      
+      await axios.put(`${baseUrl}/api/forms/${formId}/custom-name`, {
+        custom_name: editingName
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      alert('Form name updated successfully');
+      setEditingFormId(null);
+      setEditingName('');
+      fetchMyForms(); // Refresh the list
+    } catch (error) {
+      console.error('Error updating custom name:', error);
+      alert('❌ ' + (error.response?.data?.error || 'Error updating form name'));
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingFormId(null);
+    setEditingName('');
+  };
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'Draft':
@@ -131,7 +166,7 @@ const MyForms = () => {
   };
 
   const getEditLink = (form) => {
-    switch (form.form_name) {
+    switch (form.form_type) {
       case 'Purchase Request':
         return `/form/purchase-request?id=${form.id}`;
       case 'Travel Request':
@@ -165,6 +200,7 @@ const MyForms = () => {
           <thead>
             <tr>
               <th>Form Name</th>
+              <th>Form Type</th>
               <th>Department</th>
               <th>Date</th>
               <th>Status</th>
@@ -174,7 +210,54 @@ const MyForms = () => {
           <tbody>
             {forms.map((form) => (
               <tr key={form.id}>
-                <td>{form.form_name}</td>
+                <td className="form-name-cell">
+                  {editingFormId === form.id ? (
+                    <div className="edit-name-container">
+                      <input
+                        type="text"
+                        value={editingName}
+                        onChange={(e) => setEditingName(e.target.value)}
+                        className="edit-name-input"
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter') {
+                            handleSaveCustomName(form.id);
+                          } else if (e.key === 'Escape') {
+                            handleCancelEdit();
+                          }
+                        }}
+                        autoFocus
+                      />
+                      <button
+                        onClick={() => handleSaveCustomName(form.id)}
+                        className="action-btn save-btn"
+                        title="Save"
+                      >
+                        ✓
+                      </button>
+                      <button
+                        onClick={handleCancelEdit}
+                        className="action-btn cancel-btn"
+                        title="Cancel"
+                      >
+                        ✗
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="form-name-display">
+                      <span>{form.custom_name || form.form_type}</span>
+                      {form.status === 'Draft' && (
+                        <button
+                          onClick={() => handleEditCustomName(form)}
+                          className="action-btn edit-name-btn"
+                          title="Edit Form Name"
+                        >
+                          ✏️
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </td>
+                <td>{form.form_type}</td>
                 <td>{form.department}</td>
                 <td>{new Date(form.request_date).toLocaleDateString()}</td>
                 <td>

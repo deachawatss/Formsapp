@@ -528,9 +528,7 @@
     border: 1px solid #ccc;
     background: #f0f7ff;
     border-radius: 5px;
-    margin-right: 10px; /* Keep right spacing */
     width: 100%; /* Ensure full width */
-    max-width: 900px; /* Match Vendor Info section */
     box-sizing: border-box;
     margin-top: 10px;
 }
@@ -553,7 +551,6 @@
     align-items: center;
     gap: 15px; /* Keep spacing between elements */
     margin: 10px; /* Ensure it has uniform spacing */
-    padding-right: 10px; /* Space only on the right */
 }
 
 .input-row-reason label {

@@ -741,6 +741,7 @@ const PurchaseRequestForm = () => {
               ✉️ {isSendingEmail ? 'Sending...' : 'Send Email'}
             </button> */}
 
+            {/* Print button hidden - users can print from MyForms after saving
             <button
               type="button"
               className="button print-btn"
@@ -748,6 +749,7 @@ const PurchaseRequestForm = () => {
             >
               🖨 Print
             </button>
+            */}
           </div>
         </form>
       </div>

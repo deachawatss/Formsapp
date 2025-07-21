@@ -376,23 +376,32 @@ app.post('/api/forms', authenticateToken, async (req, res) => {
     const pool = await sql.connect(dbConfig);
     const request = new sql.Request();
     
-    // Determine form type based on form_name or endpoint
-    let form_type = 'general'; // default
-    if (form_name && form_name.toLowerCase().includes('major')) {
-      form_type = 'major';
-    } else if (form_name && form_name.toLowerCase().includes('minor')) {
-      form_type = 'minor';
-    } else if (form_name && form_name.toLowerCase().includes('purchase')) {
-      form_type = 'purchase';
-    } else if (form_name && form_name.toLowerCase().includes('capex')) {
-      form_type = 'capex';
-    } else if (form_name && form_name.toLowerCase().includes('travel')) {
-      form_type = 'travel';
+    // Use form_name as form_type (the actual form type like "Purchase Request")
+    const form_type = form_name;
+    
+    // Determine form_category based on form_type
+    let form_category = 'general'; // default
+    if (form_type && form_type.toLowerCase().includes('major')) {
+      form_category = 'major';
+    } else if (form_type && form_type.toLowerCase().includes('minor')) {
+      form_category = 'minor';
+    } else if (form_type && form_type.toLowerCase().includes('purchase')) {
+      form_category = 'purchase';
+    } else if (form_type && form_type.toLowerCase().includes('capex')) {
+      form_category = 'capex';
+    } else if (form_type && form_type.toLowerCase().includes('travel')) {
+      form_category = 'travel';
     }
 
+    // Auto-generate custom_name: "Form Type - User Name - Date"
+    const currentDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+    const custom_name = `${form_type} - ${user_name} - ${currentDate}`;
+
     request
-      .input('form_name', sql.NVarChar, form_name)
+      .input('form_name', sql.NVarChar, form_type) // Backward compatibility
       .input('form_type', sql.NVarChar, form_type)
+      .input('custom_name', sql.NVarChar, custom_name)
+      .input('form_category', sql.NVarChar, form_category)
       .input('user_name', sql.NVarChar, user_name)
       .input('department', sql.NVarChar, department)
       .input('details', sql.NVarChar, JSON.stringify(details))
@@ -401,9 +410,9 @@ app.post('/api/forms', authenticateToken, async (req, res) => {
 
     const result = await request.query(`
       INSERT INTO FormsSystem.Forms 
-      (form_name, form_type, user_name, department, details, status, request_date)
+      (form_name, form_type, custom_name, form_category, user_name, department, details, status, request_date)
       VALUES 
-      (@form_name, @form_type, @user_name, @department, @details, @status, @request_date);
+      (@form_name, @form_type, @custom_name, @form_category, @user_name, @department, @details, @status, @request_date);
       SELECT SCOPE_IDENTITY() as insertedId;
     `);
 
@@ -421,7 +430,28 @@ app.post('/api/forms', authenticateToken, async (req, res) => {
 app.get('/api/forms', authenticateToken, async (req, res) => {
     try {
         const pool = await sql.connect(dbConfig);
-        const result = await pool.request().query("SELECT * FROM FormsSystem.Forms ORDER BY request_date DESC");
+        const result = await pool.request().query(`
+            SELECT id, 
+                   ISNULL(form_type, form_name) as form_type,
+                   ISNULL(custom_name, form_name) as custom_name,
+                   form_category, 
+                   user_name, 
+                   department, 
+                   details, 
+                   status, 
+                   request_date,
+                   approved_by,
+                   approved_date,
+                   rejected_by,
+                   rejected_date,
+                   rejection_reason,
+                   created_at,
+                   updated_at,
+                   total_amount,
+                   priority
+            FROM FormsSystem.Forms 
+            ORDER BY request_date DESC
+        `);
         res.status(200).json(result.recordset);
     } catch (error) {
         console.error("❌ Error fetching forms:", error);
@@ -436,7 +466,15 @@ app.get('/api/forms/my-forms', authenticateToken, async (req, res) => {
         const result = await pool.request()
             .input('user_name', sql.NVarChar, req.user.name)
             .query(`
-                SELECT id, form_name, user_name, department, status, request_date, details
+                SELECT id, 
+                       ISNULL(form_type, form_name) as form_type,
+                       ISNULL(custom_name, form_name) as custom_name, 
+                       form_category, 
+                       user_name, 
+                       department, 
+                       status, 
+                       request_date, 
+                       details
                 FROM FormsSystem.Forms 
                 WHERE user_name = @user_name 
                 ORDER BY request_date DESC
@@ -461,6 +499,42 @@ app.get('/api/forms/my-forms', authenticateToken, async (req, res) => {
     }
 });
 
+// อัปเดตชื่อแบบฟอร์มแบบกำหนดเอง ----------------------------------------------
+app.put('/api/forms/:id/custom-name', authenticateToken, async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const { custom_name } = req.body;
+        
+        if (isNaN(id)) {
+            return res.status(400).json({ error: "รูปแบบ ID ไม่ถูกต้อง" });
+        }
+        
+        if (!custom_name || custom_name.trim() === '') {
+            return res.status(400).json({ error: "ชื่อแบบฟอร์มไม่สามารถเป็นค่าว่างได้" });
+        }
+
+        const pool = await sql.connect(dbConfig);
+        const result = await pool.request()
+            .input('id', sql.Int, id)
+            .input('user_name', sql.NVarChar, req.user.name)
+            .input('custom_name', sql.NVarChar, custom_name.trim())
+            .query(`
+                UPDATE FormsSystem.Forms 
+                SET custom_name = @custom_name, updated_at = GETDATE()
+                WHERE id = @id AND user_name = @user_name
+            `);
+
+        if (result.rowsAffected[0] === 0) {
+            return res.status(404).json({ error: "ไม่พบแบบฟอร์มหรือไม่มีสิทธิ์แก้ไข" });
+        }
+
+        res.json({ message: 'อัปเดตชื่อแบบฟอร์มสำเร็จ' });
+    } catch (error) {
+        console.error('❌ Error updating custom name:', error);
+        res.status(500).json({ error: 'เกิดข้อผิดพลาดในการอัปเดต' });
+    }
+});
+
 // ดึงข้อมูลฟอร์มตาม ID ----------------------------------------------
 app.get('/api/forms/:id', authenticateToken, async (req, res) => {
   try {
@@ -474,7 +548,15 @@ app.get('/api/forms/:id', authenticateToken, async (req, res) => {
     const result = await pool.request()
       .input('id', sql.Int, id)
       .query(`
-        SELECT id, form_name, user_name, department, details, status, request_date
+        SELECT id, 
+               ISNULL(form_type, form_name) as form_type,
+               ISNULL(custom_name, form_name) as custom_name,
+               form_category, 
+               user_name, 
+               department, 
+               details, 
+               status, 
+               request_date
         FROM FormsSystem.Forms 
         WHERE id = @id
       `);
@@ -535,7 +617,28 @@ app.post('/api/forms/pdf-email', authenticateToken, async (req, res) => {
         const pool = await sql.connect(dbConfig);
         const result = await pool.request()
             .input('id', sql.Int, id)
-            .query("SELECT * FROM FormsSystem.Forms WHERE id = @id");
+            .query(`
+                SELECT id, 
+                       ISNULL(form_type, form_name) as form_type,
+                       ISNULL(custom_name, form_name) as custom_name,
+                       form_category, 
+                       user_name, 
+                       department, 
+                       details, 
+                       status, 
+                       request_date,
+                       approved_by,
+                       approved_date,
+                       rejected_by,
+                       rejected_date,
+                       rejection_reason,
+                       created_at,
+                       updated_at,
+                       total_amount,
+                       priority
+                FROM FormsSystem.Forms 
+                WHERE id = @id
+            `);
 
         if (result.recordset.length === 0) {
             return res.status(404).json({ error: "ไม่พบฟอร์ม" });
@@ -1030,10 +1133,14 @@ app.put('/api/forms/:id', authenticateToken, async (req, res) => {
     const { id } = req.params;
     const { form_name, user_name, department, details, status } = req.body;
     
+    // For backward compatibility, use form_name as form_type
+    const form_type = form_name;
+    
     const pool = await sql.connect(dbConfig);
     const result = await pool.request()
       .input('id', sql.Int, id)
       .input('form_name', sql.NVarChar, form_name)
+      .input('form_type', sql.NVarChar, form_type)
       .input('user_name', sql.NVarChar, user_name)
       .input('department', sql.NVarChar, department)
       .input('details', sql.NVarChar, JSON.stringify(details))
@@ -1041,6 +1148,7 @@ app.put('/api/forms/:id', authenticateToken, async (req, res) => {
       .query(`
         UPDATE FormsSystem.Forms 
         SET form_name = @form_name,
+            form_type = @form_type,
             user_name = @user_name,
             department = @department,
             details = @details,

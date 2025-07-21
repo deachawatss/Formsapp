@@ -718,6 +718,7 @@ const TravelRequestForm = () => {
           <button type="button" className="button draft-btn" onClick={handleSaveDraft}>
             💾 Save as Draft
           </button>
+          {/* Print button hidden - users can print from MyForms after saving
           <button
             type="button"
             className="button print-btn"
@@ -725,6 +726,7 @@ const TravelRequestForm = () => {
           >
             🖨 Print
           </button>
+          */}
         </div>
       </form>
     </div>

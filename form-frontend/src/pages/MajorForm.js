@@ -1236,6 +1236,7 @@ const MajorForm = () => {
             ✉️ {isSendingEmail ? 'Sending...' : 'Send Email'}
           </button> */}
 
+          {/* Print button hidden - users can print from MyForms after saving
           <button
             type="button"
             className="button print-btn"
@@ -1243,6 +1244,7 @@ const MajorForm = () => {
           >
             🖨 Print
           </button>
+          */}
         </div>
       </form>
     </div>

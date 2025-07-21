@@ -341,10 +341,100 @@ body {
   color: white;
 }
 
+/* =========== Custom Name Edit Functionality =========== */
+.form-name-cell {
+  min-width: 200px;
+}
+
+.form-name-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-name-display span {
+  flex: 1;
+}
+
+.edit-name-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.edit-name-btn:hover {
+  opacity: 1;
+  background-color: #f0f0f0;
+}
+
+.edit-name-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.edit-name-input {
+  flex: 1;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 150px;
+}
+
+.edit-name-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.save-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.save-btn:hover {
+  background-color: #218838;
+}
+
+.cancel-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.cancel-btn:hover {
+  background-color: #c82333;
+}
+
 /* ตั้งค่าการตอบสนองสำหรับอุปกรณ์มือถือ */
 @media screen and (max-width: 768px) {
   .forms-table {
     display: block;
     overflow-x: auto;
+  }
+  
+  .form-name-cell {
+    min-width: 150px;
+  }
+  
+  .edit-name-input {
+    min-width: 100px;
   }
 }
