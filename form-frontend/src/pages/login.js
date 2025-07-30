@@ -29,6 +29,9 @@ const Login = () => {
 
     try {
       const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      console.log('Login attempt - API URL:', baseUrl);
+      console.log('Login attempt - Environment:', process.env.NODE_ENV);
+      
       const response = await axios.post(`${baseUrl}/api/login`, credentials);
 
       if (response.data.token) {

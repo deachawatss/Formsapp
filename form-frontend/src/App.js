@@ -29,7 +29,9 @@ const ProtectedRoute = ({ children }) => {
 
       try {
         const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-        console.log('Token validation: Using API URL:', baseUrl);
+        console.log('ProtectedRoute - Token validation: Using API URL:', baseUrl);
+        console.log('ProtectedRoute - Token validation: Environment:', process.env.NODE_ENV);
+        console.log('ProtectedRoute - Token validation: REACT_APP_API_URL env:', process.env.REACT_APP_API_URL);
         
         const response = await fetch(`${baseUrl}/api/forms/my-forms`, {
           method: 'GET',
@@ -98,7 +100,9 @@ function App() {
 
       try {
         const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-        console.log('Token validation: Using API URL:', baseUrl);
+        console.log('App - Token validation: Using API URL:', baseUrl);
+        console.log('App - Token validation: Environment:', process.env.NODE_ENV);
+        console.log('App - Token validation: REACT_APP_API_URL env:', process.env.REACT_APP_API_URL);
         
         const response = await fetch(`${baseUrl}/api/forms/my-forms`, {
           method: 'GET',

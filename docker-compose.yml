@@ -29,6 +29,9 @@ services:
       - AD_BASE_DN=${AD_BASE_DN}
       - AD_USERNAME=${AD_USERNAME}
       - AD_PASSWORD=${AD_PASSWORD}
+      # Frontend API URL configuration for server deployment
+      - REACT_APP_API_URL=http://192.168.0.21:5000
+      - FRONTEND_URL=http://192.168.0.21:5000
     networks:
       - app-network
     restart: unless-stopped

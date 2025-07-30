@@ -10,8 +10,14 @@ COPY form-frontend/package*.json ./
 # Install frontend dependencies
 RUN npm ci
 
+# Copy root .env file to frontend directory for build-time environment variables
+COPY .env ./
+
 # Copy frontend source code
 COPY form-frontend/ ./
+
+# Set environment variables for build
+ENV REACT_APP_API_URL=http://192.168.0.21:5000
 
 # Build frontend for production
 RUN npm run build:prod
@@ -42,6 +48,9 @@ COPY Form-App/package*.json ./
 
 # Install backend dependencies
 RUN npm ci --only=production
+
+# Copy root .env file to backend directory
+COPY .env ./
 
 # Copy backend source code
 COPY Form-App/ ./
