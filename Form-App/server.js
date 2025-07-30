@@ -1,6 +1,25 @@
-﻿// Load environment variables from .env file
+﻿// Load environment variables from .env file (if exists)
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '..', '.env') });
+const fs = require('fs');
+
+// Try to load .env from multiple locations
+const envPaths = [
+  path.resolve(__dirname, '.env'),
+  path.resolve(__dirname, '..', '.env')
+];
+
+for (const envPath of envPaths) {
+  if (fs.existsSync(envPath)) {
+    require('dotenv').config({ path: envPath });
+    console.log(`✅ Loaded environment from: ${envPath}`);
+    break;
+  }
+}
+
+// If no .env file found, environment variables should come from docker-compose
+if (!process.env.DB_USER) {
+  console.log('⚠️ No .env file found, using environment variables from container');
+}
 
 const puppeteer = require('puppeteer');
 const express = require('express');
