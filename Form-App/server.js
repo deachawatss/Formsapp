@@ -27,7 +27,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const sql = require('mssql');
 const nodemailer = require('nodemailer');
-const fs = require('fs');
 const PdfPrinter = require('pdfmake');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
